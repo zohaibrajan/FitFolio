@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 12587a0f8a8a
+Revision ID: fe25f5fbc542
 Revises:
-Create Date: 2023-11-30 16:33:00.055940
+Create Date: 2023-11-30 18:35:51.978159
 
 """
 from alembic import op
@@ -12,9 +12,8 @@ import os
 environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
 
-
 # revision identifiers, used by Alembic.
-revision = '12587a0f8a8a'
+revision = 'fe25f5fbc542'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,8 +37,8 @@ def upgrade():
     op.create_table('cardio_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
-    sa.Column('duration', sa.Integer(), nullable=False),
-    sa.Column('calories_burned', sa.Integer(), nullable=False),
+    sa.Column('intensity', sa.String(), nullable=False),
+    sa.Column('calories_per_minute', sa.Float(), nullable=False),
     sa.Column('created_by_user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -55,7 +54,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
     if environment == "production":
         op.execute(f"ALTER TABLE days SET SCHEMA {SCHEMA};")
 
@@ -115,7 +113,7 @@ def upgrade():
 
     op.create_table('food_logs',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('quantity', sa.Float(), nullable=False),
+    sa.Column('servings', sa.Integer(), nullable=False),
     sa.Column('food_id', sa.Integer(), nullable=True),
     sa.Column('day_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['day_id'], ['days.id'], ),
