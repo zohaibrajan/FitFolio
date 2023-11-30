@@ -9,8 +9,9 @@ class CardioExercise(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     exercise_name = db.Column(db.String(50), nullable=False)
-    duration = db.Column(db.Integer, nullable=False)
-    calories_burned = db.Column(db.Integer, nullable=False)
+    # duration = db.Column(db.Integer, nullable=False)
+    # calories_burned = db.Column(db.Integer, nullable=False)
+    calories_per_minute = db.Column(db.Float, nullable=False)
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
 
     cardio_logs = db.relationship("CardioLog", back_populates='exercise', cascade='all, delete-orphan')

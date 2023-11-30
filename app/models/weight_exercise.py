@@ -9,9 +9,6 @@ class WeightExercise(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     exercise_name = db.Column(db.String(50), nullable=False)
-    sets = db.Column(db.Integer, nullable=False)
-    repetitions = db.Column(db.Integer, nullable=False)
-    weight_per_rep = db.Column(db.Integer, nullable=False)
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
 
     weight_logs = db.relationship("WeightLog", back_populates="exercise", cascade="all, delete-orphan")

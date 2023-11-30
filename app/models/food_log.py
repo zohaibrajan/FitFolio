@@ -8,6 +8,7 @@ class FoodLog(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Float, nullable=False)
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("foods.id")), nullable=True)
     day_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("days.id")), nullable=True)
 

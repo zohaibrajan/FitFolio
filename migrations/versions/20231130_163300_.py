@@ -1,8 +1,8 @@
-"""all tables
+"""empty message
 
-Revision ID: 8d00de08cdee
+Revision ID: 12587a0f8a8a
 Revises:
-Create Date: 2023-11-30 12:58:51.285998
+Create Date: 2023-11-30 16:33:00.055940
 
 """
 from alembic import op
@@ -14,7 +14,7 @@ SCHEMA = os.environ.get("SCHEMA")
 
 
 # revision identifiers, used by Alembic.
-revision = '8d00de08cdee'
+revision = '12587a0f8a8a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -91,9 +91,6 @@ def upgrade():
     op.create_table('weight_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
-    sa.Column('sets', sa.Integer(), nullable=False),
-    sa.Column('repetitions', sa.Integer(), nullable=False),
-    sa.Column('weight_per_rep', sa.Integer(), nullable=False),
     sa.Column('created_by_user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -104,6 +101,8 @@ def upgrade():
 
     op.create_table('cardio_logs',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('duration', sa.Integer(), nullable=False),
+    sa.Column('calories_burned', sa.Integer(), nullable=False),
     sa.Column('exercise_id', sa.Integer(), nullable=True),
     sa.Column('day_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['day_id'], ['days.id'], ),
@@ -116,6 +115,7 @@ def upgrade():
 
     op.create_table('food_logs',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('quantity', sa.Float(), nullable=False),
     sa.Column('food_id', sa.Integer(), nullable=True),
     sa.Column('day_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['day_id'], ['days.id'], ),
@@ -128,13 +128,16 @@ def upgrade():
 
     op.create_table('weight_logs',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('sets', sa.Integer(), nullable=False),
+    sa.Column('repetitions', sa.Integer(), nullable=False),
+    sa.Column('weight_per_rep', sa.Integer(), nullable=False),
     sa.Column('exercise_id', sa.Integer(), nullable=True),
     sa.Column('day_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['day_id'], ['days.id'], ),
     sa.ForeignKeyConstraint(['exercise_id'], ['weight_exercises.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-
+    
     if environment == "production":
         op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
