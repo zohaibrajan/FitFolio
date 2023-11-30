@@ -14,3 +14,10 @@ class CardioLog(db.Model):
 
     day = db.relationship("Day", back_populates='cardio_log')
     exercise = db.relationship("CardioExercise", back_populates='cardio_logs')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "dayId": self.day_id,
+            "cardioExercise": self.exercise.to_dict()
+        }

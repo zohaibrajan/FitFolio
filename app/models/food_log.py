@@ -11,6 +11,12 @@ class FoodLog(db.Model):
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("foods.id")), nullable=True)
     day_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("days.id")), nullable=True)
 
-
     day = db.relationship("Day", back_populates='food_log')
     food = db.relationship("Food", back_populates='food_logs')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "dayId": self.day_id,
+            "food": self.food.to_dict()
+        }
