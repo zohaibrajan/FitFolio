@@ -25,3 +25,9 @@ class Day(db.Model):
             "weightLog": [weight_exercise.to_dict() for weight_exercise in self.weight_log],
             "foodLog": [food_item.to_dict() for food_item in self.food_log]
         }
+
+    def to_dict_date(self):
+        return {
+            "id": self.id,
+            "logDate": self.date
+        }

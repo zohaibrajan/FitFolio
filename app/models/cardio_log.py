@@ -20,6 +20,8 @@ class CardioLog(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "dayId": self.day_id,
-            "cardioExercise": self.exercise.to_dict()
+            "dayInfo": self.day.to_dict_date(),
+            "cardioExercise": self.exercise.to_dict(),
+            "duration": self.duration,
+            "caloriesBurned": self.calories_burned
         }

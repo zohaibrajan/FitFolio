@@ -22,5 +22,8 @@ class WeightLog(db.Model):
         return {
             "id": self.id,
             "dayId": self.day_id,
-            "weightExercise": self.exercise.to_dict()
+            "weightExercise": self.exercise.to_dict(),
+            "sets": self.sets,
+            "repetitions": self.repetitions,
+            "weightPerRep": self.weight_per_rep
         }

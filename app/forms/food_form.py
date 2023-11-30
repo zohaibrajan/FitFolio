@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, FloatField
-from wtforms.validators import DataRequired, AnyOf, ValidationError
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired
 
 
 class FoodForm(FlaskForm):
@@ -8,4 +8,3 @@ class FoodForm(FlaskForm):
     restaurant = StringField("Restaurant", validators=[DataRequired()])
     calories = IntegerField("Calories", validators=[DataRequired()])
     protein = IntegerField("Protein", validators=[DataRequired()])
-    

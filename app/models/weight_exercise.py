@@ -12,14 +12,10 @@ class WeightExercise(db.Model):
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
 
     weight_logs = db.relationship("WeightLog", back_populates="exercise", cascade="all, delete-orphan")
-
+    created_by = db.relationship("User", back_populates="weight_exercises")
 
     def to_dict(self):
         return {
             "id": self.id,
             "exerciseName": self.exercise_name,
-            "sets": self.sets,
-            "repetitions": self.repetitions,
-            "weightPerRep": self.weight_per_rep,
-            "createdByUserId": self.created_by_user_id
         }

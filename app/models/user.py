@@ -14,6 +14,11 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
 
+    goal = db.relationship("Goal", back_populates="user", cascade="all, delete-orphan")
+    foods = db.relationship("Food", back_populates="created_by", cascade="all, delete-orphan")
+    cardio_exercises = db.relationship("CardioExercise", back_populates="created_by", cascade="all, delete-orphan")
+    weight_exercises = db.relationship("WeightExercise", back_populates="created_by", cascade="all, delete-orphan")
+
     @property
     def password(self):
         return self.hashed_password

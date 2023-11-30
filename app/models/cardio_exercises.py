@@ -15,13 +15,12 @@ class CardioExercise(db.Model):
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
 
     cardio_logs = db.relationship("CardioLog", back_populates='exercise', cascade='all, delete-orphan')
+    created_by = db.relationship("User", back_populates="cardio_exercises")
 
 
     def to_dict(self):
         return {
             "id": self.id,
             "exerciseName": self.exercise_name,
-            "duration": self.duration,
-            "caloriesBurned": self.calories_burned,
-            "createdByUserId": self.created_by_user_id
+            "caloriesPerMinute": self.calories_per_minute
         }

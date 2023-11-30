@@ -8,7 +8,7 @@ class FoodLog(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Float, nullable=False)
+    servings = db.Column(db.Integer, nullable=False)
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("foods.id")), nullable=True)
     day_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("days.id")), nullable=True)
 
@@ -18,6 +18,6 @@ class FoodLog(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "dayId": self.day_id,
-            "food": self.food.to_dict()
+            "dayInfo": self.day.to_dict_date(),
+            "food": self.food.to_dict_nutrition()
         }

@@ -15,6 +15,7 @@ class Goal(db.Model):
     target_weight = db.Column(db.Integer, nullable=False)
     lbs_per_week = db.Column(db.Integer, nullable=False)
 
+    user = db.relationship("User", back_populates="goal")
 
 
     def to_dict(self):
