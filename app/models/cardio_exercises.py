@@ -9,17 +9,18 @@ class CardioExercise(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     exercise_name = db.Column(db.String(50), nullable=False)
-    sets = db.Column(db.Integer, nullable=False)
-    repetitions = db.Column(db.Integer, nullable=False)
-    weight_per_rep = db.Column(db.Integer, nullable=False)
-    created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("user.id")), nullable=True)
+    duration = db.Column(db.Integer, nullable=False)
+    calories_burned = db.Column(db.Integer, nullable=False)
+    created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
+
+    cardio_logs = db.relationship("CardioLog", back_populates='exercise', cascade='all, delete-orphan')
+
 
     def to_dict(self):
         return {
             "id": self.id,
             "exerciseName": self.exercise_name,
-            "sets": self.sets,
-            "repetitions": self.repetitions,
-            "weightPerRep": self.weight_per_rep,
+            "duration": self.duration,
+            "caloriesBurned": self.calories_burned,
             "createdByUserId": self.created_by_user_id
         }
