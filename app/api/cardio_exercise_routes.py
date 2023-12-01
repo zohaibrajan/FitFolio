@@ -10,8 +10,18 @@ cardio_exercise_routes = Blueprint("cardio-exercise", __name__)
 @login_required
 def get_all_cardio_exercises():
     """Getting all Cardio Exercises"""
-    exercises = CardioExercise.get.all()
+    exercises = CardioExercise.query.all()
 
     return {
         "cardioExercises": [exercise.to_dict() for exercise in exercises]
+    }
+
+@cardio_exercise_routes.route("/<int:cardioExerciseId>")
+@login_required
+def get_cardio_exercise(cardioExerciseId):
+    """Get a single Cardio Exercise"""
+    exercise = CardioExercise.query.get(cardioExerciseId)
+
+    return {
+        "cardioExercise": exercise.to_dict()
     }
