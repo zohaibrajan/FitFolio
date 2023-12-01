@@ -2,6 +2,7 @@ from flask.cli import AppGroup
 from .users import seed_users, undo_users
 from .cardio_exercises import seed_cardio_exercises, undo_cardio_exercises
 from .weight_exercies import seed_weight_exercises, undo_weight_exercises
+from .days import seed_days, undo_days
 
 from app.models.db import db, environment, SCHEMA
 
@@ -18,12 +19,14 @@ def seed():
         # command, which will  truncate all tables prefixed with
         # the schema name (see comment in users.py undo_users function).
         # Make sure to add all your other model's undo functions below
+        undo_days()
         undo_weight_exercises()
         undo_cardio_exercises()
         undo_users()
     seed_users()
     seed_cardio_exercises()
     seed_weight_exercises()
+    seed_days()
     # Add other seed functions here
 
 
@@ -33,4 +36,5 @@ def undo():
     undo_weight_exercises()
     undo_cardio_exercises()
     undo_users()
+    undo_days()
     # Add other undo functions here

@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_login import login_required
-from app.models import User
+from app.models import User, Day
 
 user_routes = Blueprint('users', __name__)
 
@@ -23,3 +23,14 @@ def user(id):
     """
     user = User.query.get(id)
     return user.to_dict()
+
+
+@user_routes.route('/<int:id>/days')
+@login_required
+def users_days_logged(id):
+    """Get all days the user has logged"""
+    days_logged = Day.query.where(Day.user_id == id).all()
+
+    return {
+        "daysLogged": [day.to_dict_date() for day in days_logged]
+    }

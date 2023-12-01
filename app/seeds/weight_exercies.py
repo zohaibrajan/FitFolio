@@ -9,7 +9,7 @@ def seed_weight_exercises():
             for row in csvreader:
                   exercise = WeightExercise(
                         exercise_name = row[0],
-                        created_by_user_id = int(row[1]),
+                        created_by_user_id = row[1],
                   )
                   db.session.add(exercise)
                   db.session.commit()

@@ -7,7 +7,7 @@ class Day(db.Model):
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
-    id = id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
     date = db.Column(db.Date, nullable=False)
 
@@ -20,7 +20,7 @@ class Day(db.Model):
         return {
             "id": self.id,
             "userId": self.user_id,
-            "date": self.date,
+            "logDate": self.date,
             "cardioLog": [cardio_exercise.to_dict() for cardio_exercise in self.cardio_log],
             "weightLog": [weight_exercise.to_dict() for weight_exercise in self.weight_log],
             "foodLog": [food_item.to_dict() for food_item in self.food_log]
