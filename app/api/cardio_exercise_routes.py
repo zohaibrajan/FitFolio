@@ -1,6 +1,6 @@
 from flask import Blueprint
-from flask_login import current_user, login_required
-from app.models import CardioExercise, CardioLog
+from flask_login import login_required
+from app.models import CardioExercise
 
 
 cardio_exercise_routes = Blueprint("cardio-exercise", __name__)
