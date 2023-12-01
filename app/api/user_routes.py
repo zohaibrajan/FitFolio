@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, CardioExercise, db
-from app.forms import CardioLogForm
+from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog
+from app.forms import CardioLogForm, WeightLogForm
 from datetime import datetime
 
 user_routes = Blueprint('users', __name__)
@@ -163,3 +163,138 @@ def create_user_cardio_log():
 
     if form.errors:
         return form.errors
+
+
+@user_routes.route('/weight-logs')
+@login_required
+def user_weight_logs():
+    """"Get all the weight logs for a user"""
+    weight_logs = WeightLog.query.where(WeightLog.user_id == current_user.id).order_by(WeightLog.date.desc()).all()
+
+    return {
+        "allWeightLogs": [log.to_dict() for log in weight_logs]
+    }
+
+
+@user_routes.route('/weight-logs/<int:weightLogId>')
+@login_required
+def get_a_weight_log(weightLogId):
+    """Get a single weight log for a user"""
+    weight_log = WeightLog.query.get(weightLogId)
+
+    if not weight_log:
+        return {
+            "errorMessage": "Sorry, weight-log Does Not Exist"
+        }, 404
+
+    if weight_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    return weight_log.to_dict()
+
+@user_routes.route('/weight-logs', methods=["POST"])
+@login_required
+def create_user_weight_log():
+    form = WeightLogForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        data = form.data
+        exercise_from_form = data['exercise_name']
+
+        exercise = WeightExercise.query.where(WeightExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
+
+        if not exercise:
+            return {
+                "errorMessage": "Sorry, exercise Does Not Exist"
+            }, 404
+
+
+        new_weight_log = WeightLog(
+            sets = data['sets'],
+            repetitions = data['repetitions'],
+            weight_per_rep = data['weight_per_rep'],
+            exercise_id = int(exercise.id),
+            date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
+            user_id = int(current_user.id)
+        )
+
+        db.session.add(new_weight_log)
+        db.session.commit()
+
+        return new_weight_log.to_dict(), 201
+
+    if form.errors:
+        return form.errors
+
+
+@user_routes.route('/weight-logs/<int:weightLogId>', methods=["PUT"])
+@login_required
+def update_a_users_weight_log(weightLogId):
+    """Updating a weight log for a user"""
+    weight_log = WeightLog.query.get(weightLogId)
+
+    if not weight_log:
+        return {
+            "errorMessage": "Sorry, weight-log Does Not Exist"
+        }, 404
+
+    if weight_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    form = WeightLogForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+            data = form.data
+            exercise_from_form = data['exercise_name']
+
+            exercise = WeightExercise.query.where(WeightExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
+
+            if not exercise:
+                return {
+                    "errorMessage": "Sorry, exercise Does Not Exist"
+                }, 404
+
+            updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
+
+            weight_log.sets = int(data['sets'])
+            weight_log.repetitions = int(data['repetitions'])
+            weight_log.exercise_id = int(exercise.id)
+            weight_log.weight_per_rep = int(data["weight_per_rep"])
+            weight_log.date = updated_date
+            weight_log.user_id = int(current_user.id)
+
+            db.session.commit()
+
+            return weight_log.to_dict(), 201
+
+    if form.errors:
+        return form.errors
+
+
+@user_routes.route('/weight-logs/<int:weightLogId>', methods=["DELETE"])
+@login_required
+def deleting_a_weight_log(weightLogId):
+    weight_log = WeightLog.query.get(weightLogId)
+
+    if not weight_log:
+        return {
+        "errorMessage": "Sorry, weight-log Does Not Exist"
+        }, 404
+
+    if weight_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    db.session.delete(weight_log)
+    db.session.commit()
+
+    return {
+        "message": "Success"
+    }, 200

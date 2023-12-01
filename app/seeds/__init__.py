@@ -3,6 +3,7 @@ from .users import seed_users, undo_users
 from .cardio_exercises import seed_cardio_exercises, undo_cardio_exercises
 from .weight_exercies import seed_weight_exercises, undo_weight_exercises
 from .cardio_logs import seed_cardio_logs, undo_cardio_logs
+from .weight_logs import seed_weight_logs, undo_weight_logs
 
 from app.models.db import db, environment, SCHEMA
 
@@ -19,6 +20,7 @@ def seed():
         # command, which will  truncate all tables prefixed with
         # the schema name (see comment in users.py undo_users function).
         # Make sure to add all your other model's undo functions below
+        undo_weight_logs()
         undo_cardio_logs()
         undo_weight_exercises()
         undo_cardio_exercises()
@@ -27,12 +29,14 @@ def seed():
     seed_cardio_exercises()
     seed_weight_exercises()
     seed_cardio_logs()
+    seed_weight_logs()
     # Add other seed functions here
 
 
 # Creates the `flask seed undo` command
 @seed_commands.command('undo')
 def undo():
+    undo_weight_logs()
     undo_cardio_logs()
     undo_weight_exercises()
     undo_cardio_exercises()
