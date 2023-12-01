@@ -1,4 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+from datetime import datetime
 
 
 class CardioLog(db.Model):
@@ -20,7 +21,7 @@ class CardioLog(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "date": self.date,
+            "date": self.date.strftime("%Y-%m-%d"),
             "cardioExercise": self.exercise.to_dict(),
             "duration": self.duration,
             "caloriesBurned": self.calories_burned
