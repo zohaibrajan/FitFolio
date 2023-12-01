@@ -38,7 +38,6 @@ def user_cardio_logs():
     }
 
 
-
 @user_routes.route('/cardio-logs/<int:cardioLogId>')
 @login_required
 def get_a_cardio_log(cardioLogId):
@@ -90,10 +89,13 @@ def update_a_users_cardio_log(cardioLogId):
             if not data['calories_burned']:
                 data['calories_burned'] = int(data['duration']) * exercise.calories_per_minute
 
-            cardio_log.duration = data['duration'],
-            cardio_log.calories_burned = data['calories_burned'],
-            cardio_log.exercise_id = int(exercise.id),
-            cardio_log.date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
+
+            updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
+
+            cardio_log.duration = data['duration']
+            cardio_log.calories_burned = data['calories_burned']
+            cardio_log.exercise_id = int(exercise.id)
+            cardio_log.date = updated_date
             cardio_log.user_id = int(current_user.id)
 
             db.session.commit()
@@ -103,6 +105,27 @@ def update_a_users_cardio_log(cardioLogId):
     if form.errors:
         return form.errors
 
+@user_routes.route('/cardio-logs/<int:cardioLogId>', methods=["DELETE"])
+@login_required
+def deleting_a_cardio_log(cardioLogId):
+    cardio_log = CardioLog.query.get(cardioLogId)
+
+    if not cardio_log:
+        return {
+        "errorMessage": "Sorry, cardio-log Does Not Exist"
+        }, 404
+
+    if cardio_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    db.session.delete(cardio_log)
+    db.session.commit()
+
+    return {
+        "message": "Success"
+    }, 200
 
 
 @user_routes.route('/cardio-logs', methods=["POST"])
