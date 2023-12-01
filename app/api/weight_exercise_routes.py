@@ -14,3 +14,14 @@ def get_all_weight_exercises():
     return {
         "weightExercises": [exercise.to_dict() for exercise in exercises]
     }
+
+
+@weight_exercise_routes.route("<int:weightExerciseId>")
+@login_required
+def get_cardio_exercise(weightExerciseId):
+    """Get a single Weight Exercise"""
+    exercise = WeightExercise.query.get(weightExerciseId)
+
+    return {
+        "weightExercise": exercise.to_dict()
+    }

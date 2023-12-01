@@ -8,6 +8,7 @@ from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.cardio_exercise_routes import cardio_exercise_routes
+from .api.weight_exercise_routes import weight_exercise_routes
 from .seeds import seed_commands
 from .config import Config
 
@@ -30,6 +31,7 @@ app.config.from_object(Config)
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(cardio_exercise_routes, url_prefix="/api/cardio-exercises")
+app.register_blueprint(weight_exercise_routes, url_prefix="/api/weight-exercises")
 db.init_app(app)
 Migrate(app, db)
 
