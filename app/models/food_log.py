@@ -11,7 +11,10 @@ class FoodLog(db.Model):
     servings = db.Column(db.Integer, nullable=False)
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("foods.id")), nullable=True)
     date = db.Column(db.Date, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
 
+
+    user = db.relationship("User", back_populates="food_logs")
     food = db.relationship("Food", back_populates='food_logs')
 
     def to_dict(self):

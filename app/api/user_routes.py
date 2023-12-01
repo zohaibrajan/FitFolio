@@ -1,6 +1,6 @@
 from flask import Blueprint, abort
 from flask_login import login_required, current_user
-from app.models import User, Day, CardioLog
+from app.models import User, CardioLog
 
 user_routes = Blueprint('users', __name__)
 
@@ -25,30 +25,11 @@ def user(id):
     return user.to_dict()
 
 
-@user_routes.route('/days')
+@user_routes.route('/cardio-logs')
 @login_required
-def users_days_logged():
-    """Get all days the user has logged"""
-    days_logged = Day.query.where(Day.user_id == current_user.id).all()
+def user_cardio_logs():
+    cardio_logs = CardioLog.query.where(CardioLog.user_id == current_user.id).order_by(CardioLog.date.desc()).all()
 
     return {
-        "daysLogged": [day.to_dict_date() for day in days_logged]
-    }
-
-@user_routes.route('/days/<int:dayId>/cardio-logs')
-@login_required
-def user_cardio_logs_by_day(dayId):
-    """Get all cardio logs for a user"""
-
-    day = Day.query.get(dayId)
-
-    if day.user_id != current_user.id:
-        return abort(403)
-
-    cardio_log = CardioLog.query.where(CardioLog.day_id == dayId)
-
-    print(cardio_log)
-
-    return {
-        "This Query": "Works?"
+        "allCardioLogs": [log.to_dict() for log in cardio_logs]
     }

@@ -1,5 +1,6 @@
 from app.models import db, CardioLog, environment, SCHEMA
 from sqlalchemy.sql import text
+from datetime import datetime
 import csv
 
 
@@ -12,7 +13,8 @@ def seed_cardio_logs():
                         duration = int(row[0]),
                         exercise_id = int(row[1]),
                         calories_burned = int(row[2]),
-                        day_id = int(row[3]),
+                        date = datetime.strptime(row[3], "%Y-%m-%d").date(),
+                        user_id = int(row[4])
                   )
                   db.session.add(cardio_log)
                   db.session.commit()

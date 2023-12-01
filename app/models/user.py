@@ -18,6 +18,10 @@ class User(db.Model, UserMixin):
     foods = db.relationship("Food", back_populates="created_by", cascade="all, delete-orphan")
     cardio_exercises = db.relationship("CardioExercise", back_populates="created_by", cascade="all, delete-orphan")
     weight_exercises = db.relationship("WeightExercise", back_populates="created_by", cascade="all, delete-orphan")
+    weight_logs = db.relationship("WeightLog", back_populates="user", cascade="all, delete-orphan")
+    cardio_logs = db.relationship("CardioLog", back_populates="user", cascade="all, delete-orphan")
+    food_logs = db.relationship("FoodLog", back_populates="user", cascade="all, delete-orphan")
+
 
     @property
     def password(self):

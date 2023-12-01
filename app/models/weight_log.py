@@ -13,7 +13,10 @@ class WeightLog(db.Model):
     weight_per_rep = db.Column(db.Integer, nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("weight_exercises.id")), nullable=True)
     date = db.Column(db.Date, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
 
+
+    user = db.relationship("User", back_populates="weight_logs")
     exercise = db.relationship("WeightExercise", back_populates='weight_logs')
 
 
