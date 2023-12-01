@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
-from flask_login import login_required
-from app.models import User, Day
+from flask_login import login_required, current_user
+from app.models import User, Day, CardioLog
 
 user_routes = Blueprint('users', __name__)
 
@@ -25,12 +25,19 @@ def user(id):
     return user.to_dict()
 
 
-@user_routes.route('/<int:id>/days')
+@user_routes.route('/days')
 @login_required
-def users_days_logged(id):
+def users_days_logged():
     """Get all days the user has logged"""
-    days_logged = Day.query.where(Day.user_id == id).all()
+    days_logged = Day.query.where(Day.user_id == current_user.id).all()
 
     return {
         "daysLogged": [day.to_dict_date() for day in days_logged]
     }
+
+# @user_routes.route('/days/cardio-logs')
+# @login_required
+# def user_cardio_logs_by_day():
+#     """Get all cardio logs for a user"""
+
+#     day_logged = Day.query.where(Day.user_id == current_user.id).all()

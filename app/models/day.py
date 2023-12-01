@@ -29,5 +29,6 @@ class Day(db.Model):
     def to_dict_date(self):
         return {
             "id": self.id,
-            "logDate": self.date
+            "logDate": self.date,
+            "cardioLog": self.cardio_log
         }
