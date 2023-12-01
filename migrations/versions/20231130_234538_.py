@@ -109,6 +109,7 @@ def upgrade():
     op.create_table('food_logs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('servings', sa.Integer(), nullable=False),
+    sa.Column('calories_consumed', sa.Integer(), nullable=False),
     sa.Column('food_id', sa.Integer(), nullable=True),
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),

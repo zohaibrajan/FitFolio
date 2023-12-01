@@ -9,6 +9,7 @@ class FoodLog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     servings = db.Column(db.Integer, nullable=False)
+    calories_consumed = db.Column(db.Integer, nullable=False)
     food_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("foods.id")), nullable=True)
     date = db.Column(db.Date, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
