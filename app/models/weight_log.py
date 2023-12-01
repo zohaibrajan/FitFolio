@@ -12,16 +12,15 @@ class WeightLog(db.Model):
     repetitions = db.Column(db.Integer, nullable=False)
     weight_per_rep = db.Column(db.Integer, nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("weight_exercises.id")), nullable=True)
-    day_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("days.id")), nullable=True)
+    date = db.Column(db.Date, nullable=False)
 
-    day = db.relationship("Day", back_populates='weight_log')
     exercise = db.relationship("WeightExercise", back_populates='weight_logs')
 
 
     def to_dict(self):
         return {
             "id": self.id,
-            "dayId": self.day_id,
+            "date": self.date,
             "weightExercise": self.exercise.to_dict(),
             "sets": self.sets,
             "repetitions": self.repetitions,

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, abort
 from flask_login import login_required, current_user
 from app.models import User, Day, CardioLog
 
@@ -35,9 +35,20 @@ def users_days_logged():
         "daysLogged": [day.to_dict_date() for day in days_logged]
     }
 
-# @user_routes.route('/days/cardio-logs')
-# @login_required
-# def user_cardio_logs_by_day():
-#     """Get all cardio logs for a user"""
+@user_routes.route('/days/<int:dayId>/cardio-logs')
+@login_required
+def user_cardio_logs_by_day(dayId):
+    """Get all cardio logs for a user"""
 
-#     day_logged = Day.query.where(Day.user_id == current_user.id).all()
+    day = Day.query.get(dayId)
+
+    if day.user_id != current_user.id:
+        return abort(403)
+
+    cardio_log = CardioLog.query.where(CardioLog.day_id == dayId)
+
+    print(cardio_log)
+
+    return {
+        "This Query": "Works?"
+    }

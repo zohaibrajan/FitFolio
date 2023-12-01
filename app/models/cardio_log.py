@@ -11,16 +11,14 @@ class CardioLog(db.Model):
     duration = db.Column(db.Integer, nullable=False)
     calories_burned = db.Column(db.Integer, nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("cardio_exercises.id")), nullable=True)
-    day_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("days.id")), nullable=True)
+    date = db.Column(db.Date, nullable=False)
 
-
-    day = db.relationship("Day", back_populates='cardio_log')
     exercise = db.relationship("CardioExercise", back_populates='cardio_logs')
 
     def to_dict(self):
         return {
             "id": self.id,
-            "dayInfo": self.day.to_dict_date(),
+            "date": self.date,
             "cardioExercise": self.exercise.to_dict(),
             "duration": self.duration,
             "caloriesBurned": self.calories_burned
