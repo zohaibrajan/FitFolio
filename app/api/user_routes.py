@@ -1,6 +1,8 @@
-from flask import Blueprint, abort
+from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog
+from app.models import User, CardioLog, CardioExercise, db
+from app.forms import CardioLogForm
+from datetime import datetime
 
 user_routes = Blueprint('users', __name__)
 
@@ -28,8 +30,54 @@ def user(id):
 @user_routes.route('/cardio-logs')
 @login_required
 def user_cardio_logs():
+    """"Get all the cardio logs for a user"""
     cardio_logs = CardioLog.query.where(CardioLog.user_id == current_user.id).order_by(CardioLog.date.desc()).all()
 
     return {
         "allCardioLogs": [log.to_dict() for log in cardio_logs]
     }
+
+
+
+@user_routes.route('/cardio-logs/<int:cardioLogId>')
+@login_required
+def get_a_cardio_log(cardioLogId):
+    pass
+
+
+
+@user_routes.route('/cardio-logs', methods=["POST"])
+@login_required
+def create_user_cardio_log():
+    form = CardioLogForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        data = form.data
+        exercise_from_form = data['exercise_name']
+
+        exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
+
+        if not exercise:
+            return {
+                "errorMessage": "Sorry, Exercise Does Not Exist"
+            }, 404
+
+        if not data['calories_burned']:
+            data['calories_burned'] = int(data['duration']) * exercise.calories_per_minute
+
+        new_cardio_log = CardioLog(
+            duration = data['duration'],
+            calories_burned = data['calories_burned'],
+            exercise_id = int(exercise.id),
+            date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
+            user_id = int(current_user.id)
+        )
+
+        db.session.add(new_cardio_log)
+        db.session.commit()
+
+        return new_cardio_log.to_dict(), 201
+
+    if form.errors:
+        return form.errors
