@@ -470,10 +470,15 @@ def deleting_a_food_log(foodLogId):
 @login_required
 def user_goal():
     """"Get the users goal"""
-    goal = Goal.query.where(Goal.user_id == current_user.id)
+    goal = Goal.query.where(Goal.user_id == current_user.id).first()
+
+    if not goal:
+        return {
+            "message": "You have not goal"
+        }, 404
 
     return {
-        "allFoodLogs": goal.to_dict()
+        "goal": goal.to_dict()
     }
 
 
@@ -481,6 +486,13 @@ def user_goal():
 @login_required
 def creating_user_goal():
     """Creating a goal"""
+    goal = Goal.query.where(Goal.user_id == current_user.id).first()
+
+    if goal:
+        return {
+            "message": "You already have a goal."
+        }, 403
+
     user = User.query.get(current_user.id)
     user_info = user.to_dict_with_info()
 
@@ -489,33 +501,64 @@ def creating_user_goal():
 
     if form.validate_on_submit():
         data = form.data
+        goal = data["goal"]
+        lbs_per_week = data["lbs_per_week"]
         starting_weight_kg = data["starting_weight"] * 0.453592
         age = calculate_age(user_info["dateOfBirth"])
         height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
         gender = user_info["gender"]
+        maintenance_calories = None
         calories_per_day = None
 
-        print('---------', starting_weight_kg, '-', age, '-', height, '-', gender)
         if gender == "Female":
-            calories_per_day = calculate_bmr_for_women(starting_weight_kg, height, age)
+            maintenance_calories = calculate_bmr_for_women(starting_weight_kg, height, age)
 
         if gender == "Male":
-            calories_per_day = calculate_bmr_for_men(starting_weight_kg, height, age)
+            maintenance_calories = calculate_bmr_for_men(starting_weight_kg, height, age)
 
-        print('-- calories per day', calories_per_day)
+        if goal == "Maintain Weight":
+            calories_per_day = maintenance_calories
+        if goal == "Lose Weight":
+            calorie_deficit = (lbs_per_week * 3500) / 7
+            calories_per_day = maintenance_calories - calorie_deficit
+        if goal == "Gain Weight":
+            calorie_surplus = (lbs_per_week * 3500) / 7
+            calories_per_day = maintenance_calories + calorie_surplus
+
 
         new_goal = Goal(
             user_id = current_user.id,
-            goal = data["goal"],
+            goal = goal,
             starting_weight = user_info["currentWeight"],
             target_weight = data["target_weight"],
-            lbs_per_week = data["lbs_per_week"],
+            lbs_per_week = lbs_per_week,
             calories_per_day = calories_per_day
         )
 
-        return "TODO"
+        db.session.add(new_goal)
+        db.session.commit()
+
+        return new_goal.to_dict()
 
 
 
     if form.errors:
         return form.errors
+
+
+@user_routes.route('/goal', methods=["DELETE"])
+@login_required
+def deleting_users_goal():
+    goal = Goal.query.where(Goal.user_id == current_user.id).first()
+
+    if not goal:
+        return {
+            "message": "Goal could not be found"
+        }, 404
+
+    db.session.delete(goal)
+    db.session.commit()
+
+    return {
+        "message": "Goal deleted successfully"
+    }
