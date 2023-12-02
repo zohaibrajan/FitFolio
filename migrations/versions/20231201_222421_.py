@@ -73,8 +73,7 @@ def upgrade():
     sa.Column('goal', sa.String(length=25), nullable=False),
     sa.Column('starting_weight', sa.Integer(), nullable=False),
     sa.Column('target_weight', sa.Integer(), nullable=False),
-    sa.Column('lbs_per_week', sa.Integer(), nullable=False),
-    sa.Column('lbs_lost', sa.Integer(), nullable=False),
+    sa.Column('lbs_per_week', sa.Float(), nullable=True),
     sa.Column('calories_per_day', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')

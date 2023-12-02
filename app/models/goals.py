@@ -12,9 +12,8 @@ class Goal(db.Model):
     goal = db.Column(db.String(25), nullable=False)
     starting_weight = db.Column(db.Integer, nullable=False)
     target_weight = db.Column(db.Integer, nullable=False)
-    lbs_per_week = db.Column(db.Integer, nullable=False)
+    lbs_per_week = db.Column(db.Float, nullable=True)
     calories_per_day = db.Column(db.Integer, nullable=False)
-    lbs_lost = db.Column(db.Integer, nullable=False)
 
 
     user = db.relationship("User", back_populates="goal")

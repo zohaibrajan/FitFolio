@@ -49,6 +49,7 @@ class User(db.Model, UserMixin):
     def to_dict_with_info(self):
         return {
             'username': self.username,
+            "dateOfBirth": self.dob,
             "gender": self.gender,
             "heightFt": self.height_ft,
             "heightIn": self.height_in,

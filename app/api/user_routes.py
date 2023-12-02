@@ -5,13 +5,21 @@ from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 
 user_routes = Blueprint('users', __name__)
+def calculate_bmr_for_women(weight_kg, height_cm, age_years):
+    bmr = 655 + (9.6 * weight_kg) + (1.8 * height_cm) - (4.7 * age_years)
+    return int(bmr)
+
+def calculate_bmr_for_men(weight_kg, height_cm, age_years):
+    bmr = 66 + (13.7 * weight_kg) + (5 * height_cm) - (6.8 * age_years)
+    return int(bmr)
+
 
 def calculate_age(date_of_birth):
     # Assuming date_of_birth is a string in the format "YYYY-MM-DD"
-    birth_date = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
+    print('-line11-', date_of_birth)
 
     today = datetime.now().date()
-    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
 
     return age
 
@@ -471,22 +479,41 @@ def user_goal():
 
 @user_routes.route('/goal', methods=["POST"])
 @login_required
-def user_goal():
+def creating_user_goal():
+    """Creating a goal"""
     user = User.query.get(current_user.id)
-    users_info = user.to_dict_with_info()
+    user_info = user.to_dict_with_info()
 
     form = GoalForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
         data = form.data
-        starting_weight_kg = data["starting_weight"] * 0.46
-        age = calculate_age(data["dob"])
-        height = convert_height_to_cm(data["height_ft"], data["height_in"])
+        starting_weight_kg = data["starting_weight"] * 0.453592
+        age = calculate_age(user_info["dateOfBirth"])
+        height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
+        gender = user_info["gender"]
+        calories_per_day = None
+
+        print('---------', starting_weight_kg, '-', age, '-', height, '-', gender)
+        if gender == "Female":
+            calories_per_day = calculate_bmr_for_women(starting_weight_kg, height, age)
+
+        if gender == "Male":
+            calories_per_day = calculate_bmr_for_men(starting_weight_kg, height, age)
+
+        print('-- calories per day', calories_per_day)
+
+        new_goal = Goal(
+            user_id = current_user.id,
+            goal = data["goal"],
+            starting_weight = user_info["currentWeight"],
+            target_weight = data["target_weight"],
+            lbs_per_week = data["lbs_per_week"],
+            calories_per_day = calories_per_day
+        )
 
         return "TODO"
-
-
-
 
 
 

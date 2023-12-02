@@ -67,11 +67,12 @@ def sign_up():
             email=form.data['email'],
             password=form.data['password'],
             gender = form.data["gender"],
+            dob = form.data["dob"],
             height_ft = form.data["height_ft"],
             height_in = form.data["height_in"],
             current_weight_lbs = form.data["current_weight_lbs"]
         )
-        
+
         db.session.add(user)
         db.session.commit()
         login_user(user)
