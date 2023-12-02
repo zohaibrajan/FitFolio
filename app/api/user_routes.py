@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog
-from app.forms import CardioLogForm, WeightLogForm
+from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food
+from app.forms import CardioLogForm, WeightLogForm, FoodLogForm
 from datetime import datetime
 
 user_routes = Blueprint('users', __name__)
@@ -293,6 +293,149 @@ def deleting_a_weight_log(weightLogId):
         }, 403
 
     db.session.delete(weight_log)
+    db.session.commit()
+
+    return {
+        "message": "Success"
+    }, 200
+
+
+@user_routes.route('/food-logs')
+@login_required
+def user_food_logs():
+    """"Get all the food logs for a user"""
+    food_logs = FoodLog.query.where(FoodLog.user_id == current_user.id).order_by(FoodLog.date.desc()).all()
+
+    return {
+        "allFoodLogs": [log.to_dict() for log in food_logs]
+    }
+
+@user_routes.route('/food-logs/<int:foodLogId>')
+@login_required
+def get_a_food_log(foodLogId):
+    """Get a single food log for a user"""
+    food_log = FoodLog.query.get(foodLogId)
+
+    if not food_log:
+        return {
+            "errorMessage": "Sorry, food-log Does Not Exist"
+        }, 404
+
+    if food_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    return food_log.to_dict()
+
+
+@user_routes.route('/food-logs', methods=["POST"])
+@login_required
+def create_user_food_log():
+    form = FoodLogForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        data = form.data
+        food_from_form = data['name']
+        servings = int(data["servings"])
+
+        food = Food.query.where(Food.name.ilike(f"{food_from_form}")).first()
+
+        if not food:
+            return {
+                "errorMessage": "Sorry, food Does Not Exist"
+            }, 404
+
+        calories_consumed = servings * food.calories
+        protein_consumed = servings * food.protein
+
+
+        new_food_log = FoodLog(
+            servings = servings,
+            calories_consumed = calories_consumed,
+            protein_consumed = protein_consumed,
+            food_id = int(food.id),
+            date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
+            user_id = int(current_user.id)
+        )
+
+        db.session.add(new_food_log)
+        db.session.commit()
+
+        return new_food_log.to_dict(), 201
+
+    if form.errors:
+        return form.errors
+
+
+@user_routes.route('/food-logs/<int:foodLogId>', methods=["PUT"])
+@login_required
+def update_a_users_food_log(foodLogId):
+    """Updating a food log for a user"""
+    food_log = FoodLog.query.get(foodLogId)
+
+    if not food_log:
+        return {
+            "errorMessage": "Sorry, food-log Does Not Exist"
+        }, 404
+
+    if food_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    form = FoodLogForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+            data = form.data
+            food_from_form = data['name']
+            servings = int(data["servings"])
+
+            food = Food.query.where(Food.name.ilike(f"{food_from_form}")).first()
+
+            if not food:
+                return {
+                    "errorMessage": "Sorry, food Does Not Exist"
+                }, 404
+
+            calories_consumed = servings * food.calories
+            protein_consumed = servings * food.protein
+
+            updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
+
+            food_log.servings = servings
+            food_log.calories_consumed = calories_consumed
+            food_log.protein_consumed = protein_consumed
+            food_log.food_id = int(food.id)
+            food_log.date = updated_date
+            food_log.user_id = int(current_user.id)
+
+            db.session.commit()
+
+            return food_log.to_dict(), 201
+
+    if form.errors:
+        return form.errors
+
+
+@user_routes.route('/food-logs/<int:foodLogId>', methods=["DELETE"])
+@login_required
+def deleting_a_food_log(foodLogId):
+    food_log = FoodLog.query.get(foodLogId)
+
+    if not food_log:
+        return {
+        "errorMessage": "Sorry, food-log Does Not Exist"
+        }, 404
+
+    if food_log.user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    db.session.delete(food_log)
     db.session.commit()
 
     return {

@@ -30,6 +30,7 @@ class Food(db.Model):
         return {
             "id": self.id,
             "name": self.name,
+            "restaurant": self.restaurant,
             "calories": self.calories,
             "protein": self.protein
         }
