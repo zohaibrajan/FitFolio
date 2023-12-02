@@ -13,6 +13,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
+    dob = db.Column(db.Date, nullable=False)
+    gender = db.Column(db.String, nullable=False)
+    height_ft = db.Column(db.Integer, nullable=False)
+    height_in = db.Column(db.Integer, nullable=False)
+    current_weight_lbs = db.Column(db.Integer, nullable=False)
 
     goal = db.relationship("Goal", back_populates="user", cascade="all, delete-orphan")
     foods = db.relationship("Food", back_populates="created_by", cascade="all, delete-orphan")
@@ -39,4 +44,13 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email
+        }
+
+    def to_dict_with_info(self):
+        return {
+            'username': self.username,
+            "gender": self.gender,
+            "heightFt": self.height_ft,
+            "heightIn": self.height_in,
+            "currentWeight": self.current_weight_lbs
         }

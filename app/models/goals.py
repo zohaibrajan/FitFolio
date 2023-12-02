@@ -10,10 +10,12 @@ class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
     goal = db.Column(db.String(25), nullable=False)
-    current_weight = db.Column(db.Integer)
     starting_weight = db.Column(db.Integer, nullable=False)
     target_weight = db.Column(db.Integer, nullable=False)
     lbs_per_week = db.Column(db.Integer, nullable=False)
+    calories_per_day = db.Column(db.Integer, nullable=False)
+    lbs_lost = db.Column(db.Integer, nullable=False)
+
 
     user = db.relationship("User", back_populates="goal")
 
@@ -23,8 +25,8 @@ class Goal(db.Model):
             "id": self.id,
             "userId": self.user_id,
             "goal": self.goal,
-            "currentWeight": self.current_weight,
             "startingWeight": self.starting_weight,
             "targetWeight": self.target_weight,
-            "lbsPerWeek": self.lbs_per_week
+            "lbsPerWeek": self.lbs_per_week,
+            "caloriesPerDay": self.calories_per_day
         }

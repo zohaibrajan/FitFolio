@@ -1,11 +1,26 @@
 from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food
-from app.forms import CardioLogForm, WeightLogForm, FoodLogForm
+from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal
+from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 
 user_routes = Blueprint('users', __name__)
 
+def calculate_age(date_of_birth):
+    # Assuming date_of_birth is a string in the format "YYYY-MM-DD"
+    birth_date = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
+
+    today = datetime.now().date()
+    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+
+    return age
+
+def convert_height_to_cm(feet, inches):
+    # Convert feet and inches to centimeters
+    total_inches = feet * 12 + inches
+    height_in_cm = total_inches * 2.54
+
+    return height_in_cm
 
 @user_routes.route('/')
 @login_required
@@ -441,3 +456,39 @@ def deleting_a_food_log(foodLogId):
     return {
         "message": "Success"
     }, 200
+
+
+@user_routes.route('/goal')
+@login_required
+def user_goal():
+    """"Get the users goal"""
+    goal = Goal.query.where(Goal.user_id == current_user.id)
+
+    return {
+        "allFoodLogs": goal.to_dict()
+    }
+
+
+@user_routes.route('/goal', methods=["POST"])
+@login_required
+def user_goal():
+    user = User.query.get(current_user.id)
+    users_info = user.to_dict_with_info()
+
+    form = GoalForm()
+
+    if form.validate_on_submit():
+        data = form.data
+        starting_weight_kg = data["starting_weight"] * 0.46
+        age = calculate_age(data["dob"])
+        height = convert_height_to_cm(data["height_ft"], data["height_in"])
+
+        return "TODO"
+
+
+
+
+
+
+    if form.errors:
+        return form.errors

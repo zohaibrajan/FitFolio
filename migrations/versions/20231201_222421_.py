@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 430c163ad08b
+Revision ID: 8322d87a07d0
 Revises:
-Create Date: 2023-11-30 23:45:38.111407
+Create Date: 2023-12-01 22:24:21.527686
 
 """
 from alembic import op
@@ -13,9 +13,8 @@ environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
 
 
-
 # revision identifiers, used by Alembic.
-revision = '430c163ad08b'
+revision = '8322d87a07d0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +27,11 @@ def upgrade():
     sa.Column('username', sa.String(length=40), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('hashed_password', sa.String(length=255), nullable=False),
+    sa.Column('gender', sa.String(), nullable=False),
+    sa.Column('dob', sa.Date(), nullable=False),
+    sa.Column('height_ft', sa.Integer(), nullable=False),
+    sa.Column('height_in', sa.Integer(), nullable=False),
+    sa.Column('current_weight_lbs', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
@@ -49,7 +53,6 @@ def upgrade():
     if environment == "production":
         op.execute(f"ALTER TABLE cardio_exercises SET SCHEMA {SCHEMA};")
 
-
     op.create_table('foods',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
@@ -68,17 +71,17 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('goal', sa.String(length=25), nullable=False),
-    sa.Column('current_weight', sa.Integer(), nullable=True),
     sa.Column('starting_weight', sa.Integer(), nullable=False),
     sa.Column('target_weight', sa.Integer(), nullable=False),
     sa.Column('lbs_per_week', sa.Integer(), nullable=False),
+    sa.Column('lbs_lost', sa.Integer(), nullable=False),
+    sa.Column('calories_per_day', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
 
     if environment == "production":
         op.execute(f"ALTER TABLE goals SET SCHEMA {SCHEMA};")
-
 
     op.create_table('weight_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -137,7 +140,6 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
-
     # ### end Alembic commands ###
 
 
