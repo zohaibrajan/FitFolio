@@ -16,8 +16,6 @@ def calculate_bmr_for_men(weight_kg, height_cm, age_years):
 
 def calculate_age(date_of_birth):
     # Assuming date_of_birth is a string in the format "YYYY-MM-DD"
-    print('-line11-', date_of_birth)
-
     today = datetime.now().date()
     age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
 
@@ -474,7 +472,7 @@ def user_goal():
 
     if not goal:
         return {
-            "message": "You have not goal"
+            "message": "You have no goal"
         }, 404
 
     return {
@@ -526,10 +524,15 @@ def creating_user_goal():
             calories_per_day = maintenance_calories + calorie_surplus
 
 
+
+        starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
+        user.current_weight_lbs = starting_weight
+
+
         new_goal = Goal(
             user_id = current_user.id,
             goal = goal,
-            starting_weight = user_info["currentWeight"],
+            starting_weight = starting_weight,
             target_weight = data["target_weight"],
             lbs_per_week = lbs_per_week,
             calories_per_day = calories_per_day
@@ -539,6 +542,67 @@ def creating_user_goal():
         db.session.commit()
 
         return new_goal.to_dict()
+
+
+
+    if form.errors:
+        return form.errors
+
+@user_routes.route('/goal', methods=["PUT"])
+@login_required
+def updating_user_goal():
+    """Updating a goal"""
+    current_goal = Goal.query.where(Goal.user_id == current_user.id).first()
+
+    if not current_goal:
+        return {
+            "message": "Goal Does Not Exist."
+        }, 404
+
+    user = User.query.get(current_user.id)
+    user_info = user.to_dict_with_info()
+
+    form = GoalForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        data = form.data
+        goal = data["goal"]
+        lbs_per_week = data["lbs_per_week"]
+        starting_weight_kg = data["starting_weight"] * 0.453592
+        age = calculate_age(user_info["dateOfBirth"])
+        height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
+        gender = user_info["gender"]
+        maintenance_calories = None
+        calories_per_day = None
+
+        if gender == "Female":
+            maintenance_calories = calculate_bmr_for_women(starting_weight_kg, height, age)
+
+        if gender == "Male":
+            maintenance_calories = calculate_bmr_for_men(starting_weight_kg, height, age)
+
+        if goal == "Maintain Weight":
+            calories_per_day = maintenance_calories
+        if goal == "Lose Weight":
+            calorie_deficit = (lbs_per_week * 3500) / 7
+            calories_per_day = maintenance_calories - calorie_deficit
+        if goal == "Gain Weight":
+            calorie_surplus = (lbs_per_week * 3500) / 7
+            calories_per_day = maintenance_calories + calorie_surplus
+
+        starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
+        user.current_weight_lbs = starting_weight
+
+        current_goal.goal = goal
+        current_goal.starting_weight = starting_weight
+        current_goal.target_weight = data["target_weight"]
+        current_goal.lbs_per_week = lbs_per_week
+        current_goal.calories_per_day = calories_per_day
+
+        db.session.commit()
+
+        return current_goal.to_dict()
 
 
 
