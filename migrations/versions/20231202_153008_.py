@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8322d87a07d0
+Revision ID: 999dc4112d1e
 Revises:
-Create Date: 2023-12-01 22:24:21.527686
+Create Date: 2023-12-02 15:30:08.903319
 
 """
 from alembic import op
@@ -12,9 +12,8 @@ import os
 environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
 
-
 # revision identifiers, used by Alembic.
-revision = '8322d87a07d0'
+revision = '999dc4112d1e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,8 +26,8 @@ def upgrade():
     sa.Column('username', sa.String(length=40), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('hashed_password', sa.String(length=255), nullable=False),
-    sa.Column('gender', sa.String(), nullable=False),
     sa.Column('dob', sa.Date(), nullable=False),
+    sa.Column('gender', sa.String(), nullable=False),
     sa.Column('height_ft', sa.Integer(), nullable=False),
     sa.Column('height_in', sa.Integer(), nullable=False),
     sa.Column('current_weight_lbs', sa.Integer(), nullable=False),
@@ -139,6 +138,7 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
+
     # ### end Alembic commands ###
 
 
