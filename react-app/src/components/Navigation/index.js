@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/session";
@@ -65,7 +65,11 @@ function Navigation({ isLoaded }) {
             style={{ fontSize: "0px", opacity: "0.4" }}
           />
           <span>Follow Us:</span>
-          <a target="_blank" href="https://github.com/zohaibrajan">
+          <a
+            target="_blank"
+            href="https://github.com/zohaibrajan"
+            rel="noreferrer"
+          >
             <i
               className="fa-brands fa-square-github"
               style={{ color: "#000000", fontSize: "18px", cursor: "pointer" }}
@@ -74,6 +78,7 @@ function Navigation({ isLoaded }) {
           <a
             target="_blank"
             href="https://www.linkedin.com/in/zohaib-rajan-718198216/"
+            rel="noreferrer"
           >
             <i
               class="fa-brands fa-linkedin"
