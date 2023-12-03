@@ -19,7 +19,8 @@
 #project-title {
   color: rgb(0, 102, 238);
   font-size: 30px;
-  font-family: "Inter", Helvetica, Arial, sans-serif
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 600;
 }
 
 #nav-link-to-home {
@@ -28,5 +29,7 @@
 
 .nav-login-signup {
   display: flex;
-  gap: 10px
+  gap: 10px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 400;
 }

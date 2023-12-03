@@ -19,11 +19,11 @@ function Navigation({ isLoaded }){
 			{isLoaded && (
 				<div className='nav-login-signup'>
 					<li>
-						<button>Login</button>
+						<NavLink to="/login">Login</NavLink>
 					</li>
-					<hr aria-orientation='vertical' style={{fontSize: "0px"}}/>
+					<hr aria-orientation='vertical' style={{fontSize: "0px", opacity: "0.4"}}/>
 					<li>
-						<button>Sign Up</button>
+						<NavLink to="/signup">Sign Up</NavLink>
 					</li>
 				</div>
 			)}
