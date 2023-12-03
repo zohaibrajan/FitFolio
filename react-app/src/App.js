@@ -7,7 +7,8 @@ import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import LandingPage from "./components/LandingPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import Home from "./components/HomePage";
+import HomeNavBar from "./components/HomeNavBar";
+import Diary from "./components/Diary";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,8 +25,9 @@ function App() {
           <Route exact path="/">
             <LandingPage />
           </Route>
-          <ProtectedRoute path="/home">
-            <Home />
+          <ProtectedRoute path="/my-home/diary">
+            <HomeNavBar />
+            <Diary />
           </ProtectedRoute>
           <Route path="/login" >
             <LoginFormPage />
