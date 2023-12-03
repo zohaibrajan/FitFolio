@@ -5,3 +5,28 @@
 .hidden {
   display: none;
 }
+
+.nav-bar-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  width: 70%;
+  list-style: none;
+  height: 50px
+}
+
+#project-title {
+  color: rgb(0, 102, 238);
+  font-size: 30px;
+  font-family: "Inter", Helvetica, Arial, sans-serif
+}
+
+#nav-link-to-home {
+  text-decoration: none;
+}
+
+.nav-login-signup {
+  display: flex;
+  gap: 10px
+}
