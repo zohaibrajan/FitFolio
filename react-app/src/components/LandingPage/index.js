@@ -28,7 +28,7 @@ function LandingPage() {
               calorie tracker
             </span>
             <button onClick={onClick} id="get-started-button">
-              START TODAY <i class="fa-solid fa-angle-right"></i>
+              START TODAY <i className="fa-solid fa-angle-right"></i>
             </button>
           </div>
         </div>
