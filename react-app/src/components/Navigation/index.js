@@ -9,7 +9,6 @@ function Navigation({ isLoaded }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const sessionUser = useSelector((state) => state.session.user);
-  console.log(sessionUser);
 
   const logoutUser = async (e) => {
     e.preventDefault();
@@ -22,7 +21,7 @@ function Navigation({ isLoaded }) {
     <ul className="nav-bar-list">
       {sessionUser ? (
         <li>
-          <NavLink id="nav-link-to-home" exact to="/home">
+          <NavLink id="nav-link-to-home" exact to="/my-home/diary">
             <p id="project-title">fitfolio</p>
           </NavLink>
         </li>
@@ -81,7 +80,7 @@ function Navigation({ isLoaded }) {
             rel="noreferrer"
           >
             <i
-              class="fa-brands fa-linkedin"
+              className="fa-brands fa-linkedin"
               style={{ color: "#0077b5", fontSize: "18px", cursor: "pointer" }}
             ></i>
           </a>

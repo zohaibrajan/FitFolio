@@ -9,6 +9,7 @@ import LandingPage from "./components/LandingPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import HomeNavBar from "./components/HomeNavBar";
 import Diary from "./components/Diary";
+import Goal from "./components/Goal";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,9 +26,13 @@ function App() {
           <Route exact path="/">
             <LandingPage />
           </Route>
-          <ProtectedRoute path="/my-home/diary">
-            <HomeNavBar />
+          <ProtectedRoute exact path="/my-home/diary">
+            <HomeNavBar path={"home"}/>
             <Diary />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/my-home/goal">
+            <HomeNavBar path={"goal"}/>
+            <Goal />
           </ProtectedRoute>
           <Route path="/login" >
             <LoginFormPage />

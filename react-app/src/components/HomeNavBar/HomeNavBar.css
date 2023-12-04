@@ -16,6 +16,10 @@
     cursor: pointer;
 }
 
-.my-home:active {
+
+.my-goal-active, .my-home-active {
+    cursor: pointer;
     font-weight: 600;
+    font-size: 16px;
+    text-decoration: underline;
 }
