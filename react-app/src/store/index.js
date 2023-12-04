@@ -3,11 +3,15 @@ import thunk from 'redux-thunk';
 import session from './session'
 import cardioExerciseReducer from './cardioExercises';
 import weightExerciseReducer from './weightExercises';
+import foodsReducer from './foods';
+import cardioLogReducer from './cardioLogs';
 
 const rootReducer = combineReducers({
   session,
   cardioExercises: cardioExerciseReducer,
-  weightExercises: weightExerciseReducer
+  weightExercises: weightExerciseReducer,
+  foods: foodsReducer,
+  cardioLogs: cardioLogReducer
 });
 
 

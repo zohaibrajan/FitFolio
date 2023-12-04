@@ -1,63 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
-import { getAllWeightExercisesThunk } from "../../store/weightExercises";
+import React, { useEffect } from "react";
+import OpenModalButton from "../OpenModalButton";
+import CardioLogModal from "../CardioLogModel";
+import WeightLogModal from "../WeightLogModal";
+import FoodLogModal from "../FoodLogModal";
+import { getAllCardioLogsThunk } from "../../store/cardioLogs";
+import { useDispatch } from "react-redux";
+
 
 
 function Diary() {
-  const dispatch = useDispatch();
-  const cardioExercisesObj = useSelector((state) => state.cardioExercises);
-  const weightExerciseObj = useSelector((state) => state.weightExercises);
-  const weightExercises = Object.values(weightExerciseObj);
-  const cardioExercises = Object.values(cardioExercisesObj);
-  const [cardioExercise, setCardioExercise] = useState("");
-  const [weightExercise, setWeightExercise] = useState("");
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getAllCardioExercisesThunk());
-    dispatch(getAllWeightExercisesThunk())
-  }, [dispatch]);
+    dispatch(getAllCardioLogsThunk())
+  }, [dispatch])
+
 
   return (
     <>
-      <div className="create-logs-div">
-        <label className="cardio-log-creation">
-          Cardio Exercises
-          <select
-            type="text"
-            value={cardioExercise}
-            onChange={(e) => setCardioExercise(e.target.value)}
-            placeholder="Cardio Exercises"
-          >
-            {cardioExercises.map((exercise) => (
-              <option
-                key={exercise.id}
-                value={`${exercise.exerciseName}, ${exercise.id}`}
-              >
-                {exercise.exerciseName}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="weight-log-creation">
-          Weight Exercises
-          <select
-            type="text"
-            value={weightExercise}
-            onChange={(e) => setWeightExercise(e.target.value)}
-            placeholder="Weight Exercises"
-          >
-            {weightExercises.map((exercise) => (
-              <option
-                key={exercise.id}
-                value={`${exercise.exerciseName}, ${exercise.id}`}
-              >
-                {exercise.exerciseName}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+      <OpenModalButton
+        modalComponent={<CardioLogModal />}
+        buttonText={"Add Cardio Exercise"}
+      />
+      <OpenModalButton
+        modalComponent={<WeightLogModal />}
+        buttonText={"Add Weight Exercise"}
+      />
+      <OpenModalButton
+        modalComponent={<FoodLogModal />}
+        buttonText={"Add Food"}
+      />
     </>
   );
 }
