@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { useModal } from "../../context/Modal";
-import { createCardioLogThunk } from "../../store/cardioLogs";
-import { updateCardioLogThunk, deleteACardioLog } from "../../store/cardioLogs";
+import {
+  createCardioLogThunk,
+  updateCardioLogThunk,
+  deleteACardioLog,
+} from "../../store/cardioLogs";
 import "./CardioLog.css";
 
 function CardioLogModal({ formType = "create", log = {} }) {
@@ -25,6 +28,7 @@ function CardioLogModal({ formType = "create", log = {} }) {
   const [date, setDate] = useState(
     formType === "update" ? log.date : formattedDate
   );
+
 
   useEffect(() => {
     dispatch(getAllCardioExercisesThunk());
@@ -74,7 +78,7 @@ function CardioLogModal({ formType = "create", log = {} }) {
           method: "PUT",
           body: formData,
         });
-        dispatch(deleteACardioLog(log.id))
+        dispatch(deleteACardioLog(log.id));
         closeModal();
       } else {
         try {

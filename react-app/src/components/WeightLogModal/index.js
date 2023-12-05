@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
-import { createWeightLogThunk } from "../../store/weightLogs";
+import { createWeightLogThunk, updateWeightLogThunk, deleteAWeightLog } from "../../store/weightLogs";
 import "./WeightLog.css";
 
-function WeightLogModal() {
+
+function WeightLogModal({ formType = "create", log = {} }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const today = new Date();
@@ -14,11 +15,17 @@ function WeightLogModal() {
   const formattedDate = today.toISOString().slice(0, 10);
   const weightExerciseObj = useSelector((state) => state.weightExercises);
   const weightExercises = Object.values(weightExerciseObj);
-  const [date, setDate] = useState(formattedDate);
-  const [exerciseId, setExerciseId] = useState(1);
-  const [sets, setSets] = useState(0);
-  const [reps, setReps] = useState(0);
-  const [weightPerRep, setWeightPerRep] = useState(0);
+  const [date, setDate] = useState(
+    formType === "update" ? log.date : formattedDate
+  );
+  const [exerciseId, setExerciseId] = useState(
+    formType === "update" ? log.weightExercise.id : 1
+  );
+  const [sets, setSets] = useState(formType === "update" ? log.sets : 0);
+  const [reps, setReps] = useState(formType === "update" ? log.repetitions : 0);
+  const [weightPerRep, setWeightPerRep] = useState(
+    formType === "update" ? log.weightPerRep : 0
+  );
 
   useEffect(() => {
     dispatch(getAllWeightExercisesThunk());
@@ -37,20 +44,39 @@ function WeightLogModal() {
     formData.append("weight_per_rep", weightPerRep);
     formData.append("date", correctFormatForDate);
 
-    if (correctFormatForDate !== formattedDate) {
-      await fetch("/api/users/weight-logs", {
-        method: "POST",
-        body: formData,
-      });
-      closeModal()
-    } else {
-      try {
-        await dispatch(createWeightLogThunk(formData));
-        history.replace("/my-home/diary");
+    if (formType === "create") {
+      if (correctFormatForDate !== formattedDate) {
+        await fetch("/api/users/weight-logs", {
+          method: "POST",
+          body: formData,
+        });
         closeModal();
-      } catch (e) {
-        const errors = await e.json();
-        console.error(errors);
+      } else {
+        try {
+          await dispatch(createWeightLogThunk(formData));
+          history.replace("/my-home/diary");
+          closeModal();
+        } catch (e) {
+          const errors = await e.json();
+          console.error(errors);
+        }
+      }
+    } else {
+      if (correctFormatForDate !== formattedDate) {
+        await fetch(`/api/users/weight-logs/${log.id}`, {
+          method: "PUT",
+          body: formData,
+        });
+        dispatch(deleteAWeightLog(log.id))
+        closeModal()
+      } else {
+        try {
+          await dispatch(updateWeightLogThunk(log.id, formData));
+          closeModal()
+        } catch (e) {
+          const errors = await e.json()
+          console.error(errors)
+        }
       }
     }
   };
@@ -111,8 +137,8 @@ function WeightLogModal() {
           Date:
           <input
             type="date"
-            pattern="\d{4}-\d{2}-\d{2}"
             value={date}
+            pattern="\d{4}-\d{2}-\d{2}"
             max={formattedDate}
             onChange={(e) => setDate(e.target.value)}
           />

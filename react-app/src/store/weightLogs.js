@@ -1,6 +1,7 @@
 const CREATE_WEIGHT_LOG = "weight-logs/CREATE_WEIGHT_LOG";
 const ALL_WEIGHT_LOGS = "weight-logs/ALL_WEIGHT_LOGS";
 const DELETE_WEIGHT_LOG = "weight-logs/DELETE_WEIGHT_LOG";
+const UPDATE_WEIGHT_LOG = "weight-logs/UPDATE_WEIGHT_LOG";
 
 const getAllWeightLogs = (weightLogs) => ({
   type: ALL_WEIGHT_LOGS,
@@ -12,9 +13,14 @@ const createWeightLog = (weightLog) => ({
   weightLog,
 });
 
-const deleteAWeightLog = (weightLogId) => ({
+export const deleteAWeightLog = (weightLogId) => ({
   type: DELETE_WEIGHT_LOG,
   weightLogId,
+});
+
+const updateAWeightLog = (weightLog) => ({
+  type: UPDATE_WEIGHT_LOG,
+  weightLog,
 });
 
 export const getAllWeightLogsThunk = () => async (dispatch) => {
@@ -65,6 +71,20 @@ export const deleteWeightLogThunk = (weightLogId) => async (dispatch) => {
   }
 };
 
+export const updateWeightLogThunk =
+  (weightLogId, weightLog) => async (dispatch) => {
+    const res = await fetch(`/api/users/weight-logs/${weightLogId}`, {
+      method: "PUT",
+      body: weightLog,
+    });
+
+    if (res.ok) {
+      const updatedLog = await res.json();
+      dispatch(updateAWeightLog(updatedLog));
+      return updatedLog;
+    }
+  };
+
 const weightLogReducer = (state = {}, action) => {
   switch (action.type) {
     case ALL_WEIGHT_LOGS: {
@@ -80,9 +100,14 @@ const weightLogReducer = (state = {}, action) => {
         [action.weightLog.id]: action.weightLog,
       };
     case DELETE_WEIGHT_LOG: {
-      const newState = { ...state }
-      delete newState[action.weightLogId]
-      return newState
+      const newState = { ...state };
+      delete newState[action.weightLogId];
+      return newState;
+    }
+    case UPDATE_WEIGHT_LOG: {
+      const newState = { ...state };
+      newState[action.weightLog.id] = action.weightLog;
+      return newState;
     }
     default:
       return state;

@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllFoodsThunk } from "../../store/foods";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
-import { createFoodLogThunk } from "../../store/foodLogs";
+import { createFoodLogThunk, updateCardioLogThunk, deleteAFoodLog } from "../../store/foodLogs";
 import "./FoodLog.css";
 
-function FoodLogModal() {
+function FoodLogModal({ formType = "create", log = {} }) {
   const dispatch = useDispatch();
   const foodsObj = useSelector((state) => state.foods);
   const { closeModal } = useModal();
@@ -14,11 +14,19 @@ function FoodLogModal() {
   const history = useHistory();
   const formattedDate = today.toISOString().slice(0, 10);
   const foods = Object.values(foodsObj);
-  const [foodId, setFoodId] = useState(1);
-  const [servings, setServings] = useState(0);
-  const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  const [proteinConsumed, setProteinConsumed] = useState(0);
-  const [date, setDate] = useState(formattedDate);
+  const [foodId, setFoodId] = useState(formType === "update" ? log.food.id : 1);
+  const [servings, setServings] = useState(
+    formType === "update" ? log.servings : 0
+  );
+  const [caloriesConsumed, setCaloriesConsumed] = useState(
+    formType === "update" ? log.totalCaloriesConsumed : 0
+  );
+  const [proteinConsumed, setProteinConsumed] = useState(
+    formType === "update" ? log.totalProteinConsumed : 0
+  );
+  const [date, setDate] = useState(
+    formType === "update" ? log.date : formattedDate
+  );
 
   useEffect(() => {
     dispatch(getAllFoodsThunk());
@@ -44,20 +52,39 @@ function FoodLogModal() {
     formData.append("servings", servings);
     formData.append("date", correctFormatForDate);
 
-    if (correctFormatForDate !== formattedDate) {
-      await fetch("/api/users/food-logs", {
-        method: "POST",
-        body: formData,
-      });
-      closeModal()
-    } else {
-      try {
-        await dispatch(createFoodLogThunk(formData));
-        history.replace("/my-home/diary");
+    if (formType === "create") {
+      if (correctFormatForDate !== formattedDate) {
+        await fetch("/api/users/food-logs", {
+          method: "POST",
+          body: formData,
+        });
         closeModal();
-      } catch (e) {
-        const errors = await e.json();
-        console.error(errors);
+      } else {
+        try {
+          await dispatch(createFoodLogThunk(formData));
+          history.replace("/my-home/diary");
+          closeModal();
+        } catch (e) {
+          const errors = await e.json();
+          console.error(errors);
+        }
+      }
+    } else {
+      if (correctFormatForDate !== formattedDate) {
+        await fetch(`/api/users/food-logs/${log.id}`, {
+          method: "PUT",
+          body: formData,
+        })
+        dispatch(deleteAFoodLog(log.id))
+        closeModal()
+      } else {
+        try {
+          await dispatch(updateCardioLogThunk(log.id, formData))
+          closeModal()
+        } catch (e) {
+          const errors = await e.json()
+          console.error(errors)
+        }
       }
     }
   };

@@ -125,12 +125,10 @@ function Diary() {
                   style={{ color: "#ff0000" }}
                 ></i>
               </button>
-              <button>
-                <i
-                  className="fa-solid fa-pen-to-square"
-                  style={{ color: "#000000" }}
-                ></i>
-              </button>
+              <OpenModalButton
+                buttonText={"Edit Workout"}
+                modalComponent={<WeightLogModal formType="update" log={log} />}
+              />
             </div>
           ))
         )}
@@ -149,12 +147,10 @@ function Diary() {
                   style={{ color: "#ff0000" }}
                 ></i>
               </button>
-              <button>
-                <i
-                  className="fa-solid fa-pen-to-square"
-                  style={{ color: "#000000" }}
-                ></i>
-              </button>
+              <OpenModalButton
+                buttonText={"Edit Food Item"}
+                modalComponent={<FoodLogModal formType="update" log={log} />}
+              />
             </div>
           ))
         )}
