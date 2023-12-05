@@ -16,36 +16,45 @@ function WeightLogModal() {
   const weightExercises = Object.values(weightExerciseObj);
   const [date, setDate] = useState(formattedDate);
   const [exerciseId, setExerciseId] = useState(1);
-  const [sets, setSets] = useState(0)
-  const [reps, setReps] = useState(0)
-  const [weightPerRep, setWeightPerRep] = useState(0)
+  const [sets, setSets] = useState(0);
+  const [reps, setReps] = useState(0);
+  const [weightPerRep, setWeightPerRep] = useState(0);
 
   useEffect(() => {
     dispatch(getAllWeightExercisesThunk());
   }, [dispatch]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const exerciseName = weightExerciseObj[exerciseId].exerciseName;
-    const changeToDate = new Date(date)
+    const changeToDate = new Date(date);
     const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
 
-    const formData = new FormData()
-    formData.append("exercise_name", exerciseName)
-    formData.append("sets", sets)
-    formData.append("repetitions", reps)
-    formData.append("weight_per_rep", weightPerRep)
-    formData.append("date", correctFormatForDate)
+    const formData = new FormData();
+    formData.append("exercise_name", exerciseName);
+    formData.append("sets", sets);
+    formData.append("repetitions", reps);
+    formData.append("weight_per_rep", weightPerRep);
+    formData.append("date", correctFormatForDate);
 
-    try {
-      await dispatch(createWeightLogThunk(formData))
-      history.replace("/my-home/diary")
+    if (correctFormatForDate !== formattedDate) {
+      await fetch("/api/users/weight-logs", {
+        method: "POST",
+        body: formData,
+      });
       closeModal()
-    } catch (e) {
-      const errors = await e.json()
-      console.error(errors)
+    } else {
+      try {
+        await dispatch(createWeightLogThunk(formData));
+        history.replace("/my-home/diary");
+        closeModal();
+      } catch (e) {
+        const errors = await e.json();
+        console.error(errors);
+      }
     }
-  }
+
+  };
 
   return (
     <div className="weight-log-container">

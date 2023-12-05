@@ -43,14 +43,25 @@ function CardioLogModal() {
     formData.append("exercise_name", cardioExercisesObj[cardioExercise].exerciseName);
     formData.append("date", correctFormatForDate)
 
-    try {
-        await dispatch(createCardioLogThunk(formData))
-        history.replace("/my-home/diary")
-        closeModal()
-    } catch (e) {
-        const errors = await e.json()
-        console.error(errors)
+    if (correctFormatForDate !== formattedDate) {
+      await fetch("/api/users/cardio-logs", {
+        method: "POST",
+        body: formData,
+      });
+      history.replace("/my-home/diary");
+      closeModal()
+
+    } else {
+      try {
+          await dispatch(createCardioLogThunk(formData))
+          history.replace("/my-home/diary")
+          closeModal()
+      } catch (e) {
+          const errors = await e.json()
+          console.error(errors)
+      }
     }
+
 
   }
 

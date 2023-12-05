@@ -44,13 +44,21 @@ function FoodLogModal() {
     formData.append("servings", servings);
     formData.append("date", correctFormatForDate);
 
-    try {
-      await dispatch(createFoodLogThunk(formData))
-      history.replace("/my-home/diary")
+    if (correctFormatForDate !== formattedDate) {
+      await fetch("/api/users/food-logs", {
+        method: "POST",
+        body: formData,
+      });
       closeModal()
-    } catch (e) {
-      const errors = await e.json();
-      console.error(errors);
+    } else {
+      try {
+        await dispatch(createFoodLogThunk(formData));
+        history.replace("/my-home/diary");
+        closeModal();
+      } catch (e) {
+        const errors = await e.json();
+        console.error(errors);
+      }
     }
   };
 

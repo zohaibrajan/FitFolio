@@ -8,6 +8,9 @@ import { getAllCardioLogsForTodayThunk } from "../../store/cardioLogs";
 import { getAllWeightLogsForTodayThunk } from "../../store/weightLogs";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFoodLogsForTodayThunk } from "../../store/foodLogs";
+import { deleteCardioLogThunk } from "../../store/cardioLogs";
+import { deleteWeightLogThunk } from "../../store/weightLogs";
+import { deleteFoodLogThunk } from "../../store/foodLogs";
 
 
 
@@ -23,6 +26,7 @@ function Diary() {
   const [caloriesBurned, setCaloriesBurned] = useState(0)
   const [caloriesConsumed, setCaloriesConsumed] = useState(0)
 
+
   useEffect(() => {
     dispatch(getUsersGoalThunk())
     dispatch(getAllCardioLogsForTodayThunk())
@@ -37,18 +41,35 @@ function Diary() {
       cardioLogs.forEach(log => {
         caloriesB += log.caloriesBurned
       })
-
-      setCaloriesBurned(caloriesB)
     }
+    setCaloriesBurned(caloriesB)
 
     if (foodLogs.length) {
       foodLogs.forEach(log => {
         caloriesC += log.totalCaloriesConsumed
       })
-
-      setCaloriesConsumed(caloriesC)
     }
+    setCaloriesConsumed(caloriesC)
   }, [cardioLogs, foodLogs])
+
+  const removeCardioLog = (e, cardioLogId) => {
+    e.preventDefault()
+
+    dispatch(deleteCardioLogThunk(cardioLogId))
+  }
+
+  const removeWeightLog = (e, weightLodId) => {
+    e.preventDefault()
+
+    dispatch(deleteWeightLogThunk(weightLodId))
+  }
+
+  const removeFoodLog = (e, foodLogId) => {
+    e.preventDefault()
+
+    dispatch(deleteFoodLogThunk(foodLogId))
+  
+  }
 
   return (
     <>
@@ -80,6 +101,12 @@ function Diary() {
             <div key={log.id}>
               <span>{log.cardioExercise.exerciseName}</span> :
               <span>{log.caloriesBurned}</span> :<span>{log.duration}</span>
+              <button onClick={(e) => removeCardioLog(e, log.id)}>
+                <i
+                  className="fa-solid fa-circle-minus"
+                  style={{ color: "#ff0000" }}
+                ></i>
+              </button>
             </div>
           ))
         )}
@@ -92,6 +119,12 @@ function Diary() {
               <span>{log.weightExercise.exerciseName}</span>
               <span>{log.sets}</span> :<span>{log.repetitions}</span> :
               <span>{log.weightPerRep}</span>
+              <button onClick={(e) => removeWeightLog(e, log.id)}>
+                <i
+                  className="fa-solid fa-circle-minus"
+                  style={{ color: "#ff0000" }}
+                ></i>
+              </button>
             </div>
           ))
         )}
@@ -104,12 +137,18 @@ function Diary() {
               <span>{log.food.name}</span>
               <span>{log.totalCaloriesConsumed}</span>:
               <span>{log.totalProteinConsumed}</span>:
+              <button onClick={(e) => removeFoodLog(e, log.id)}>
+                <i
+                  className="fa-solid fa-circle-minus"
+                  style={{ color: "#ff0000" }}
+                ></i>
+              </button>
             </div>
           ))
         )}
         <progress
           max={`${goal.caloriesPerDay + caloriesBurned}`}
-          value={`${goal.caloriesPerDay + caloriesBurned - caloriesConsumed}`}
+          value={`${caloriesConsumed}`}
         />
       </div>
     </>

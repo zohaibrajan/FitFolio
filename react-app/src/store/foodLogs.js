@@ -1,5 +1,6 @@
 const CREATE_FOOD_LOG = "food-logs/CREATE_FOOD_LOG";
 const ALL_FOOD_LOGS = "food-logs/ALL_FOOD_LOGS"
+const DELETE_FOOD_LOG = "food-logs/DELETE_FOOD_LOG";
 
 const getAllFoodLogs = (foodLogs) => ({
   type: ALL_FOOD_LOGS,
@@ -9,6 +10,11 @@ const getAllFoodLogs = (foodLogs) => ({
 const createFoodLog = (foodLog) => ({
   type: CREATE_FOOD_LOG,
   foodLog,
+});
+
+const deleteAFoodLog = (foodLogId) => ({
+  type: DELETE_FOOD_LOG,
+  foodLogId,
 });
 
 export const getAllFoodLogsThunk = () => async (dispatch) => {
@@ -28,6 +34,18 @@ export const getAllFoodLogsForTodayThunk = () => async (dispatch) => {
     const foodLogs = await res.json();
     dispatch(getAllFoodLogs(foodLogs));
     return foodLogs;
+  }
+};
+
+export const deleteFoodLogThunk = (foodLogId) => async (dispatch) => {
+  const res = await fetch(`/api/users/food-logs/${foodLogId}`, {
+    method: "DELETE",
+  });
+
+  if (res.ok) {
+    const confirm = await res.json();
+    dispatch(deleteAFoodLog(foodLogId));
+    return confirm;
   }
 };
 
@@ -60,6 +78,11 @@ const foodLogReducer = (state = {}, action) => {
         ...state,
         [action.foodLog.id]: action.foodLog,
       };
+    case DELETE_FOOD_LOG: {
+      const newState = { ...state };
+      delete newState[action.foodLogId];
+      return newState;
+    }
     default:
       return state;
   }
