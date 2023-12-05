@@ -30,8 +30,6 @@ function WeightLogModal() {
     const changeToDate = new Date(date)
     const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
 
-    console.log(correctFormatForDate)
-
     const formData = new FormData()
     formData.append("exercise_name", exerciseName)
     formData.append("sets", sets)
@@ -44,7 +42,8 @@ function WeightLogModal() {
       history.replace("/my-home/diary")
       closeModal()
     } catch (e) {
-      console.error(e)
+      const errors = await e.json()
+      console.error(errors)
     }
   }
 
@@ -106,6 +105,7 @@ function WeightLogModal() {
             type="date"
             pattern="\d{4}-\d{2}-\d{2}"
             value={date}
+            max={formattedDate}
             onChange={(e) => setDate(e.target.value)}
           />
         </label>

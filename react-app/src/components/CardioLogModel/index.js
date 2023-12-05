@@ -18,7 +18,6 @@ function CardioLogModal() {
   const [duration, setDuration] = useState(0);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [date, setDate] = useState(formattedDate);
-  const [errors, setErrors] = useState({})
 
 
   useEffect(() => {
@@ -50,7 +49,7 @@ function CardioLogModal() {
         closeModal()
     } catch (e) {
         const errors = await e.json()
-        setErrors(errors)
+        console.error(errors)
     }
 
   }
@@ -103,6 +102,7 @@ function CardioLogModal() {
             type="date"
             pattern="\d{4}-\d{2}-\d{2}"
             value={date}
+            max={formattedDate}
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
