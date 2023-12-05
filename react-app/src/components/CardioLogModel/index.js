@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { useModal } from "../../context/Modal";
 import { createCardioLogThunk } from "../../store/cardioLogs";
+import { updateCardioLogThunk, deleteACardioLog } from "../../store/cardioLogs";
 import "./CardioLog.css";
 
-function CardioLogModal() {
+function CardioLogModal({ formType = "create", log = {} }) {
   const dispatch = useDispatch();
-  const { closeModal } = useModal()
+  const { closeModal } = useModal();
   const today = new Date();
-  const history = useHistory()
   const formattedDate = today.toISOString().slice(0, 10);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
-  const [cardioExercise, setCardioExercise] = useState(1);
-  const [duration, setDuration] = useState(0);
-  const [caloriesBurned, setCaloriesBurned] = useState(0);
-  const [date, setDate] = useState(formattedDate);
-
+  const [cardioExercise, setCardioExercise] = useState(
+    formType === "update" ? log.cardioExercise.id : 1
+  );
+  const [duration, setDuration] = useState(
+    formType === "update" ? log.duration : 0
+  );
+  const [caloriesBurned, setCaloriesBurned] = useState(
+    formType === "update" ? log.caloriesBurned : 0
+  );
+  const [date, setDate] = useState(
+    formType === "update" ? log.date : formattedDate
+  );
 
   useEffect(() => {
     dispatch(getAllCardioExercisesThunk());
@@ -27,43 +33,60 @@ function CardioLogModal() {
   useEffect(() => {
     const exercise = cardioExercisesObj[cardioExercise];
     if (exercise) {
-        setCaloriesBurned(exercise.caloriesPerMinute * duration);
+      setCaloriesBurned(exercise.caloriesPerMinute * duration);
     }
   }, [cardioExercise, duration, cardioExercisesObj]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const changeToDate = new Date(date);
     const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
 
-    const formData = new FormData()
+    const formData = new FormData();
     formData.append("duration", Number(duration));
     formData.append("calories_burned", Number(caloriesBurned));
-    formData.append("exercise_name", cardioExercisesObj[cardioExercise].exerciseName);
-    formData.append("date", correctFormatForDate)
+    formData.append(
+      "exercise_name",
+      cardioExercisesObj[cardioExercise].exerciseName
+    );
+    formData.append("date", correctFormatForDate);
 
-    if (correctFormatForDate !== formattedDate) {
-      await fetch("/api/users/cardio-logs", {
-        method: "POST",
-        body: formData,
-      });
-      history.replace("/my-home/diary");
-      closeModal()
-
+    if (formType === "create") {
+      if (correctFormatForDate !== formattedDate) {
+        await fetch("/api/users/cardio-logs", {
+          method: "POST",
+          body: formData,
+        });
+        closeModal();
+      } else {
+        try {
+          await dispatch(createCardioLogThunk(formData));
+          closeModal();
+        } catch (e) {
+          const errors = await e.json();
+          console.error(errors);
+        }
+      }
     } else {
-      try {
-          await dispatch(createCardioLogThunk(formData))
-          history.replace("/my-home/diary")
-          closeModal()
-      } catch (e) {
-          const errors = await e.json()
-          console.error(errors)
+      if (correctFormatForDate !== formattedDate) {
+        await fetch(`/api/users/cardio-logs/${log.id}`, {
+          method: "PUT",
+          body: formData,
+        });
+        dispatch(deleteACardioLog(log.id))
+        closeModal();
+      } else {
+        try {
+          await dispatch(updateCardioLogThunk(log.id, formData));
+          closeModal();
+        } catch (e) {
+          const errors = await e.json();
+          console.error(errors);
+        }
       }
     }
-
-
-  }
+  };
 
   return (
     <div className="cardio-log-container">

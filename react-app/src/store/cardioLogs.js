@@ -1,6 +1,8 @@
 const CREATE_CARDIO_LOG = "cardio-logs/CREATE_CARDIO_LOG";
 const ALL_CARDIO_LOGS = "cardio-logs/ALL_CARDIO_LOGS"
 const DELETE_CARDIO_LOG = "cardio-logs/DELETE_CARDIO_LOG"
+const UPDATE_CARDIO_LOG = "cardio-logs/UPDATE_CARDIO_LOG";
+
 
 
 const getAllCardioLogs = (cardioLogs) => ({
@@ -13,9 +15,14 @@ const createCardioLog = (cardioLog) => ({
     cardioLog
 })
 
-const deleteACardioLog = (cardioLogId) => ({
+export const deleteACardioLog = (cardioLogId) => ({
   type: DELETE_CARDIO_LOG,
   cardioLogId
+})
+
+const updateACardioLog = (cardioLog) => ({
+  type: UPDATE_CARDIO_LOG,
+  cardioLog
 })
 
 export const getAllCardioLogsThunk = () => async (dispatch) => {
@@ -66,6 +73,19 @@ export const deleteCardioLogThunk = (cardioLogId) => async (dispatch) => {
   }
 }
 
+export const updateCardioLogThunk = (cardioLogId, cardioLog) => async (dispatch) => {
+    const res = await fetch(`/api/users/cardio-logs/${cardioLogId}`, {
+      method: "PUT",
+      body: cardioLog
+    });
+
+    if (res.ok) {
+      const updatedLog = await res.json();
+      dispatch(updateACardioLog(updatedLog))
+      return updatedLog
+    }
+}
+
 const cardioLogReducer = (state = {}, action) => {
   switch (action.type) {
     case ALL_CARDIO_LOGS: {
@@ -83,6 +103,11 @@ const cardioLogReducer = (state = {}, action) => {
     case DELETE_CARDIO_LOG: {
       const newState = { ...state }
       delete newState[action.cardioLogId]
+      return newState
+    }
+    case UPDATE_CARDIO_LOG: {
+      const newState = { ...state }
+      newState[action.cardioLog.id] = action.cardioLog
       return newState
     }
     default:

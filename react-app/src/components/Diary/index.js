@@ -12,64 +12,60 @@ import { deleteCardioLogThunk } from "../../store/cardioLogs";
 import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
 
-
-
 function Diary() {
-  const dispatch = useDispatch()
-  const goal = useSelector(state => state.goal)
-  const cardioLogsObj = useSelector(state => state.cardioLogs)
-  const weightLogsObj = useSelector(state => state.weightLogs)
-  const foodLogsObj = useSelector(state => state.foodLogs)
-  const foodLogs = Object.values(foodLogsObj)
-  const weightLogs = Object.values(weightLogsObj)
-  const cardioLogs = Object.values(cardioLogsObj)
-  const [caloriesBurned, setCaloriesBurned] = useState(0)
-  const [caloriesConsumed, setCaloriesConsumed] = useState(0)
-
-
-  useEffect(() => {
-    dispatch(getUsersGoalThunk())
-    dispatch(getAllCardioLogsForTodayThunk())
-    dispatch(getAllWeightLogsForTodayThunk())
-    dispatch(getAllFoodLogsForTodayThunk())
-  }, [dispatch])
+  const dispatch = useDispatch();
+  const goal = useSelector((state) => state.goal);
+  const cardioLogsObj = useSelector((state) => state.cardioLogs);
+  const weightLogsObj = useSelector((state) => state.weightLogs);
+  const foodLogsObj = useSelector((state) => state.foodLogs);
+  const foodLogs = Object.values(foodLogsObj);
+  const weightLogs = Object.values(weightLogsObj);
+  const cardioLogs = Object.values(cardioLogsObj);
+  const [caloriesBurned, setCaloriesBurned] = useState(0);
+  const [caloriesConsumed, setCaloriesConsumed] = useState(0);
 
   useEffect(() => {
-    let caloriesB = 0
-    let caloriesC = 0
+    dispatch(getUsersGoalThunk());
+    dispatch(getAllCardioLogsForTodayThunk());
+    dispatch(getAllWeightLogsForTodayThunk());
+    dispatch(getAllFoodLogsForTodayThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
+    let caloriesB = 0;
+    let caloriesC = 0;
     if (cardioLogs.length) {
-      cardioLogs.forEach(log => {
-        caloriesB += log.caloriesBurned
-      })
+      cardioLogs.forEach((log) => {
+        caloriesB += log.caloriesBurned;
+      });
     }
-    setCaloriesBurned(caloriesB)
+    setCaloriesBurned(caloriesB);
 
     if (foodLogs.length) {
-      foodLogs.forEach(log => {
-        caloriesC += log.totalCaloriesConsumed
-      })
+      foodLogs.forEach((log) => {
+        caloriesC += log.totalCaloriesConsumed;
+      });
     }
-    setCaloriesConsumed(caloriesC)
-  }, [cardioLogs, foodLogs])
+    setCaloriesConsumed(caloriesC);
+  }, [cardioLogs, foodLogs]);
 
   const removeCardioLog = (e, cardioLogId) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    dispatch(deleteCardioLogThunk(cardioLogId))
-  }
+    dispatch(deleteCardioLogThunk(cardioLogId));
+  };
 
   const removeWeightLog = (e, weightLodId) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    dispatch(deleteWeightLogThunk(weightLodId))
-  }
+    dispatch(deleteWeightLogThunk(weightLodId));
+  };
 
   const removeFoodLog = (e, foodLogId) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    dispatch(deleteFoodLogThunk(foodLogId))
-  
-  }
+    dispatch(deleteFoodLogThunk(foodLogId));
+  };
 
   return (
     <>
@@ -107,6 +103,10 @@ function Diary() {
                   style={{ color: "#ff0000" }}
                 ></i>
               </button>
+              <OpenModalButton
+                buttonText={"Edit Workout"}
+                modalComponent={<CardioLogModal formType="update" log={log} />}
+              />
             </div>
           ))
         )}
@@ -125,6 +125,12 @@ function Diary() {
                   style={{ color: "#ff0000" }}
                 ></i>
               </button>
+              <button>
+                <i
+                  className="fa-solid fa-pen-to-square"
+                  style={{ color: "#000000" }}
+                ></i>
+              </button>
             </div>
           ))
         )}
@@ -141,6 +147,12 @@ function Diary() {
                 <i
                   className="fa-solid fa-circle-minus"
                   style={{ color: "#ff0000" }}
+                ></i>
+              </button>
+              <button>
+                <i
+                  className="fa-solid fa-pen-to-square"
+                  style={{ color: "#000000" }}
                 ></i>
               </button>
             </div>

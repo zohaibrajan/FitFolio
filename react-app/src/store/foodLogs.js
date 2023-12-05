@@ -65,6 +65,7 @@ export const createFoodLogThunk = (foodLog) => async (dispatch) => {
   }
 };
 
+
 const foodLogReducer = (state = {}, action) => {
   switch (action.type) {
     case ALL_FOOD_LOGS:
