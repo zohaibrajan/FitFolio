@@ -22,6 +22,16 @@ export const getAllCardioLogsThunk = () => async (dispatch) => {
   }
 };
 
+export const getAllCardioLogsForTodayThunk = () => async (dispatch) => {
+  const res = await fetch("/api/users/cardio-logs/today");
+
+  if (res.ok) {
+    const cardioLogs = await res.json();
+    dispatch(getAllCardioLogs(cardioLogs));
+    return cardioLogs;
+  }
+};
+
 export const createCardioLogThunk = (cardioLog) => async (dispatch) => {
     const res = await fetch("/api/users/cardio-logs", {
         method: "POST",

@@ -21,6 +21,16 @@ export const getAllFoodLogsThunk = () => async (dispatch) => {
   }
 };
 
+export const getAllFoodLogsForTodayThunk = () => async (dispatch) => {
+  const res = await fetch("/api/users/food-logs/today");
+
+  if (res.ok) {
+    const foodLogs = await res.json();
+    dispatch(getAllFoodLogs(foodLogs));
+    return foodLogs;
+  }
+};
+
 export const createFoodLogThunk = (foodLog) => async (dispatch) => {
   const res = await fetch("/api/users/food-logs", {
     method: "POST",

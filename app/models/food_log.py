@@ -26,5 +26,5 @@ class FoodLog(db.Model):
             "food": self.food.to_dict_nutrition(),
             "servings": self.servings,
             "totalCaloriesConsumed": self.calories_consumed,
-            "totalProteinConsumer": self.protein_consumed
+            "totalProteinConsumed": self.protein_consumed
         }
