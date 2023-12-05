@@ -35,11 +35,14 @@ function CardioLogModal() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    const changeToDate = new Date(date);
+    const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
+
     const formData = new FormData()
     formData.append("duration", Number(duration));
     formData.append("calories_burned", Number(caloriesBurned));
     formData.append("exercise_name", cardioExercisesObj[cardioExercise].exerciseName);
-    formData.append("date", date)
+    formData.append("date", correctFormatForDate)
 
     try {
         await dispatch(createCardioLogThunk(formData))

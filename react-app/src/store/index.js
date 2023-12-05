@@ -5,13 +5,15 @@ import cardioExerciseReducer from './cardioExercises';
 import weightExerciseReducer from './weightExercises';
 import foodsReducer from './foods';
 import cardioLogReducer from './cardioLogs';
+import weightLogReducer from './weightLogs';
 
 const rootReducer = combineReducers({
   session,
   cardioExercises: cardioExerciseReducer,
   weightExercises: weightExerciseReducer,
   foods: foodsReducer,
-  cardioLogs: cardioLogReducer
+  cardioLogs: cardioLogReducer,
+  weightLogs: weightLogReducer
 });
 
 
