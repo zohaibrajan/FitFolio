@@ -44,7 +44,7 @@ const goalReducer = (state = {}, action) => {
     case CREATE_GOAL:
       return {
         ...state,
-        [action.cardioLog.id]: action.cardioLog,
+        [action.goal.id]: action.goal,
       };
     default:
       return state;

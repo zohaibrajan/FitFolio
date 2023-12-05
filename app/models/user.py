@@ -1,6 +1,7 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from datetime import datetime
 
 
 class User(db.Model, UserMixin):
@@ -48,8 +49,9 @@ class User(db.Model, UserMixin):
 
     def to_dict_with_info(self):
         return {
+            'id': self.id,
             'username': self.username,
-            "dateOfBirth": self.dob,
+            "dateOfBirth": self.dob.strftime("%Y-%m-%d"),
             "gender": self.gender,
             "heightFt": self.height_ft,
             "heightIn": self.height_in,
