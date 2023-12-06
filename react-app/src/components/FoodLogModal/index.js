@@ -114,6 +114,7 @@ function FoodLogModal({ formType = "create", log = {} }) {
         <label className="food-log-labels">
           Servings:
           <input
+            className="servings-input"
             min={1}
             step={1}
             type="number"
@@ -131,9 +132,13 @@ function FoodLogModal({ formType = "create", log = {} }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <span>Calories Consumed: {caloriesConsumed}</span>
-        <span>Protein Consumed: {proteinConsumed}</span>
-        <button type="submit">Submit</button>
+        <span className="food-log-labels">
+          Calories Consumed: {caloriesConsumed}
+        </span>
+        <span className="food-log-labels">
+          Protein Consumed: {proteinConsumed}
+        </span>
+        <button className='food-log-submit-button' type="submit">Submit</button>
       </form>
     </div>
   );

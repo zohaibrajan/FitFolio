@@ -106,6 +106,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
         <label className="weight-log-labels">
           Sets:
           <input
+            className="weight-log-inputs"
             min={1}
             step={1}
             type="number"
@@ -116,6 +117,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
         <label className="weight-log-labels">
           Repetitions:
           <input
+            className="weight-log-inputs"
             min={1}
             step={1}
             type="number"
@@ -126,6 +128,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
         <label className="weight-log-labels">
           Weight Per Repetition:
           <input
+            className="weight-log-inputs"
             min={1}
             step={1}
             type="number"
@@ -133,7 +136,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
             onChange={(e) => setWeightPerRep(e.target.value)}
           />
         </label>
-        <label className="cardio-log-labels">
+        <label className="weight-log-labels">
           Date:
           <input
             type="date"
@@ -143,7 +146,9 @@ function WeightLogModal({ formType = "create", log = {} }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <button type="submit">Submit</button>
+        <button className="weight-log-submit-button" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );

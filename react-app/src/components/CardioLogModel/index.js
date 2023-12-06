@@ -117,16 +117,19 @@ function CardioLogModal({ formType = "create", log = {} }) {
         <label className="cardio-log-labels">
           Duration:
           <input
+            className="duration-cb"
             min={1}
             step={1}
             type="number"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           />
+          min
         </label>
         <label className="cardio-log-labels">
           Calories Burned:
           <input
+            className="duration-cb"
             min={1}
             step={1}
             type="number"
@@ -144,7 +147,9 @@ function CardioLogModal({ formType = "create", log = {} }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <button type="submit">Submit</button>
+        <button className="cardio-log-submit-button" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );
