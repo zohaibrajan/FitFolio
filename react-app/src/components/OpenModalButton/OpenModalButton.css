@@ -1,0 +1,11 @@
+.update-goal-button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    border: none;
+    color: rgb(0, 102, 238);
+    background-color: transparent
+}
+
+.update-goal-button:hover {
+    text-decoration: underline;
+}
