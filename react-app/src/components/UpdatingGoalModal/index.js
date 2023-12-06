@@ -1,7 +1,15 @@
 import React, { useState } from "react";
+import { updateGoalThunk } from "../../store/goal";
+import { useModal } from "../../context/Modal";
 import "./UpdatingGoal.css";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
-function UpdatingGoalModal({ currentGoal }) {
+function UpdatingGoalModal() {
+  const currentGoal = useSelector((state) => state.goal);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { closeModal } = useModal();
   const [goal, setGoal] = useState(currentGoal.goal);
   const [currentWeight, setCurrentWeight] = useState(
     currentGoal.startingWeight
@@ -13,6 +21,7 @@ function UpdatingGoalModal({ currentGoal }) {
       ? -1 * currentGoal.lbsPerWeek
       : currentGoal.lbsPerWeek
   );
+
 
   const handleGoalClick = (clickedGoal) => {
     setGoal(clickedGoal);
@@ -167,12 +176,20 @@ function UpdatingGoalModal({ currentGoal }) {
     formDataGoal.append("starting_weight", currentWeight);
     formDataGoal.append("target_weight", targetWeight);
 
+    try {
+      await dispatch(updateGoalThunk(formDataGoal));
+      closeModal();
+      history.replace("/my-home/diary");
+    } catch (e) {
+      const errors = await e.json();
+      console.error(errors);
+    }
   };
 
   return (
     <div>
       <h1>Let's Change your goal</h1>
-      <form className="updating-goal-form">
+      <form className="updating-goal-form" onSubmit={handleSubmit}>
         <label>
           Goal
           {["Lose Weight", "Maintain Weight", "Gain Weight"].map((value) => (
@@ -223,6 +240,7 @@ function UpdatingGoalModal({ currentGoal }) {
           Weekly Goal:
           {renderWeeklyGoalButtons()}
         </label>
+        <button type="submit">Update Goal</button>
       </form>
     </div>
   );

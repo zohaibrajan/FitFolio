@@ -24,7 +24,7 @@ function Goal() {
         <span>Starting Weight: {goal.startingWeight}</span>
         <span>Target Weight: {goal.targetWeight}</span>
       </div>
-      <OpenModalButton modalComponent={<UpdatingGoalModal currentGoal={goal}/>} buttonText={"Update Goal"}/>
+      <OpenModalButton modalComponent={<UpdatingGoalModal />} buttonText={"Update Goal"}/>
     </div>
   );
 }
