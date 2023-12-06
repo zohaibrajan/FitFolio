@@ -2,5 +2,41 @@
 .cardio-log-form {
     display: flex;
     flex-direction: column;
-    gap: 25px
+    gap: 25px;
+    padding: 20px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+}
+
+.cardio-log-container {
+    border: 3px solid black;
+    background-color: rgb(240, 240, 240);
+}
+
+
+.cardio-log-labels {
+    font-weight: 600;
+}
+
+.cardio-log-labels > input, .cardio-log-labels > select {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 3px;
+}
+
+.duration-cb {
+    width: 50px;
+}
+
+.cardio-log-submit-button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    background-color: rgb(133, 196, 0);
+    padding: 5px;
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+
+.cardio-log-submit-button:hover {
+    background-color: rgb(72, 104, 2);
 }

@@ -25,8 +25,6 @@ function SignupFormPage() {
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [date, setDate] = useState("");
 
-  console.log(weeklyGoal)
-
   if (sessionUser) return <Redirect to="/my-home/diary" />;
 
   const handleGoalClick = (clickedGoal) => {
