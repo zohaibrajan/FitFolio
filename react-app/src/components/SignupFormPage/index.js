@@ -74,7 +74,7 @@ function SignupFormPage() {
       return <span>You have not selected a goal yet</span>;
     }
     if (goal === "Maintain Weight") {
-      return <span>Your Weekly Goal to remain at your Current Weight</span>;
+      return <span>Your Weekly Goal is to remain at your Current Weight</span>;
     } else {
       return (
         <div>
@@ -334,7 +334,7 @@ function SignupFormPage() {
         <label>
           Email
           <input
-            type="text"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
