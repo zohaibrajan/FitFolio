@@ -2,7 +2,7 @@ from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
 from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
-from datetime import datetime
+from datetime import datetime, date
 
 user_routes = Blueprint('users', __name__)
 def calculate_bmr_for_women(weight_kg, height_cm, age_years):
@@ -15,14 +15,13 @@ def calculate_bmr_for_men(weight_kg, height_cm, age_years):
 
 
 def calculate_age(date_of_birth):
-    # Assuming date_of_birth is a string in the format "YYYY-MM-DD"
     today = datetime.now().date()
-    age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+    date_object = datetime.strptime(date_of_birth, "%Y-%m-%d")
+    age = today.year - date_object.year - ((today.month, today.day) < (date_object.month, date_object.day))
 
     return age
 
 def convert_height_to_cm(feet, inches):
-    # Convert feet and inches to centimeters
     total_inches = feet * 12 + inches
     height_in_cm = total_inches * 2.54
 
@@ -45,7 +44,7 @@ def user(id):
     Query for a user by id and returns that user in a dictionary
     """
     user = User.query.get(id)
-    return user.to_dict()
+    return user.to_dict_with_info()
 
 
 @user_routes.route('/cardio-logs')
@@ -53,6 +52,24 @@ def user(id):
 def user_cardio_logs():
     """"Get all the cardio logs for a user"""
     cardio_logs = CardioLog.query.where(CardioLog.user_id == current_user.id).order_by(CardioLog.date.desc()).all()
+
+    return {
+        "allCardioLogs": [log.to_dict() for log in cardio_logs]
+    }
+
+@user_routes.route('/cardio-logs/today')
+@login_required
+def user_cardio_logs_for_today():
+    """"Get all the cardio logs for a user on today's date"""
+    today = date.today()
+
+    cardio_logs = (
+        CardioLog.query
+        .filter(CardioLog.user_id == current_user.id)
+        .filter(CardioLog.date == today)
+        .order_by(CardioLog.date.desc())
+        .all()
+    )
 
     return {
         "allCardioLogs": [log.to_dict() for log in cardio_logs]
@@ -196,6 +213,24 @@ def user_weight_logs():
         "allWeightLogs": [log.to_dict() for log in weight_logs]
     }
 
+@user_routes.route('/weight-logs/today')
+@login_required
+def user_weight_logs_for_today():
+    """"Get all the weight logs for a user for today"""
+    today = date.today()
+
+
+    weight_logs = (
+        WeightLog.query
+        .filter(WeightLog.user_id == current_user.id)
+        .filter(WeightLog.date == today)
+        .order_by(WeightLog.date.desc())
+        .all()
+    )
+
+    return {
+        "allWeightLogs": [log.to_dict() for log in weight_logs]
+    }
 
 @user_routes.route('/weight-logs/<int:weightLogId>')
 @login_required
@@ -326,6 +361,24 @@ def deleting_a_weight_log(weightLogId):
 def user_food_logs():
     """"Get all the food logs for a user"""
     food_logs = FoodLog.query.where(FoodLog.user_id == current_user.id).order_by(FoodLog.date.desc()).all()
+
+    return {
+        "allFoodLogs": [log.to_dict() for log in food_logs]
+    }
+
+@user_routes.route('/food-logs/today')
+@login_required
+def user_food_logs_for_today():
+    """"Get all the food logs for a user for today"""
+    today = date.today()
+
+    food_logs = (
+        FoodLog.query
+        .filter(FoodLog.user_id == current_user.id)
+        .filter(FoodLog.date == today)
+        .order_by(FoodLog.date.desc())
+        .all()
+    )
 
     return {
         "allFoodLogs": [log.to_dict() for log in food_logs]

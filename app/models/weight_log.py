@@ -1,4 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+from datetime import datetime
 
 
 class WeightLog(db.Model):
@@ -23,7 +24,7 @@ class WeightLog(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "date": self.date,
+            "date": self.date.strftime("%Y-%m-%d"),
             "weightExercise": self.exercise.to_dict(),
             "sets": self.sets,
             "repetitions": self.repetitions,

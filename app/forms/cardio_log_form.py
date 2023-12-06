@@ -8,4 +8,3 @@ class CardioLogForm(FlaskForm):
     exercise_name = StringField("Exercise Name", validators=[DataRequired(), Length(min=1, max=50, message="Name must be shorter than 50 characters")])
     date = DateField("Date", validators=[DataRequired()])
     calories_burned = IntegerField("Calories Burned")
-    submit = SubmitField("Submit")

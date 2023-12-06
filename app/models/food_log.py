@@ -1,4 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+from datetime import datetime
 
 
 class FoodLog(db.Model):
@@ -22,9 +23,9 @@ class FoodLog(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "date": self.date,
+            "date": self.date.strftime("%Y-%m-%d"),
             "food": self.food.to_dict_nutrition(),
             "servings": self.servings,
             "totalCaloriesConsumed": self.calories_consumed,
-            "totalProteinConsumer": self.protein_consumed
+            "totalProteinConsumed": self.protein_consumed
         }

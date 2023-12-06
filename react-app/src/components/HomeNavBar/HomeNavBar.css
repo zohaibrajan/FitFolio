@@ -1,0 +1,25 @@
+.home-page-nav-bar {
+    display: flex;
+    background-color: rgb(0, 102, 238);
+    height: 50px;
+    align-items: center;
+    flex-direction: row;
+    gap: 50px;
+    justify-content: center;
+    color: white;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.my-home, .my-goal {
+    cursor: pointer;
+}
+
+
+.my-goal-active, .my-home-active {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: underline;
+}

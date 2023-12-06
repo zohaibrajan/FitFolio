@@ -1,4 +1,6 @@
-.sign-up-form {
+
+.cardio-log-form {
     display: flex;
     flex-direction: column;
+    gap: 25px
 }

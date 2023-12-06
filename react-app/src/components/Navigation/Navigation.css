@@ -5,3 +5,55 @@
 .hidden {
   display: none;
 }
+
+.nav-bar-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  width: 70%;
+  list-style: none;
+  height: 50px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+#project-title {
+  color: rgb(0, 102, 238);
+  font-size: 30px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+}
+
+#nav-link-to-home {
+  text-decoration: none;
+}
+
+.nav-login-signup {
+  display: flex;
+  gap: 10px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+
+.login-signup-link {
+  text-decoration: none;
+  color: rgb(0, 102, 238);
+  align-items: center;
+  font-size: 14px;
+}
+
+
+.logged-in-nav-bar {
+  display: flex;
+  gap: 10px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  color: rgb(0, 102, 238);
+}
+
+#logout-user:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
