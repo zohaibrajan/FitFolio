@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { login } from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
+import { useModal } from "../../context/Modal";
 import { Redirect } from "react-router-dom";
-import './LoginForm.css';
+import "./LoginForm.css";
 
 function LoginFormPage() {
   const dispatch = useDispatch();
+  const { closeModal } = useModal()
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +21,11 @@ function LoginFormPage() {
     if (data) {
       setErrors(data);
     }
+  };
+
+  const demoLogin = (e) => {
+    e.preventDefault();
+    dispatch(login("demo@aa.io", "password")).then(closeModal());
   };
 
   return (
@@ -50,6 +57,9 @@ function LoginFormPage() {
         </label>
         <button type="submit">Log In</button>
       </form>
+      <button onClick={demoLogin} className="loginButton">
+        Demo User
+      </button>
     </>
   );
 }
