@@ -7,6 +7,7 @@ function OpenModalButton({
   onButtonClick, // optional: callback function that will be called once the button that opens the modal is clicked
   onModalClose // optional: callback function that will be called once the modal is closed
 }) {
+  const style = modalComponent.type.name === "UpdatingGoalModal" ? "update-goal-button" : "none"
   const { setModalContent, setOnModalClose } = useModal();
 
   const onClick = () => {
@@ -16,7 +17,7 @@ function OpenModalButton({
   };
 
   return (
-    <button onClick={onClick}>{buttonText}</button>
+    <button className={style} onClick={onClick}>{buttonText}</button>
   );
 }
 
