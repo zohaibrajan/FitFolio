@@ -34,5 +34,5 @@ class SignUpForm(FlaskForm):
     dob = DateField("Date of Birth", validators=[DataRequired(), validate_date_of_birth])
     gender = SelectField("Gender", choices=["Male", "Female"], validators=[DataRequired()])
     height_ft = IntegerField("Height Ft", validators=[DataRequired(), NumberRange(min=3, max=7)])
-    height_in = IntegerField("Height In", validators=[DataRequired(), NumberRange(min=0, max=11)])
+    height_in = IntegerField("Height In", validators=[NumberRange(min=0, max=11)])
     current_weight_lbs = IntegerField("Weight in lbs", validators=[DataRequired()])

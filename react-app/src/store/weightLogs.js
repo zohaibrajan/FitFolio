@@ -2,6 +2,7 @@ const CREATE_WEIGHT_LOG = "weight-logs/CREATE_WEIGHT_LOG";
 const ALL_WEIGHT_LOGS = "weight-logs/ALL_WEIGHT_LOGS";
 const DELETE_WEIGHT_LOG = "weight-logs/DELETE_WEIGHT_LOG";
 const UPDATE_WEIGHT_LOG = "weight-logs/UPDATE_WEIGHT_LOG";
+const CLEAR_WEIGHT_LOG_STATE = "weight-logs/CLEAR_WEIGHT_LOG_STATE";
 
 const getAllWeightLogs = (weightLogs) => ({
   type: ALL_WEIGHT_LOGS,
@@ -16,6 +17,10 @@ const createWeightLog = (weightLog) => ({
 export const deleteAWeightLog = (weightLogId) => ({
   type: DELETE_WEIGHT_LOG,
   weightLogId,
+});
+
+export const clearWeightLogState = () => ({
+  type: CLEAR_WEIGHT_LOG_STATE,
 });
 
 const updateAWeightLog = (weightLog) => ({
@@ -109,6 +114,8 @@ const weightLogReducer = (state = {}, action) => {
       newState[action.weightLog.id] = action.weightLog;
       return newState;
     }
+    case CLEAR_WEIGHT_LOG_STATE:
+      return {};
     default:
       return state;
   }

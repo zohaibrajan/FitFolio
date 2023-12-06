@@ -2,6 +2,7 @@ const CREATE_FOOD_LOG = "food-logs/CREATE_FOOD_LOG";
 const ALL_FOOD_LOGS = "food-logs/ALL_FOOD_LOGS"
 const DELETE_FOOD_LOG = "food-logs/DELETE_FOOD_LOG";
 const UPDATE_FOOD_LOG = "food-logs/UPDATE_FOOD_LOG";
+const CLEAR_FOOD_LOG_STATE = "food-logs/CLEAR_FOOD_LOG_STATE";
 
 const getAllFoodLogs = (foodLogs) => ({
   type: ALL_FOOD_LOGS,
@@ -21,6 +22,10 @@ export const deleteAFoodLog = (foodLogId) => ({
 const updateAFoodLog = (foodLog) => ({
   type: UPDATE_FOOD_LOG,
   foodLog,
+});
+
+export const clearFoodLogState = () => ({
+  type: CLEAR_FOOD_LOG_STATE,
 });
 
 export const getAllFoodLogsThunk = () => async (dispatch) => {
@@ -109,6 +114,8 @@ const foodLogReducer = (state = {}, action) => {
       newState[action.foodLog.id] = action.foodLog
       return newState
     }
+    case CLEAR_FOOD_LOG_STATE:
+      return {}
     default:
       return state;
   }

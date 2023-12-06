@@ -16,7 +16,8 @@ def calculate_bmr_for_men(weight_kg, height_cm, age_years):
 
 def calculate_age(date_of_birth):
     today = datetime.now().date()
-    age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+    date_object = datetime.strptime(date_of_birth, "%Y-%m-%d")
+    age = today.year - date_object.year - ((today.month, today.day) < (date_object.month, date_object.day))
 
     return age
 

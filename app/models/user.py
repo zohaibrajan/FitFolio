@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     dob = db.Column(db.Date, nullable=False)
     gender = db.Column(db.String, nullable=False)
     height_ft = db.Column(db.Integer, nullable=False)
-    height_in = db.Column(db.Integer, nullable=False)
+    height_in = db.Column(db.Integer, nullable=True)
     current_weight_lbs = db.Column(db.Integer, nullable=False)
 
     goal = db.relationship("Goal", back_populates="user", cascade="all, delete-orphan")

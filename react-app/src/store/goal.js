@@ -1,5 +1,6 @@
 const CREATE_GOAL = "goal/CREATE_GOAL";
 const USER_GOAL = "goal/USER_GOAL";
+const CLEAR_STATE = "goal/CLEAR_STATE"
 
 const getUsersGoal = (goal) => ({
   type: USER_GOAL,
@@ -10,6 +11,10 @@ const createGoal = (goal) => ({
   type: CREATE_GOAL,
   goal,
 });
+
+export const clearGoalState = () => ({
+  type: CLEAR_STATE,
+})
 
 export const getUsersGoalThunk = () => async (dispatch) => {
   const res = await fetch("/api/users/goal");
@@ -33,6 +38,7 @@ export const createGoalThunk = (goal) => async (dispatch) => {
     return newGoal;
   } else {
     const errors = await res.json();
+    console.log('something is breaking', errors)
     return errors;
   }
 };
@@ -46,6 +52,9 @@ const goalReducer = (state = {}, action) => {
         ...state,
         [action.goal.id]: action.goal,
       };
+    case CLEAR_STATE: {
+      return {}
+    }
     default:
       return state;
   }

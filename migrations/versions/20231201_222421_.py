@@ -30,7 +30,7 @@ def upgrade():
     sa.Column('gender', sa.String(), nullable=False),
     sa.Column('dob', sa.Date(), nullable=False),
     sa.Column('height_ft', sa.Integer(), nullable=False),
-    sa.Column('height_in', sa.Integer(), nullable=False),
+    sa.Column('height_in', sa.Integer(), nullable=True),
     sa.Column('current_weight_lbs', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),

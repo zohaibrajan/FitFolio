@@ -25,7 +25,7 @@ function SignupFormPage() {
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [date, setDate] = useState("");
 
-  if (sessionUser) return <Redirect to="/" />;
+  if (sessionUser) return <Redirect to="/my-home/diary" />;
 
   const handleGoalClick = (clickedGoal) => {
     setGoal(clickedGoal);
@@ -194,10 +194,11 @@ function SignupFormPage() {
     formDataGoal.append("target_weight", targetWeight)
 
     if (password === confirmPassword) {
-      const data = await dispatch(signUp(formDataUser));
-      await dispatch(createGoalThunk(formDataUser))
+      const data = await dispatch(signUp(formDataUser))
       if (data) {
         setErrors(data);
+      } else {
+        await dispatch(createGoalThunk(formDataGoal));
       }
     } else {
       setErrors([
@@ -287,7 +288,7 @@ function SignupFormPage() {
             type="number"
             value={heightIn}
             onChange={(e) => setHeightIn(e.target.value)}
-            max={12}
+            max={11}
             min={0}
             required
           ></input>

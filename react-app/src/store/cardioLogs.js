@@ -2,6 +2,7 @@ const CREATE_CARDIO_LOG = "cardio-logs/CREATE_CARDIO_LOG";
 const ALL_CARDIO_LOGS = "cardio-logs/ALL_CARDIO_LOGS"
 const DELETE_CARDIO_LOG = "cardio-logs/DELETE_CARDIO_LOG"
 const UPDATE_CARDIO_LOG = "cardio-logs/UPDATE_CARDIO_LOG";
+const CLEAR_CARDIO_LOG_STATE = "cardio-logs/CLEAR_CARDIO_LOG_STATE"
 
 
 
@@ -18,6 +19,10 @@ const createCardioLog = (cardioLog) => ({
 export const deleteACardioLog = (cardioLogId) => ({
   type: DELETE_CARDIO_LOG,
   cardioLogId
+})
+
+export const clearCardioLogState = () => ({
+  type: CLEAR_CARDIO_LOG_STATE
 })
 
 const updateACardioLog = (cardioLog) => ({
@@ -109,6 +114,9 @@ const cardioLogReducer = (state = {}, action) => {
       const newState = { ...state }
       newState[action.cardioLog.id] = action.cardioLog
       return newState
+    }
+    case CLEAR_CARDIO_LOG_STATE: {
+      return {}
     }
     default:
       return state;

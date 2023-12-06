@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/session";
 import "./Navigation.css";
 import { useHistory } from "react-router-dom";
+import { clearGoalState } from "../../store/goal";
+import { clearCardioLogState } from "../../store/cardioLogs";
+import { clearFoodLogState } from "../../store/foodLogs";
+import { clearWeightLogState } from "../../store/weightLogs";
 
 function Navigation({ isLoaded }) {
   const dispatch = useDispatch();
@@ -12,6 +16,10 @@ function Navigation({ isLoaded }) {
 
   const logoutUser = async (e) => {
     e.preventDefault();
+    dispatch(clearGoalState());
+    dispatch(clearCardioLogState())
+    dispatch(clearFoodLogState())
+    dispatch(clearWeightLogState())
     await dispatch(logout());
     history.replace("/");
     return;
