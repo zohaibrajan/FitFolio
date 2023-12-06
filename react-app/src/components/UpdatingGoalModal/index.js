@@ -22,14 +22,16 @@ function UpdatingGoalModal() {
       : currentGoal.lbsPerWeek
   );
 
-
   const handleGoalClick = (clickedGoal) => {
     setGoal(clickedGoal);
     if (clickedGoal === "Lose Weight") {
+      setWeeklyGoal(0)
       setTargetWeight("");
     } else if (clickedGoal === "Maintain Weight") {
+      setWeeklyGoal('set')
       setTargetWeight(currentWeight);
     } else if (clickedGoal === "Gain Weight") {
+      setWeeklyGoal(0);
       setTargetWeight("");
     }
 
@@ -240,7 +242,7 @@ function UpdatingGoalModal() {
           Weekly Goal:
           {renderWeeklyGoalButtons()}
         </label>
-        <button type="submit">Update Goal</button>
+        <button disabled={!targetWeight || goalErrors.length || weeklyGoal === 0} type="submit">Update Goal</button>
       </form>
     </div>
   );
