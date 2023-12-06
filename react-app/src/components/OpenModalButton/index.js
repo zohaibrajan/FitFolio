@@ -1,5 +1,6 @@
 import React from 'react';
 import { useModal } from '../../context/Modal';
+import './OpenModalButton.css'
 
 function OpenModalButton({
   modalComponent, // component to render inside the modal
@@ -7,7 +8,6 @@ function OpenModalButton({
   onButtonClick, // optional: callback function that will be called once the button that opens the modal is clicked
   onModalClose // optional: callback function that will be called once the modal is closed
 }) {
-  const style = modalComponent.type.name === "UpdatingGoalModal" ? "update-goal-button" : "none"
   const { setModalContent, setOnModalClose } = useModal();
 
   const onClick = () => {
@@ -17,7 +17,9 @@ function OpenModalButton({
   };
 
   return (
-    <button className={style} onClick={onClick}>{buttonText}</button>
+    <button className={"update-goal-button"} onClick={onClick}>
+      {buttonText}
+    </button>
   );
 }
 

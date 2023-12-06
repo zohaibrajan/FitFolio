@@ -25,6 +25,8 @@ function SignupFormPage() {
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [date, setDate] = useState("");
 
+  console.log(weeklyGoal)
+
   if (sessionUser) return <Redirect to="/my-home/diary" />;
 
   const handleGoalClick = (clickedGoal) => {
@@ -32,6 +34,7 @@ function SignupFormPage() {
     if (clickedGoal === "Lose Weight") {
       setTargetWeight("");
     } else if (clickedGoal === "Maintain Weight") {
+      setWeeklyGoal("set")
       setTargetWeight(currentWeight);
     } else if (clickedGoal === "Gain Weight") {
       setTargetWeight("");
@@ -358,7 +361,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        <button type="submit" disabled={goalErrors.length}>
+        <button type="submit" disabled={goalErrors.length || weeklyGoal === ""}>
           Sign Up
         </button>
       </form>
