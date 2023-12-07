@@ -10,9 +10,15 @@ function FoodLogModal({ formType = "create", log = {} }) {
   const dispatch = useDispatch();
   const foodsObj = useSelector((state) => state.foods);
   const { closeModal } = useModal();
-  const today = new Date();
+  let today = new Date().getTime();
+  today = new Date(today);
+  const year = today.getFullYear();
+  const month =
+    today.getMonth() >= 10 ? today.getMonth() + 1 : `0${today.getMonth() + 1}`;
+  const day = today.getDate();
+  const formattedDate =
+    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
   const history = useHistory();
-  const formattedDate = today.toISOString().slice(0, 10);
   const foods = Object.values(foodsObj);
   const [foodId, setFoodId] = useState(formType === "update" ? log.food.id : 1);
   const [servings, setServings] = useState(
