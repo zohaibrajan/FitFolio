@@ -12,8 +12,14 @@ import "./CardioLog.css";
 function CardioLogModal({ formType = "create", log = {} }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
-  const today = new Date();
-  const formattedDate = today.toISOString().slice(0, 10);
+  let today = new Date().getTime();
+  today = new Date(today);
+  const year = today.getFullYear();
+  const month =
+    today.getMonth() >= 10 ? today.getMonth() + 1: `0${today.getMonth() + 1}`;
+  const day = today.getDate();
+  const formattedDate =
+    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [cardioExercise, setCardioExercise] = useState(
@@ -28,6 +34,7 @@ function CardioLogModal({ formType = "create", log = {} }) {
   const [date, setDate] = useState(
     formType === "update" ? log.date : formattedDate
   );
+
 
 
   useEffect(() => {
