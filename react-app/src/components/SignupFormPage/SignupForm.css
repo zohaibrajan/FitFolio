@@ -69,6 +69,7 @@
 .signup-form-gender-container {
     display: flex;
     margin: 10px 0;
+    align-items: center;
     flex-direction: column;
     font-weight: 600;
     font-size: 17px;
@@ -150,4 +151,25 @@
     flex-direction: column;
     margin: 9px 0;
     gap: 5px;
+}
+
+.weekly-goal-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+
+.checking-if-goal-buttons {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+.weekly-goal-buttons {
+    background-color: white;
+    padding: 10px;
 }

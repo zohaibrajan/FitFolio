@@ -72,22 +72,47 @@ function SignupFormPage() {
 
   const renderWeeklyGoalButtons = () => {
     if (!goal) {
-      return <span>You have not selected a goal yet</span>;
+      return (
+        <div className="checking-if-goal" style={{height: "50px"}}>
+          <span
+            style={{
+              fontWeight: "600",
+              fontSize: "15px",
+              color: "rgb(0, 102, 238)",
+            }}
+          >
+            You have not selected a goal yet
+          </span>
+        </div>
+      );
     }
     if (goal === "Maintain Weight") {
-      return <span>Your Weekly Goal is to remain at your Current Weight</span>;
+      return (
+        <div className="checking-if-goal" style={{height: "50px"}}>
+          <span
+            style={{
+              fontWeight: "600",
+              fontSize: "15px",
+              color: "rgb(0, 102, 238)",
+            }}
+          >
+            Your Weekly Goal is to remain at your Current Weight
+          </span>
+        </div>
+      );
     } else {
       return (
-        <div>
+        <div className="checking-if-goal-buttons">
           {goal === "Lose Weight" && (
             <>
               <button
                 type="button"
+                className="weekly-goal-buttons"
                 onClick={() => setWeeklyGoal(-0.5)}
                 style={{
                   border:
                     weeklyGoal === -0.5
-                      ? "1px solid rgb(0, 102, 238)"
+                      ? "2px solid rgb(0, 102, 238)"
                       : "1px solid black",
                   color: weeklyGoal === -0.5 ? "rgb(0, 102, 238)" : "black",
                 }}
@@ -96,11 +121,12 @@ function SignupFormPage() {
               </button>
               <button
                 type="button"
+                className="weekly-goal-buttons"
                 onClick={() => setWeeklyGoal(-1)}
                 style={{
                   border:
                     weeklyGoal === -1
-                      ? "1px solid rgb(0, 102, 238)"
+                      ? "2px solid rgb(0, 102, 238)"
                       : "1px solid black",
                   color: weeklyGoal === -1 ? "rgb(0, 102, 238)" : "black",
                 }}
@@ -109,11 +135,12 @@ function SignupFormPage() {
               </button>
               <button
                 type="button"
+                className="weekly-goal-buttons"
                 onClick={() => setWeeklyGoal(-1.5)}
                 style={{
                   border:
                     weeklyGoal === -1.5
-                      ? "1px solid rgb(0, 102, 238)"
+                      ? "2px solid rgb(0, 102, 238)"
                       : "1px solid black",
                   color: weeklyGoal === -1.5 ? "rgb(0, 102, 238)" : "black",
                 }}
@@ -122,11 +149,11 @@ function SignupFormPage() {
               </button>
             </>
           )}
-          {goal === "Gain Weight" && (
-            <>
-              <div>
+            {goal === "Gain Weight" && (
+              <>
                 <button
                   type="button"
+                  className="weekly-goal-buttons"
                   onClick={() => setWeeklyGoal(0.5)}
                   style={{
                     border:
@@ -140,11 +167,12 @@ function SignupFormPage() {
                 </button>
                 <button
                   type="button"
+                  className="weekly-goal-buttons"
                   onClick={() => setWeeklyGoal(1)}
                   style={{
                     border:
                       weeklyGoal === 1
-                        ? "1px solid rgb(0, 102, 238)"
+                        ? "2px solid rgb(0, 102, 238)"
                         : "1px solid black",
                     color: weeklyGoal === 1 ? "rgb(0, 102, 238)" : "black",
                   }}
@@ -153,21 +181,21 @@ function SignupFormPage() {
                 </button>
                 <button
                   type="button"
+                  className="weekly-goal-buttons"
                   onClick={() => setWeeklyGoal(1.5)}
                   style={{
                     border:
                       weeklyGoal === 1.5
-                        ? "1px solid rgb(0, 102, 238)"
+                        ? "2px solid rgb(0, 102, 238)"
                         : "1px solid black",
                     color: weeklyGoal === 1.5 ? "rgb(0, 102, 238)" : "black",
                   }}
                 >
                   Gain 1.5 lbs per week
                 </button>
-              </div>
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </div>
       );
     }
   };
@@ -221,7 +249,7 @@ function SignupFormPage() {
                 <li key={idx}>{error}</li>
               ))}
             </ul>
-            <label className="signup-form-labels">
+            <label className="signup-form-labels" style={{ height: "170px" }}>
               Goal
               <span style={{ marginBottom: "3px" }}></span>
               {["Lose Weight", "Maintain Weight", "Gain Weight"].map(
@@ -286,7 +314,7 @@ function SignupFormPage() {
             </div>
             <label
               className="goal-form-labels"
-              style={{ display: "flex", gap: "15px", marginTop: "5px" }}
+              style={{ display: "flex", marginTop: "5px", flexDirection: "column" }}
             >
               Date of Birth
               <input
@@ -300,7 +328,7 @@ function SignupFormPage() {
               ></input>
             </label>
             <div className="height-labels-container">
-              How tall are you?
+              <span>How tall are you?</span>
               <div className="height-choices-in-signup-form">
                 <label className="height-labels-in-form">
                   Height(ft):
@@ -329,20 +357,31 @@ function SignupFormPage() {
               </div>
             </div>
             {!goal ? (
-              <div className="checking-if-goal">
+              <div
+                className="checking-if-goal"
+                style={{ height: "10px", alignItems: "flex-end" }}
+              >
                 <span
                   style={{
                     fontWeight: "600",
                     fontSize: "12px",
-                    color: "rgb(0, 102, 238)",
+                    color: "transparent",
                   }}
                 >
                   Please select a goal before continuing
                 </span>
               </div>
             ) : (
-              <div className="checking-if-goal">
-                <span></span>
+              <div className="checking-if-goal" style={{ height: "10px" }}>
+                <span
+                  style={{
+                    fontWeight: "600",
+                    fontSize: "12px",
+                    color: "transparent",
+                  }}
+                >
+                  Please select a goal before continuing
+                </span>
               </div>
             )}
             <div className="user-weight-inputs-container">
@@ -374,14 +413,17 @@ function SignupFormPage() {
                 {goalErrors && <p style={{ color: "red" }}>{goalErrors}</p>}
               </label>
             </div>
-            <label className="signup-form-labels">
+            <label className="weekly-goal-container">
               Weekly Goal:
-              {renderWeeklyGoalButtons()}
+              <div className="weekly-goal-choices">
+                {renderWeeklyGoalButtons()}
+              </div>
             </label>
             <label className="signup-form-labels">
               Username
               <input
                 type="text"
+                disabled={goal === ""}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -391,6 +433,7 @@ function SignupFormPage() {
               Email
               <input
                 type="email"
+                disabled={goal === ""}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -400,6 +443,7 @@ function SignupFormPage() {
               Password
               <input
                 type="password"
+                disabled={goal === ""}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -409,6 +453,7 @@ function SignupFormPage() {
               Confirm Password
               <input
                 type="password"
+                disabled={goal === ""}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -418,7 +463,7 @@ function SignupFormPage() {
               <button
                 type="submit"
                 className="signup-submit-button"
-                disabled={goalErrors.length || weeklyGoal === ""}
+                disabled={goalErrors.length || weeklyGoal === "" || goal === ""}
               >
                 Sign Up
               </button>
