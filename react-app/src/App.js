@@ -10,7 +10,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import HomeNavBar from "./components/HomeNavBar";
 import Diary from "./components/Diary";
 import Goal from "./components/Goal";
-import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,7 +42,6 @@ function App() {
           </Route>
         </Switch>
       )}
-      <Footer />
     </>
   );
 }

@@ -34,11 +34,6 @@ function LoginFormPage() {
         <div className="login-form-container">
           <h1>Member Login</h1>
           <form onSubmit={handleSubmit} className="login-form">
-            {/* <ul>
-              {errors.map((error, idx) => (
-                <li key={idx}>{error}</li>
-              ))}
-            </ul> */}
             <label className="login-form-labels">
               Email:
               <input

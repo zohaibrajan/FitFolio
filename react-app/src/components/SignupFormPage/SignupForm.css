@@ -1,4 +1,153 @@
-.sign-up-form {
+.signup-form {
     display: flex;
     flex-direction: column;
+    width: 100%;
+}
+
+.signup-form-container {
+    display: flex;
+    flex-direction: column;
+    width: 550px;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 8px 32px;
+    padding: 30px 45px;
+    border-radius: 20px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+}
+
+
+.signup-form-parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1100px;
+    border-top: 3px solid rgb(0, 102, 238);
+}
+
+.signup-submit-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.signup-submit-button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    border: none;
+    width: 60%;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 5px;
+    background-color: rgb(0, 102, 238);
+    color: white;
+}
+
+.signup-submit-button:hover {
+    background-color: rgb(0, 72, 166);
+}
+
+.signup-form-labels {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.signup-form-gender-choices {
+    display: flex;
+    margin-top: 5px;
+    gap: 25px;
+    flex-direction: row;
+}
+
+.signup-form-labels-gender {
+    display: flex;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.signup-form-gender-container {
+    display: flex;
+    margin: 10px 0;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.signup-goal-button {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.signup-form-sub-headers {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 7px 0px;
+    border-bottom: 1px solid rgba(180, 180, 180, 0.6);
+}
+
+
+.goal-form-labels {
+    display: flex;
+    font-weight: 600;
+    font-size: 17px;
+    gap: 5px;
+    align-items: center;
+}
+
+.height-labels-container {
+    display: flex;
+    margin: 15px 0 0 0;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.height-labels-in-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.height-choices-in-signup-form {
+    display: flex;
+    justify-content: center;
+    font-weight: 400;
+    font-size: 15px;
+    margin-top: 8px;
+    gap: 15px
+}
+
+.height-inputs {
+    margin-right: 5px;
+    width: 100px;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.checking-if-goal {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.weight-inputs {
+    padding: 10px;
+    width: 70%;
+}
+
+.user-weight-inputs-container {
+    display: flex;
+    flex-direction: column;
+    margin: 9px 0;
+    gap: 5px;
 }
