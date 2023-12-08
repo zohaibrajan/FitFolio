@@ -380,6 +380,14 @@ def user_food_logs_for_today():
         .all()
     )
 
+    # print('1st', food_logs[0].date == today)
+
+    # logs = [log.to_dict() for log in food_logs]
+
+    # print('-------', today)
+    # print('----------', logs)
+    # print('-------', logs[0]["date"])
+
     return {
         "allFoodLogs": [log.to_dict() for log in food_logs]
     }
@@ -424,13 +432,18 @@ def create_user_food_log():
         calories_consumed = servings * food.calories
         protein_consumed = servings * food.protein
 
+        # print('in creating food-log', data["date"])
+
+        # print("-------------can you see me")
+
 
         new_food_log = FoodLog(
             servings = servings,
             calories_consumed = calories_consumed,
             protein_consumed = protein_consumed,
             food_id = int(food.id),
-            date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
+            date = data["date"],
+            # date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
             user_id = int(current_user.id)
         )
 
