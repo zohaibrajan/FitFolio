@@ -6,8 +6,14 @@ import { createGoalThunk } from "../../store/goal";
 import "./SignupForm.css";
 
 function SignupFormPage() {
-  const today = new Date();
-  const formattedDate = today.toISOString().slice(0, 10);
+  let today = new Date().getTime();
+  today = new Date(today);
+  const year = today.getFullYear();
+  const month =
+    today.getMonth() >= 10 ? today.getMonth() + 1 : `0${today.getMonth() + 1}`;
+  const day = today.getDate();
+  const formattedDate =
+    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
@@ -24,6 +30,9 @@ function SignupFormPage() {
   const [goalErrors, setGoalErrors] = useState("");
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [date, setDate] = useState("");
+  const disabled =
+    goalErrors.length || weeklyGoal === "" || targetWeight === "";
+  const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
 
   if (sessionUser) return <Redirect to="/my-home/diary" />;
 
@@ -73,7 +82,7 @@ function SignupFormPage() {
   const renderWeeklyGoalButtons = () => {
     if (!goal) {
       return (
-        <div className="checking-if-goal" style={{height: "50px"}}>
+        <div className="checking-if-goal" style={{ height: "50px" }}>
           <span
             style={{
               fontWeight: "600",
@@ -88,7 +97,7 @@ function SignupFormPage() {
     }
     if (goal === "Maintain Weight") {
       return (
-        <div className="checking-if-goal" style={{height: "50px"}}>
+        <div className="checking-if-goal" style={{ height: "50px" }}>
           <span
             style={{
               fontWeight: "600",
@@ -149,53 +158,53 @@ function SignupFormPage() {
               </button>
             </>
           )}
-            {goal === "Gain Weight" && (
-              <>
-                <button
-                  type="button"
-                  className="weekly-goal-buttons"
-                  onClick={() => setWeeklyGoal(0.5)}
-                  style={{
-                    border:
-                      weeklyGoal === 0.5
-                        ? "1px solid rgb(0, 102, 238)"
-                        : "1px solid black",
-                    color: weeklyGoal === 0.5 ? "rgb(0, 102, 238)" : "black",
-                  }}
-                >
-                  Gain 0.5 lbs per week
-                </button>
-                <button
-                  type="button"
-                  className="weekly-goal-buttons"
-                  onClick={() => setWeeklyGoal(1)}
-                  style={{
-                    border:
-                      weeklyGoal === 1
-                        ? "2px solid rgb(0, 102, 238)"
-                        : "1px solid black",
-                    color: weeklyGoal === 1 ? "rgb(0, 102, 238)" : "black",
-                  }}
-                >
-                  Gain 1 lb per week
-                </button>
-                <button
-                  type="button"
-                  className="weekly-goal-buttons"
-                  onClick={() => setWeeklyGoal(1.5)}
-                  style={{
-                    border:
-                      weeklyGoal === 1.5
-                        ? "2px solid rgb(0, 102, 238)"
-                        : "1px solid black",
-                    color: weeklyGoal === 1.5 ? "rgb(0, 102, 238)" : "black",
-                  }}
-                >
-                  Gain 1.5 lbs per week
-                </button>
-              </>
-            )}
-          </div>
+          {goal === "Gain Weight" && (
+            <>
+              <button
+                type="button"
+                className="weekly-goal-buttons"
+                onClick={() => setWeeklyGoal(0.5)}
+                style={{
+                  border:
+                    weeklyGoal === 0.5
+                      ? "2px solid rgb(0, 102, 238)"
+                      : "1px solid black",
+                  color: weeklyGoal === 0.5 ? "rgb(0, 102, 238)" : "black",
+                }}
+              >
+                Gain 0.5 lbs per week
+              </button>
+              <button
+                type="button"
+                className="weekly-goal-buttons"
+                onClick={() => setWeeklyGoal(1)}
+                style={{
+                  border:
+                    weeklyGoal === 1
+                      ? "2px solid rgb(0, 102, 238)"
+                      : "1px solid black",
+                  color: weeklyGoal === 1 ? "rgb(0, 102, 238)" : "black",
+                }}
+              >
+                Gain 1 lb per week
+              </button>
+              <button
+                type="button"
+                className="weekly-goal-buttons"
+                onClick={() => setWeeklyGoal(1.5)}
+                style={{
+                  border:
+                    weeklyGoal === 1.5
+                      ? "2px solid rgb(0, 102, 238)"
+                      : "1px solid black",
+                  color: weeklyGoal === 1.5 ? "rgb(0, 102, 238)" : "black",
+                }}
+              >
+                Gain 1.5 lbs per week
+              </button>
+            </>
+          )}
+        </div>
       );
     }
   };
@@ -232,9 +241,10 @@ function SignupFormPage() {
         await dispatch(createGoalThunk(formDataGoal));
       }
     } else {
-      setErrors([
-        "Confirm Password field must be the same as the Password field",
-      ]);
+      setErrors({
+        confirmPassword:
+          "Confirm Password field must be the same as the Password field",
+      });
     }
   };
 
@@ -244,35 +254,32 @@ function SignupFormPage() {
         <div className="signup-form-container">
           <h1 style={{ marginBottom: "25px" }}>Lets Create An Account</h1>
           <form onSubmit={handleSubmit} className="signup-form">
-            <ul>
-              {errors.map((error, idx) => (
-                <li key={idx}>{error}</li>
-              ))}
-            </ul>
-            <label className="signup-form-labels" style={{ height: "170px" }}>
+            <label className="all-goals-container" style={{ height: "170px" }}>
               Goal
               <span style={{ marginBottom: "3px" }}></span>
-              {["Lose Weight", "Maintain Weight", "Gain Weight"].map(
-                (value) => (
-                  <button
-                    className="signup-goal-button"
-                    key={value}
-                    type="button"
-                    value={value}
-                    onClick={() => handleGoalClick(value)}
-                    style={{
-                      color: goal === value ? "rgb(0, 102, 238)" : "black",
-                      border:
-                        goal === value
-                          ? "2px solid rgb(0, 102, 238)"
-                          : "1px solid black",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    {value}
-                  </button>
-                )
-              )}
+              <div className="all-goals-choices">
+                {["Lose Weight", "Maintain Weight", "Gain Weight"].map(
+                  (value) => (
+                    <button
+                      className="signup-goal-button"
+                      key={value}
+                      type="button"
+                      value={value}
+                      onClick={() => handleGoalClick(value)}
+                      style={{
+                        height: "40px",
+                        color: goal === value ? "rgb(0, 102, 238)" : "black",
+                        border:
+                          goal === value
+                            ? "2px solid rgb(0, 102, 238)"
+                            : "1px solid black",
+                      }}
+                    >
+                      {value}
+                    </button>
+                  )
+                )}
+              </div>
             </label>
             <div className="signup-form-sub-headers">
               <h3>Help us calculate your calories</h3>
@@ -312,14 +319,40 @@ function SignupFormPage() {
                 </label>
               </div>
             </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                minHeight: "10px",
+                marginBottom: "12px",
+                maxHeight: "10px",
+              }}
+            >
+              {errors.gender ? (
+                <span
+                  style={{
+                    fontSize: "10px",
+                    color: "red",
+                  }}
+                >
+                  {errors.gender}
+                </span>
+              ) : (
+                <span style={{ fontSize: "8px", color: "transparent" }}></span>
+              )}
+            </div>
             <label
               className="goal-form-labels"
-              style={{ display: "flex", marginTop: "5px", flexDirection: "column" }}
+              style={{
+                display: "flex",
+                marginTop: "5px",
+                flexDirection: "column",
+              }}
             >
               Date of Birth
               <input
                 type="date"
-                style={{ padding: "10px" }}
+                style={{ padding: "10px", width: "176px" }}
                 value={date}
                 pattern="\d{4}-\d{2}-\d{2}"
                 max={formattedDate}
@@ -396,9 +429,30 @@ function SignupFormPage() {
                   max={900}
                   min={50}
                   disabled={goal === ""}
-                  required
                 ></input>
               </label>
+              <div
+                style={{
+                  minHeight: "10px",
+                  marginBottom: "12px",
+                  maxHeight: "10px",
+                }}
+              >
+                {errors.current_weight_lbs ? (
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    {errors.current_weight_lbs}
+                  </span>
+                ) : (
+                  <span
+                    style={{ fontSize: "8px", color: "transparent" }}
+                  ></span>
+                )}
+              </div>
               <label className="goal-form-labels" style={{ marginTop: "5px" }}>
                 Target Weight:
                 <input
@@ -408,10 +462,25 @@ function SignupFormPage() {
                   onChange={handleTargetWeightChange}
                   disabled={!currentWeight}
                   min={40}
-                  required
                 />
-                {goalErrors && <p style={{ color: "red" }}>{goalErrors}</p>}
               </label>
+              {goalErrors ? (
+                <div className="goal-errors">
+                  <p
+                    style={{
+                      color: "red",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    {goalErrors}
+                  </p>
+                </div>
+              ) : (
+                <div className="goal-errors">
+                  <p style={{ color: "red" }}></p>
+                </div>
+              )}
             </div>
             <label className="weekly-goal-container">
               Weekly Goal:
@@ -419,52 +488,141 @@ function SignupFormPage() {
                 {renderWeeklyGoalButtons()}
               </div>
             </label>
-            <label className="signup-form-labels">
-              Username
-              <input
-                type="text"
-                disabled={goal === ""}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </label>
-            <label className="signup-form-labels">
-              Email
-              <input
-                type="email"
-                disabled={goal === ""}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </label>
-            <label className="signup-form-labels">
-              Password
-              <input
-                type="password"
-                disabled={goal === ""}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </label>
-            <label className="signup-form-labels">
-              Confirm Password
-              <input
-                type="password"
-                disabled={goal === ""}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </label>
-            <div className="signup-submit-button-container">
-              <button
-                type="submit"
-                className="signup-submit-button"
-                disabled={goalErrors.length || weeklyGoal === "" || goal === ""}
+            <div className="user-info">
+              <label className="signup-form-labels">
+                Username
+                <input
+                  className="user-info-inputs"
+                  type="text"
+                  disabled={goal === ""}
+                  minLength={6}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </label>
+              <div
+                style={{
+                  minHeight: "10px",
+                  marginBottom: "12px",
+                  maxHeight: "10px",
+                }}
               >
+                {errors.username ? (
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    {errors.username}
+                  </span>
+                ) : (
+                  <span
+                    style={{ fontSize: "8px", color: "transparent" }}
+                  ></span>
+                )}
+              </div>
+              <label className="signup-form-labels">
+                Email
+                <input
+                  type="email"
+                  className="user-info-inputs"
+                  disabled={goal === ""}
+                  minLength={6}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+              <div
+                style={{
+                  minHeight: "10px",
+                  marginBottom: "12px",
+                  maxHeight: "10px",
+                }}
+              >
+                {errors.email ? (
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    {errors.email}
+                  </span>
+                ) : (
+                  <span
+                    style={{ fontSize: "8px", color: "transparent" }}
+                  ></span>
+                )}
+              </div>
+              <label className="signup-form-labels">
+                Password
+                <input
+                  type="password"
+                  className="user-info-inputs"
+                  disabled={goal === ""}
+                  minLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+              <div
+                style={{
+                  minHeight: "10px",
+                  marginBottom: "12px",
+                  maxHeight: "10px",
+                }}
+              >
+                {errors.password ? (
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    {errors.password}
+                  </span>
+                ) : (
+                  <span
+                    style={{ fontSize: "8px", color: "transparent" }}
+                  ></span>
+                )}
+              </div>
+              <label className="signup-form-labels">
+                Confirm Password
+                <input
+                  type="password"
+                  className="user-info-inputs"
+                  disabled={goal === ""}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </label>
+              <div
+                style={{
+                  minHeight: "10px",
+                  marginBottom: "12px",
+                  maxHeight: "10px",
+                }}
+              >
+                {errors.confirmPassword ? (
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    {errors.confirmPassword}
+                  </span>
+                ) : (
+                  <span
+                    style={{ fontSize: "8px", color: "transparent" }}
+                  ></span>
+                )}
+              </div>
+            </div>
+            <div className="signup-submit-button-container">
+              <button type="submit" className={buttonStyle} disabled={disabled}>
                 Sign Up
               </button>
             </div>
