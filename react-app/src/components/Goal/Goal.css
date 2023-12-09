@@ -9,7 +9,9 @@
 .goal-content {
     width: 70%;
     border: 1px solid black;
-    background-color: rgb(246, 246, 246)
+    background-color: rgb(246, 246, 246);
+    min-width: 685px;
+    max-width: 775px;
 }
 
 .goal-container-title {
