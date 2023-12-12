@@ -4,13 +4,15 @@ import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
 import { getUsersGoalThunk } from "../../store/goal";
-import { getAllCardioLogsForTodayThunk } from "../../store/cardioLogs";
+import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
 import { getAllWeightLogsForTodayThunk } from "../../store/weightLogs";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFoodLogsForTodayThunk } from "../../store/foodLogs";
 import { deleteCardioLogThunk } from "../../store/cardioLogs";
 import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./Diary.css";
 
 function Diary() {
@@ -24,17 +26,36 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
+  let today = new Date().getTime();
+  today = new Date(today);
+  const year = today.getFullYear();
+  const month =
+    today.getMonth() >= 10
+      ? today.getMonth() + 1
+      : `0${today.getMonth() + 1}`;
+  const day = today.getDate();
+  const formattedDate =
+    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
+  const [selectedDate, setSelectedDate] = useState(new Date(formattedDate));
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
       ? "calories-green"
       : "calories-red";
 
   useEffect(() => {
+    const year = selectedDate.getFullYear();
+    const month =
+      selectedDate.getMonth() >= 10
+        ? selectedDate.getMonth() + 1
+        : `0${selectedDate.getMonth() + 1}`;
+    const day = selectedDate.getDate();
+    const formattedDateForFetch =
+      day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
     dispatch(getUsersGoalThunk());
-    dispatch(getAllCardioLogsForTodayThunk());
+    dispatch(getAllCardioLogsForADateThunk(formattedDateForFetch));
     dispatch(getAllWeightLogsForTodayThunk());
     dispatch(getAllFoodLogsForTodayThunk());
-  }, [dispatch]);
+  }, [dispatch, selectedDate]);
 
   useEffect(() => {
     let caloriesB = 0;
@@ -56,24 +77,26 @@ function Diary() {
 
   const removeCardioLog = (e, cardioLogId) => {
     e.preventDefault();
-
     dispatch(deleteCardioLogThunk(cardioLogId));
   };
 
   const removeWeightLog = (e, weightLodId) => {
     e.preventDefault();
-
     dispatch(deleteWeightLogThunk(weightLodId));
   };
 
   const removeFoodLog = (e, foodLogId) => {
     e.preventDefault();
-
     dispatch(deleteFoodLogThunk(foodLogId));
   };
 
   return (
     <>
+      <DatePicker
+        showIcon
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+      />
       <div className="diary-container">
         <div className="diary-elements-container">
           <div className="diary-details-container">

@@ -40,8 +40,9 @@ export const getAllCardioLogsThunk = () => async (dispatch) => {
   }
 };
 
-export const getAllCardioLogsForTodayThunk = () => async (dispatch) => {
-  const res = await fetch("/api/users/cardio-logs/today");
+
+export const getAllCardioLogsForADateThunk = (date) => async (dispatch) => {
+  const res = await fetch(`/api/users/cardio-logs/${date}`);
 
   if (res.ok) {
     const cardioLogs = await res.json();
