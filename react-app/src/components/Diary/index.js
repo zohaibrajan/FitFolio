@@ -17,6 +17,7 @@ import "./Diary.css";
 
 function Diary() {
   const dispatch = useDispatch();
+  const today = new Date();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const weightLogsObj = useSelector((state) => state.weightLogs);
@@ -85,6 +86,7 @@ function Diary() {
       <DatePicker
         showIcon
         selected={selectedDate}
+        maxDate={today}
         onChange={(date) => setSelectedDate(date)}
       />
       <div className="diary-container">
