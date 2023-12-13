@@ -5,9 +5,9 @@ import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
 import { getUsersGoalThunk } from "../../store/goal";
 import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
-import { getAllWeightLogsForTodayThunk } from "../../store/weightLogs";
+import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
+import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllFoodLogsForTodayThunk } from "../../store/foodLogs";
 import { deleteCardioLogThunk } from "../../store/cardioLogs";
 import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
@@ -26,17 +26,7 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  let today = new Date().getTime();
-  today = new Date(today);
-  const year = today.getFullYear();
-  const month =
-    today.getMonth() >= 10
-      ? today.getMonth() + 1
-      : `0${today.getMonth() + 1}`;
-  const day = today.getDate();
-  const formattedDate =
-    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
-  const [selectedDate, setSelectedDate] = useState(new Date(formattedDate));
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
       ? "calories-green"
@@ -53,8 +43,8 @@ function Diary() {
       day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
     dispatch(getUsersGoalThunk());
     dispatch(getAllCardioLogsForADateThunk(formattedDateForFetch));
-    dispatch(getAllWeightLogsForTodayThunk());
-    dispatch(getAllFoodLogsForTodayThunk());
+    dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));
+    dispatch(getAllFoodLogsForADayThunk(formattedDateForFetch));
   }, [dispatch, selectedDate]);
 
   useEffect(() => {
@@ -125,15 +115,19 @@ function Diary() {
 
               <div className="log-buttons-container">
                 <OpenModalButton
-                  modalComponent={<CardioLogModal />}
+                  modalComponent={
+                    <CardioLogModal dateFromDiary={selectedDate} />
+                  }
                   buttonText={"Add Cardio Exercise"}
                 />
                 <OpenModalButton
-                  modalComponent={<WeightLogModal />}
+                  modalComponent={
+                    <WeightLogModal dateFromDiary={selectedDate} />
+                  }
                   buttonText={"Add Weight Exercise"}
                 />
                 <OpenModalButton
-                  modalComponent={<FoodLogModal />}
+                  modalComponent={<FoodLogModal dateFromDiary={selectedDate} />}
                   buttonText={"Add Food"}
                 />
               </div>
@@ -198,7 +192,11 @@ function Diary() {
                               <OpenModalButton
                                 buttonText={"Edit Exercise"}
                                 modalComponent={
-                                  <CardioLogModal formType="update" log={log} />
+                                  <CardioLogModal
+                                    formType="update"
+                                    log={log}
+                                    dateFromDiary={selectedDate}
+                                  />
                                 }
                               />
                             </td>
@@ -256,7 +254,11 @@ function Diary() {
                               <OpenModalButton
                                 buttonText={"Edit Exercise"}
                                 modalComponent={
-                                  <WeightLogModal formType="update" log={log} />
+                                  <WeightLogModal
+                                    formType="update"
+                                    log={log}
+                                    dateFromDiary={selectedDate}
+                                  />
                                 }
                               />
                             </td>
@@ -312,7 +314,11 @@ function Diary() {
                               <OpenModalButton
                                 buttonText={"Edit Food Item"}
                                 modalComponent={
-                                  <FoodLogModal formType="update" log={log} />
+                                  <FoodLogModal
+                                    formType="update"
+                                    log={log}
+                                    dateFromDiary={selectedDate}
+                                  />
                                 }
                               />
                             </td>

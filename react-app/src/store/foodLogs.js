@@ -38,8 +38,9 @@ export const getAllFoodLogsThunk = () => async (dispatch) => {
   }
 };
 
-export const getAllFoodLogsForTodayThunk = () => async (dispatch) => {
-  const res = await fetch("/api/users/food-logs/today");
+
+export const getAllFoodLogsForADayThunk = (date) => async (dispatch) => {
+  const res = await fetch(`/api/users/food-logs/${date}`);
 
   if (res.ok) {
     const foodLogs = await res.json();

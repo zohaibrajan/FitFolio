@@ -3,26 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
+import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
 import { createWeightLogThunk, updateWeightLogThunk, deleteAWeightLog } from "../../store/weightLogs";
 import "./WeightLog.css";
 
 
-function WeightLogModal({ formType = "create", log = {} }) {
+function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
-  let today = new Date().getTime();
-  today = new Date(today);
-  const year = today.getFullYear();
-  const month =
-    today.getMonth() >= 10 ? today.getMonth() + 1 : `0${today.getMonth() + 1}`;
-  const day = today.getDate();
-  const formattedDate =
-    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
+  const today = gettingTodaysDate();
+  const diaryDate = formattingUserInputDate(dateFromDiary);
   const history = useHistory();
   const weightExerciseObj = useSelector((state) => state.weightExercises);
   const weightExercises = Object.values(weightExerciseObj);
   const [date, setDate] = useState(
-    formType === "update" ? log.date : formattedDate
+    formType === "update" ? log.date : diaryDate
   );
   const [exerciseId, setExerciseId] = useState(
     formType === "update" ? log.weightExercise.id : 1
@@ -51,7 +46,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
     formData.append("date", correctFormatForDate);
 
     if (formType === "create") {
-      if (correctFormatForDate !== formattedDate) {
+      if (correctFormatForDate !== diaryDate) {
         await fetch("/api/users/weight-logs", {
           method: "POST",
           body: formData,
@@ -68,7 +63,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
         }
       }
     } else {
-      if (correctFormatForDate !== formattedDate) {
+      if (correctFormatForDate !== diaryDate) {
         await fetch(`/api/users/weight-logs/${log.id}`, {
           method: "PUT",
           body: formData,
@@ -148,7 +143,7 @@ function WeightLogModal({ formType = "create", log = {} }) {
             type="date"
             value={date}
             pattern="\d{4}-\d{2}-\d{2}"
-            max={formattedDate}
+            max={today}
             onChange={(e) => setDate(e.target.value)}
           />
         </label>

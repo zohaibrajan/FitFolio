@@ -47,17 +47,6 @@ def user(id):
     return user.to_dict_with_info()
 
 
-@user_routes.route('/cardio-logs')
-@login_required
-def user_cardio_logs():
-    """"Get all the cardio logs for a user"""
-    cardio_logs = CardioLog.query.where(CardioLog.user_id == current_user.id).order_by(CardioLog.date.desc()).all()
-
-    return {
-        "allCardioLogs": [log.to_dict() for log in cardio_logs]
-    }
-
-
 @user_routes.route('/cardio-logs/<string:date>')
 @login_required
 def user_cardio_logs_for_date(date):
@@ -206,35 +195,6 @@ def create_user_cardio_log():
         return form.errors
 
 
-@user_routes.route('/weight-logs')
-@login_required
-def user_weight_logs():
-    """"Get all the weight logs for a user"""
-    weight_logs = WeightLog.query.where(WeightLog.user_id == current_user.id).order_by(WeightLog.date.desc()).all()
-
-    return {
-        "allWeightLogs": [log.to_dict() for log in weight_logs]
-    }
-
-@user_routes.route('/weight-logs/today')
-@login_required
-def user_weight_logs_for_today():
-    """"Get all the weight logs for a user for today"""
-    today = date.today()
-
-
-    weight_logs = (
-        WeightLog.query
-        .filter(WeightLog.user_id == current_user.id)
-        .filter(WeightLog.date == today)
-        .order_by(WeightLog.date.desc())
-        .all()
-    )
-
-    return {
-        "allWeightLogs": [log.to_dict() for log in weight_logs]
-    }
-
 @user_routes.route('/weight-logs/<string:date>')
 @login_required
 def user_weight_logs_for_date(date):
@@ -377,33 +337,6 @@ def deleting_a_weight_log(weightLogId):
     }, 200
 
 
-@user_routes.route('/food-logs')
-@login_required
-def user_food_logs():
-    """"Get all the food logs for a user"""
-    food_logs = FoodLog.query.where(FoodLog.user_id == current_user.id).order_by(FoodLog.date.desc()).all()
-
-    return {
-        "allFoodLogs": [log.to_dict() for log in food_logs]
-    }
-
-@user_routes.route('/food-logs/today')
-@login_required
-def user_food_logs_for_today():
-    """"Get all the food logs for a user for today"""
-    today = date.today()
-
-    food_logs = (
-        FoodLog.query
-        .filter(FoodLog.user_id == current_user.id)
-        .filter(FoodLog.date == today)
-        .order_by(FoodLog.date.desc())
-        .all()
-    )
-
-    return {
-        "allFoodLogs": [log.to_dict() for log in food_logs]
-    }
 
 @user_routes.route('/food-logs/<string:date>')
 @login_required
@@ -463,10 +396,6 @@ def create_user_food_log():
         calories_consumed = servings * food.calories
         protein_consumed = servings * food.protein
 
-        # print('in creating food-log', data["date"])
-
-        # print("-------------can you see me")
-
 
         new_food_log = FoodLog(
             servings = servings,
@@ -474,7 +403,6 @@ def create_user_food_log():
             protein_consumed = protein_consumed,
             food_id = int(food.id),
             date = data["date"],
-            # date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
             user_id = int(current_user.id)
         )
 

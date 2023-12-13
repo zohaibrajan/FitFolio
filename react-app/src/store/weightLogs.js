@@ -48,6 +48,18 @@ export const getAllWeightLogsForTodayThunk = () => async (dispatch) => {
   }
 };
 
+
+export const getAllWeightLogForADayThunk = (date) => async (dispatch) => {
+  const res = await fetch(`/api/users/weight-logs/${date}`);
+
+  if (res.ok) {
+    const weightLogs = await res.json();
+    dispatch(getAllWeightLogs(weightLogs));
+    return weightLogs;
+  }
+};
+
+
 export const createWeightLogThunk = (weightLog) => async (dispatch) => {
   const res = await fetch("/api/users/weight-logs", {
     method: "POST",
