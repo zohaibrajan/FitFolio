@@ -3,21 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllFoodsThunk } from "../../store/foods";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
+import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
 import { createFoodLogThunk, updateCardioLogThunk, deleteAFoodLog } from "../../store/foodLogs";
 import "./FoodLog.css";
 
-function FoodLogModal({ formType = "create", log = {} }) {
+function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
   const dispatch = useDispatch();
   const foodsObj = useSelector((state) => state.foods);
   const { closeModal } = useModal();
-  let today = new Date().getTime();
-  today = new Date(today);
-  const year = today.getFullYear();
-  const month =
-    today.getMonth() >= 10 ? today.getMonth() + 1 : `0${today.getMonth() + 1}`;
-  const day = today.getDate();
-  const formattedDate =
-    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
+  const today = gettingTodaysDate();
+  const diaryDate = formattingUserInputDate(dateFromDiary);
   const history = useHistory();
   const foods = Object.values(foodsObj);
   const [foodId, setFoodId] = useState(formType === "update" ? log.food.id : 1);
@@ -31,7 +26,7 @@ function FoodLogModal({ formType = "create", log = {} }) {
     formType === "update" ? log.totalProteinConsumed : 0
   );
   const [date, setDate] = useState(
-    formType === "update" ? log.date : formattedDate
+    formType === "update" ? log.date : diaryDate
   );
 
   useEffect(() => {
@@ -59,7 +54,7 @@ function FoodLogModal({ formType = "create", log = {} }) {
     formData.append("date", correctFormatForDate);
 
     if (formType === "create") {
-      if (correctFormatForDate !== formattedDate) {
+      if (correctFormatForDate !== diaryDate) {
         await fetch("/api/users/food-logs", {
           method: "POST",
           body: formData,
@@ -76,7 +71,7 @@ function FoodLogModal({ formType = "create", log = {} }) {
         }
       }
     } else {
-      if (correctFormatForDate !== formattedDate) {
+      if (correctFormatForDate !== diaryDate) {
         await fetch(`/api/users/food-logs/${log.id}`, {
           method: "PUT",
           body: formData,
@@ -134,7 +129,7 @@ function FoodLogModal({ formType = "create", log = {} }) {
             type="date"
             pattern="\d{4}-\d{2}-\d{2}"
             value={date}
-            max={formattedDate}
+            max={today}
             onChange={(e) => setDate(e.target.value)}
           />
         </label>

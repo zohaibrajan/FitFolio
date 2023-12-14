@@ -4,17 +4,21 @@ import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
 import { getUsersGoalThunk } from "../../store/goal";
-import { getAllCardioLogsForTodayThunk } from "../../store/cardioLogs";
-import { getAllWeightLogsForTodayThunk } from "../../store/weightLogs";
+import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
+import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
+import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllFoodLogsForTodayThunk } from "../../store/foodLogs";
 import { deleteCardioLogThunk } from "../../store/cardioLogs";
 import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
+import DatePicker from "react-datepicker";
+import { addDays, subDays } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 import "./Diary.css";
 
 function Diary() {
   const dispatch = useDispatch();
+  const today = new Date();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const weightLogsObj = useSelector((state) => state.weightLogs);
@@ -24,17 +28,26 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
       ? "calories-green"
       : "calories-red";
 
   useEffect(() => {
+    const year = selectedDate.getFullYear();
+    const month =
+      selectedDate.getMonth() >= 10
+        ? selectedDate.getMonth() + 1
+        : `0${selectedDate.getMonth() + 1}`;
+    const day = selectedDate.getDate();
+    const formattedDateForFetch =
+      day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
     dispatch(getUsersGoalThunk());
-    dispatch(getAllCardioLogsForTodayThunk());
-    dispatch(getAllWeightLogsForTodayThunk());
-    dispatch(getAllFoodLogsForTodayThunk());
-  }, [dispatch]);
+    dispatch(getAllCardioLogsForADateThunk(formattedDateForFetch));
+    dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));
+    dispatch(getAllFoodLogsForADayThunk(formattedDateForFetch));
+  }, [dispatch, selectedDate]);
 
   useEffect(() => {
     let caloriesB = 0;
@@ -56,21 +69,37 @@ function Diary() {
 
   const removeCardioLog = (e, cardioLogId) => {
     e.preventDefault();
-
     dispatch(deleteCardioLogThunk(cardioLogId));
   };
 
   const removeWeightLog = (e, weightLodId) => {
     e.preventDefault();
-
     dispatch(deleteWeightLogThunk(weightLodId));
   };
 
   const removeFoodLog = (e, foodLogId) => {
     e.preventDefault();
-
     dispatch(deleteFoodLogThunk(foodLogId));
   };
+
+  const incrementDate = () => {
+    setSelectedDate(addDays(selectedDate, 1));
+  };
+
+  const decrementDate = () => {
+    setSelectedDate(subDays(selectedDate, 1));
+  };
+
+  const isTodayOrFuture =
+    selectedDate.getFullYear() > today.getFullYear() ||
+    (selectedDate.getFullYear() === today.getFullYear() &&
+      selectedDate.getMonth() > today.getMonth()) ||
+    (selectedDate.getFullYear() === today.getFullYear() &&
+      selectedDate.getMonth() === today.getMonth() &&
+      selectedDate.getDate() >= today.getDate());
+  const nextDayButtonStyle = isTodayOrFuture
+    ? "next-date-button-disabled"
+    : "next-date-button";
 
   return (
     <>
@@ -80,40 +109,70 @@ function Diary() {
             <div className="diary-details-title">
               <span>Your Daily Summary</span>
             </div>
-            <div className="diary-details">
-              <span style={{ fontWeight: "600" }}>Calories Remaining</span>
-              {goal.caloriesPerDay && (
-                <h2 className={caloriesStyle}>
-                  {goal.caloriesPerDay + caloriesBurned - caloriesConsumed}
-                </h2>
-              )}
-              <span style={{ fontWeight: "600" }}>
-                Exercise:{" "}
-                <span style={{ fontWeight: "400" }}>
-                  {caloriesBurned} Calories Burned
+            <div className="diary-inner-details-container">
+              <div className="diary-details">
+                <span style={{ fontWeight: "600" }}>Calories Remaining</span>
+                {goal.caloriesPerDay && (
+                  <h2 className={caloriesStyle}>
+                    {goal.caloriesPerDay + caloriesBurned - caloriesConsumed}
+                  </h2>
+                )}
+                <span style={{ fontWeight: "600" }}>
+                  Exercise:{" "}
+                  <span style={{ fontWeight: "400" }}>
+                    {caloriesBurned} Calories Burned
+                  </span>
                 </span>
-              </span>
-              <span style={{ fontWeight: "600" }}>
-                Food:{" "}
-                <span style={{ fontWeight: "400" }}>
-                  {caloriesConsumed} Calories Consumed
+                <span style={{ fontWeight: "600" }}>
+                  Food:{" "}
+                  <span style={{ fontWeight: "400" }}>
+                    {caloriesConsumed} Calories Consumed
+                  </span>
                 </span>
-              </span>
-
-              <div className="log-buttons-container">
-                <OpenModalButton
-                  modalComponent={<CardioLogModal />}
-                  buttonText={"Add Cardio Exercise"}
-                />
-                <OpenModalButton
-                  modalComponent={<WeightLogModal />}
-                  buttonText={"Add Weight Exercise"}
-                />
-                <OpenModalButton
-                  modalComponent={<FoodLogModal />}
-                  buttonText={"Add Food"}
-                />
               </div>
+              <div className="diary-calendar-container">
+                <button className="prev-date-button" onClick={decrementDate}>
+                  <i
+                    className="fa-solid fa-angle-left"
+                    style={{ color: "white" }}
+                  ></i>
+                </button>
+                <DatePicker
+                  className="date-picker"
+                  showIcon
+                  selected={selectedDate}
+                  maxDate={today}
+                  onChange={(date) => {
+                    if (date <= today) {
+                      setSelectedDate(date);
+                    }
+                  }}
+                />
+                <button
+                  className={nextDayButtonStyle}
+                  onClick={incrementDate}
+                  disabled={isTodayOrFuture}
+                >
+                  <i
+                    className="fa-solid fa-angle-right"
+                    style={{ color: "white" }}
+                  />
+                </button>
+              </div>
+            </div>
+            <div className="log-buttons-container">
+              <OpenModalButton
+                modalComponent={<CardioLogModal dateFromDiary={selectedDate} />}
+                buttonText={"Add Cardio Exercise"}
+              />
+              <OpenModalButton
+                modalComponent={<WeightLogModal dateFromDiary={selectedDate} />}
+                buttonText={"Add Weight Exercise"}
+              />
+              <OpenModalButton
+                modalComponent={<FoodLogModal dateFromDiary={selectedDate} />}
+                buttonText={"Add Food"}
+              />
             </div>
 
             <div className="calories-progress-bar-container">
@@ -175,7 +234,11 @@ function Diary() {
                               <OpenModalButton
                                 buttonText={"Edit Exercise"}
                                 modalComponent={
-                                  <CardioLogModal formType="update" log={log} />
+                                  <CardioLogModal
+                                    formType="update"
+                                    log={log}
+                                    dateFromDiary={selectedDate}
+                                  />
                                 }
                               />
                             </td>
@@ -233,7 +296,11 @@ function Diary() {
                               <OpenModalButton
                                 buttonText={"Edit Exercise"}
                                 modalComponent={
-                                  <WeightLogModal formType="update" log={log} />
+                                  <WeightLogModal
+                                    formType="update"
+                                    log={log}
+                                    dateFromDiary={selectedDate}
+                                  />
                                 }
                               />
                             </td>
@@ -289,7 +356,11 @@ function Diary() {
                               <OpenModalButton
                                 buttonText={"Edit Food Item"}
                                 modalComponent={
-                                  <FoodLogModal formType="update" log={log} />
+                                  <FoodLogModal
+                                    formType="update"
+                                    log={log}
+                                    dateFromDiary={selectedDate}
+                                  />
                                 }
                               />
                             </td>

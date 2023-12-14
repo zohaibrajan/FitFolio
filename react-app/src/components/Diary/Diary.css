@@ -4,6 +4,64 @@
     margin-top: 35px;
 }
 
+.diary-inner-details-container {
+    display: flex;
+    margin: 15px 40px;
+    justify-content: space-between;
+}
+
+.date-picker {
+    display: flex;
+    width: 150px;
+    height: 17px;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid rgb(140, 140, 140);
+    border-right: 1px solid rgb(140, 140, 140);
+    border-top: 1px solid rgb(0, 102, 238);
+    border-bottom: 1px solid rgb(0, 102, 238);
+}
+
+.next-date-button {
+    cursor: pointer;
+    height: 30px;
+    border-radius: 0 5px 5px 0;
+    background-color: rgb(0, 102, 238);
+    border: none;
+    width: 25px;
+}
+
+.next-date-button-disabled {
+    height: 30px;
+    cursor: not-allowed;
+    border-radius: 0 5px 5px 0;
+    background-color: rgb(140, 140, 140);
+    border: none;
+    width: 25px;
+    opacity: 0.5;
+}
+
+.prev-date-button {
+    cursor: pointer;
+    height: 30px;
+    border-radius: 5px 0 0 5px;
+    background-color: rgb(0, 102, 238);
+    border: none;
+    width: 25px;
+}
+
+.next-date-button:hover, .prev-date-button:hover {
+    background-color: rgb(0, 72, 166);
+}
+
+.diary-calendar-container {
+    display: flex;
+    margin-top: 25px;
+    height: 50px;
+    border-radius: 2px;
+}
+
 .diary-elements-container {
     display: flex;
     flex-direction: column;
@@ -16,6 +74,7 @@
 .log-buttons-container {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 .diary-details-title {
@@ -41,7 +100,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 15px;
 }
 
 
@@ -49,6 +107,7 @@
     display: flex;
     justify-content: center;
     height: 30px;
+    margin-bottom: 5px;
 }
 
 .progress-bar {

@@ -7,19 +7,14 @@ import {
   updateCardioLogThunk,
   deleteACardioLog,
 } from "../../store/cardioLogs";
+import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
 import "./CardioLog.css";
 
-function CardioLogModal({ formType = "create", log = {} }) {
+function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
-  let today = new Date().getTime();
-  today = new Date(today);
-  const year = today.getFullYear();
-  const month =
-    today.getMonth() >= 10 ? today.getMonth() + 1: `0${today.getMonth() + 1}`;
-  const day = today.getDate();
-  const formattedDate =
-    day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
+  const today = gettingTodaysDate()
+  const diaryDate = formattingUserInputDate(dateFromDiary)
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [cardioExercise, setCardioExercise] = useState(
@@ -32,9 +27,8 @@ function CardioLogModal({ formType = "create", log = {} }) {
     formType === "update" ? log.caloriesBurned : 0
   );
   const [date, setDate] = useState(
-    formType === "update" ? log.date : formattedDate
+    formType === "update" ? log.date : diaryDate
   );
-
 
 
   useEffect(() => {
@@ -54,6 +48,8 @@ function CardioLogModal({ formType = "create", log = {} }) {
     const changeToDate = new Date(date);
     const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
 
+    console.log(correctFormatForDate, '-------', diaryDate)
+
     const formData = new FormData();
     formData.append("duration", Number(duration));
     formData.append("calories_burned", Number(caloriesBurned));
@@ -64,7 +60,7 @@ function CardioLogModal({ formType = "create", log = {} }) {
     formData.append("date", correctFormatForDate);
 
     if (formType === "create") {
-      if (correctFormatForDate !== formattedDate) {
+      if (correctFormatForDate !== diaryDate) {
         await fetch("/api/users/cardio-logs", {
           method: "POST",
           body: formData,
@@ -80,7 +76,7 @@ function CardioLogModal({ formType = "create", log = {} }) {
         }
       }
     } else {
-      if (correctFormatForDate !== formattedDate) {
+      if (correctFormatForDate !== diaryDate) {
         await fetch(`/api/users/cardio-logs/${log.id}`, {
           method: "PUT",
           body: formData,
@@ -150,7 +146,7 @@ function CardioLogModal({ formType = "create", log = {} }) {
             type="date"
             pattern="\d{4}-\d{2}-\d{2}"
             value={date}
-            max={formattedDate}
+            max={today}
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
