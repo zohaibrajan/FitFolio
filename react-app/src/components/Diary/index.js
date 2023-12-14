@@ -12,6 +12,7 @@ import { deleteCardioLogThunk } from "../../store/cardioLogs";
 import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
 import DatePicker from "react-datepicker";
+import { addDays, subDays } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Diary.css";
 
@@ -81,58 +82,97 @@ function Diary() {
     dispatch(deleteFoodLogThunk(foodLogId));
   };
 
+  const incrementDate = () => {
+    setSelectedDate(addDays(selectedDate, 1));
+  };
+
+  const decrementDate = () => {
+    setSelectedDate(subDays(selectedDate, 1));
+  };
+
+  const isTodayOrFuture =
+    selectedDate.getFullYear() > today.getFullYear() ||
+    (selectedDate.getFullYear() === today.getFullYear() &&
+      selectedDate.getMonth() > today.getMonth()) ||
+    (selectedDate.getFullYear() === today.getFullYear() &&
+      selectedDate.getMonth() === today.getMonth() &&
+      selectedDate.getDate() >= today.getDate());
+  const nextDayButtonStyle = isTodayOrFuture
+    ? "next-date-button-disabled"
+    : "next-date-button";
+
   return (
     <>
-      <DatePicker
-        showIcon
-        selected={selectedDate}
-        maxDate={today}
-        onChange={(date) => setSelectedDate(date)}
-      />
       <div className="diary-container">
         <div className="diary-elements-container">
           <div className="diary-details-container">
             <div className="diary-details-title">
               <span>Your Daily Summary</span>
             </div>
-            <div className="diary-details">
-              <span style={{ fontWeight: "600" }}>Calories Remaining</span>
-              {goal.caloriesPerDay && (
-                <h2 className={caloriesStyle}>
-                  {goal.caloriesPerDay + caloriesBurned - caloriesConsumed}
-                </h2>
-              )}
-              <span style={{ fontWeight: "600" }}>
-                Exercise:{" "}
-                <span style={{ fontWeight: "400" }}>
-                  {caloriesBurned} Calories Burned
+            <div className="diary-inner-details-container">
+              <div className="diary-details">
+                <span style={{ fontWeight: "600" }}>Calories Remaining</span>
+                {goal.caloriesPerDay && (
+                  <h2 className={caloriesStyle}>
+                    {goal.caloriesPerDay + caloriesBurned - caloriesConsumed}
+                  </h2>
+                )}
+                <span style={{ fontWeight: "600" }}>
+                  Exercise:{" "}
+                  <span style={{ fontWeight: "400" }}>
+                    {caloriesBurned} Calories Burned
+                  </span>
                 </span>
-              </span>
-              <span style={{ fontWeight: "600" }}>
-                Food:{" "}
-                <span style={{ fontWeight: "400" }}>
-                  {caloriesConsumed} Calories Consumed
+                <span style={{ fontWeight: "600" }}>
+                  Food:{" "}
+                  <span style={{ fontWeight: "400" }}>
+                    {caloriesConsumed} Calories Consumed
+                  </span>
                 </span>
-              </span>
-
-              <div className="log-buttons-container">
-                <OpenModalButton
-                  modalComponent={
-                    <CardioLogModal dateFromDiary={selectedDate} />
-                  }
-                  buttonText={"Add Cardio Exercise"}
-                />
-                <OpenModalButton
-                  modalComponent={
-                    <WeightLogModal dateFromDiary={selectedDate} />
-                  }
-                  buttonText={"Add Weight Exercise"}
-                />
-                <OpenModalButton
-                  modalComponent={<FoodLogModal dateFromDiary={selectedDate} />}
-                  buttonText={"Add Food"}
-                />
               </div>
+              <div className="diary-calendar-container">
+                <button className="prev-date-button" onClick={decrementDate}>
+                  <i
+                    className="fa-solid fa-angle-left"
+                    style={{ color: "white" }}
+                  ></i>
+                </button>
+                <DatePicker
+                  className="date-picker"
+                  showIcon
+                  selected={selectedDate}
+                  maxDate={today}
+                  onChange={(date) => {
+                    if (date <= today) {
+                      setSelectedDate(date);
+                    }
+                  }}
+                />
+                <button
+                  className={nextDayButtonStyle}
+                  onClick={incrementDate}
+                  disabled={isTodayOrFuture}
+                >
+                  <i
+                    className="fa-solid fa-angle-right"
+                    style={{ color: "white" }}
+                  />
+                </button>
+              </div>
+            </div>
+            <div className="log-buttons-container">
+              <OpenModalButton
+                modalComponent={<CardioLogModal dateFromDiary={selectedDate} />}
+                buttonText={"Add Cardio Exercise"}
+              />
+              <OpenModalButton
+                modalComponent={<WeightLogModal dateFromDiary={selectedDate} />}
+                buttonText={"Add Weight Exercise"}
+              />
+              <OpenModalButton
+                modalComponent={<FoodLogModal dateFromDiary={selectedDate} />}
+                buttonText={"Add Food"}
+              />
             </div>
 
             <div className="calories-progress-bar-container">
