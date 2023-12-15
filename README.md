@@ -34,6 +34,29 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 * [User Stories](https://github.com/zohaibrajan/FitFolio/wiki/User-Stories)
 * [Wireframes](https://github.com/zohaibrajan/FitFolio/wiki/Wire-Frames)
 
+## API Endpoints
+| Endpoint                                      | API Route                       | Description                               |
+| --------------------------------------------------- | ------------------------------- | ------------------------------------------------- |
+| **GET All Users:**                                | `/api/users`                    | Returns a list of all users.                        |
+| **GET Specific User:**                            | `/api/users/<int:userId>`       | Returns information about a specific user.          |
+| **GET User's Cardio Logs:**                       | `/api/users/cardio-logs/<string:date>` | Returns all cardio logs logged by the current user on a given date. |
+| **GET Cardio Log by ID:**                         | `/api/users/cardio-logs/<int:cardioLogId>` | Returns a cardio log logged by the current user.    |
+| **POST Cardio Log:**                              | `/api/users/cardio-logs`        | Creates a cardio log for the current user.          |
+| **PUT Cardio Log by ID:**                         | `/api/users/cardio-logs/<int:cardioLogId>` | Updates a cardio log logged by the current user.    |
+| **DELETE Cardio Log by ID:**                      | `/api/users/cardio-logs/<int:cardioLogId>` | Deletes a cardio log logged by the current user.    |
+| **GET Weight Logs:**                              | `/api/users/weight-logs/<string:date>` | Returns all weight logs logged by the current user on a given date. |
+| **GET Weight Log by ID:**                         | `/api/users/weight-logs/<int:weightLogId>` | Returns a weight log logged by the current user.    |
+| **POST Weight Log:**                              | `/api/users/weight-logs`        | Creates a weight log for the current user.          |
+| **PUT Weight Log by ID:**                         | `/api/users/weight-logs/<int:weightLogId>` | Updates a weight log logged by the current user.    |
+| **DELETE Weight Log by ID:**                      | `/api/users/weight-logs/<int:weightLogId>` | Deletes a weight log logged by the current user.    |
+| **GET Food Logs:**                                | `/api/users/food-logs/<string:date>` | Returns all food logs logged by the current user on a given date. |
+| **GET Food Log by ID:**                           | `/api/users/food-logs/<int:foodLogId>` | Returns a food log logged by the current user.      |
+| **POST Food Log:**                                | `/api/users/food-logs`          | Creates a food log for the current user.            |
+| **PUT Food Log by ID:**                           | `/api/users/food-logs/<int:foodLogId>` | Updates a food log logged by the current user.      |
+| **DELETE Food Log by ID:**                        | `/api/users/food-logs/<int:foodLogId>` | Deletes a food log logged by the current user.      |
+
+
+
 ### Landing Page
 ![](./images/landingpage.png)
 
