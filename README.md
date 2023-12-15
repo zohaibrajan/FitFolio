@@ -25,7 +25,7 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 ##### Database, Deployment and Hosting
  ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
  ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
- ![Docker](https://img.shields.io/badge/Docker-%23316192.svg?style=for-the-badge&logo=Docker&logoColor=white)
+ ![Docker](https://camo.githubusercontent.com/f6e929cfc4dad2aea20e8f6574a20cfe4749cac8c919b166a4eb4abfd01ec0fd/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d446f636b65722d2532333234393645443f7374796c653d666f722d7468652d6261646765266c6f676f3d646f636b6572266c6f676f436f6c6f723d7768697465)
 
 
 ## Index
@@ -39,3 +39,9 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 
 ### Home Page
 ![](./images/homepage.png)
+
+
+### Connect
+Connect with me on [LinkedIn](https://www.linkedin.com/in/zohaib-rajan-718198216/),
+you can also take a look at other projects I have contributed [here](https://github.com/zohaibrajan).
+I look forward to chatting with you!!
