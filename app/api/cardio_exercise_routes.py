@@ -85,6 +85,29 @@ def update_cardio_exercise(cardioExerciseId):
     if form.errors:
         return form.errors
 
+@cardio_exercise_routes.route("/<int:cardioExerciseId>", methods=["DELETE"])
+@login_required
+def delete_cardio_exercise(cardioExerciseId):
+    """Delete a Cardio Exercise"""
+    cardio_exercise = CardioExercise.query.get(cardioExerciseId)
+
+    if not cardio_exercise:
+        return {
+            "errorMessage": "Sorry, Cardio Exercise Does Not Exist"
+        }, 404
+
+    if cardio_exercise.created_by_user_id != current_user.id:
+        return {
+            "errorMessage": "Unauthorized"
+        }, 403
+
+    db.session.delete(cardio_exercise)
+    db.session.commit()
+
+    return {
+        "message": "Cardio Exercise Deleted"
+    }
+
 @cardio_exercise_routes.route("/new", methods=["POST"])
 @login_required
 def create_cardio_exercise():
