@@ -45,11 +45,6 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const changeToDate = new Date(date);
-    const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
-
-    console.log(correctFormatForDate, '-------', diaryDate)
-
     const formData = new FormData();
     formData.append("duration", Number(duration));
     formData.append("calories_burned", Number(caloriesBurned));
@@ -57,10 +52,10 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
       "exercise_name",
       cardioExercisesObj[cardioExercise].exerciseName
     );
-    formData.append("date", correctFormatForDate);
+    formData.append("date", date);
 
     if (formType === "create") {
-      if (correctFormatForDate !== diaryDate) {
+      if (date !== diaryDate) {
         await fetch("/api/users/cardio-logs", {
           method: "POST",
           body: formData,
@@ -76,7 +71,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         }
       }
     } else {
-      if (correctFormatForDate !== diaryDate) {
+      if (date !== diaryDate) {
         await fetch(`/api/users/cardio-logs/${log.id}`, {
           method: "PUT",
           body: formData,

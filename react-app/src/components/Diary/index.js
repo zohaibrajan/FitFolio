@@ -3,6 +3,8 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
+import { formattingUserInputDate } from "../../utils";
+import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
 import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
 import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
@@ -28,21 +30,14 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { selectedDate, setSelectedDate } = useSelectedDate()
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
       ? "calories-green"
       : "calories-red";
 
   useEffect(() => {
-    const year = selectedDate.getFullYear();
-    const month =
-      selectedDate.getMonth() >= 10
-        ? selectedDate.getMonth() + 1
-        : `0${selectedDate.getMonth() + 1}`;
-    const day = selectedDate.getDate();
-    const formattedDateForFetch =
-      day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
+    const formattedDateForFetch = formattingUserInputDate(selectedDate);
     dispatch(getUsersGoalThunk());
     dispatch(getAllCardioLogsForADateThunk(formattedDateForFetch));
     dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));

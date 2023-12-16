@@ -12,12 +12,12 @@
     font-weight: 400;
 }
 
-.my-home, .my-goal {
+.my-home, .my-goal, .my-exercise {
     cursor: pointer;
 }
 
 
-.my-goal-active, .my-home-active {
+.my-goal-active, .my-home-active, .my-exercise-active {
     cursor: pointer;
     font-weight: 600;
     font-size: 16px;

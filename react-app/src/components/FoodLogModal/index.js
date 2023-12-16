@@ -4,10 +4,14 @@ import { getAllFoodsThunk } from "../../store/foods";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
-import { createFoodLogThunk, updateCardioLogThunk, deleteAFoodLog } from "../../store/foodLogs";
+import {
+  createFoodLogThunk,
+  updateCardioLogThunk,
+  deleteAFoodLog,
+} from "../../store/foodLogs";
 import "./FoodLog.css";
 
-function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
+function FoodLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const dispatch = useDispatch();
   const foodsObj = useSelector((state) => state.foods);
   const { closeModal } = useModal();
@@ -15,6 +19,9 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
   const diaryDate = formattingUserInputDate(dateFromDiary);
   const history = useHistory();
   const foods = Object.values(foodsObj);
+  const [searchTerm, setSearchTerm] = useState(
+    formType === "update" ? log.food.name : ""
+  );
   const [foodId, setFoodId] = useState(formType === "update" ? log.food.id : 1);
   const [servings, setServings] = useState(
     formType === "update" ? log.servings : 0
@@ -27,6 +34,9 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
   );
   const [date, setDate] = useState(
     formType === "update" ? log.date : diaryDate
+  );
+  const [isFoodSelected, setIsFoodSelected] = useState(
+    formType === "update" ? true : false
   );
 
   useEffect(() => {
@@ -41,20 +51,27 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
     }
   }, [foodId, servings, foodsObj]);
 
+  const filteredFoods = foods.filter((food) =>
+    food.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleFoodClick = (food) => {
+    setFoodId(food.id);
+    setSearchTerm(food.name);
+    setIsFoodSelected(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const foodName = foodsObj[foodId].name;
-    const changeToDate = new Date(date);
-    const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
+    const foodName = searchTerm
 
     const formData = new FormData();
     formData.append("name", foodName);
     formData.append("servings", servings);
-    formData.append("date", correctFormatForDate);
+    formData.append("date", date);
 
     if (formType === "create") {
-      if (correctFormatForDate !== diaryDate) {
+      if (date !== diaryDate) {
         await fetch("/api/users/food-logs", {
           method: "POST",
           body: formData,
@@ -71,20 +88,20 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
         }
       }
     } else {
-      if (correctFormatForDate !== diaryDate) {
+      if (date !== diaryDate) {
         await fetch(`/api/users/food-logs/${log.id}`, {
           method: "PUT",
           body: formData,
-        })
-        dispatch(deleteAFoodLog(log.id))
-        closeModal()
+        });
+        dispatch(deleteAFoodLog(log.id));
+        closeModal();
       } else {
         try {
-          await dispatch(updateCardioLogThunk(log.id, formData))
-          closeModal()
+          await dispatch(updateCardioLogThunk(log.id, formData));
+          closeModal();
         } catch (e) {
-          const errors = await e.json()
-          console.error(errors)
+          const errors = await e.json();
+          console.error(errors);
         }
       }
     }
@@ -99,22 +116,33 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
       >
         <label className="food-log-labels">
           Foods
-          <select
+          <input
             type="text"
-            value={foodId}
-            onChange={(e) => setFoodId(e.target.value)}
-            placeholder="Food"
-          >
-            {foods.map((food) => (
-              <option key={food.id} value={food.id}>
-                {food.name}
-              </option>
-            ))}
-          </select>
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setIsFoodSelected(false);
+            }}
+            placeholder="Search for a food"
+          />
+          {searchTerm && !isFoodSelected && filteredFoods.length > 0 && (
+            <div className="scrollable-list">
+              {filteredFoods.map((food) => (
+                <button
+                  className="food-options-available"
+                  key={food.id}
+                  onClick={() => handleFoodClick(food)}
+                >
+                  {food.name}
+                </button>
+              ))}
+            </div>
+          )}
         </label>
         <label className="food-log-labels">
           Servings:
           <input
+            disabled={!isFoodSelected}
             className="servings-input"
             min={1}
             step={1}
@@ -139,7 +167,13 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = ""}) {
         <span className="food-log-labels">
           Protein Consumed: {proteinConsumed}
         </span>
-        <button className='food-log-submit-button' type="submit">Submit</button>
+        <button
+          disabled={!isFoodSelected || servings < 1}
+          className="food-log-submit-button"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
     </div>
   );

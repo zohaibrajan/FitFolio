@@ -2,8 +2,23 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
+    max-width: 252px;
     padding: 20px;
     font-family: "Inter", Helvetica, Arial, sans-serif;
+}
+
+.scrollable-list {
+    position: absolute;
+    top: 48px;
+    right: 30px;
+    width: 150px;
+    gap: 2px;
+    max-height: 100px;
+    background-color: white;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .food-log-container {
@@ -26,6 +41,26 @@
     font-weight: 600;
 }
 
+.food-options-available {
+    cursor: pointer;
+    padding: 0;
+    padding-top: 2px;
+    font-size: 12px;
+    padding-bottom: 2px;
+    border: none;
+    color: black;
+    background-color: transparent;
+    font-family: "Inter",
+        Helvetica,
+        Arial,
+        sans-serif;
+    ;
+}
+
+.food-options-available:hover {
+    background-color: rgb(240, 240, 240);
+}
+
 .food-log-submit-button {
     cursor: pointer;
     font-family: "Inter", Helvetica, Arial, sans-serif;
@@ -35,6 +70,14 @@
     font-weight: 600;
     border: none;
 }
+
+.food-log-submit-button:disabled:hover,
+.food-log-submit-button:disabled {
+    background-color: #8C8C8C;
+    cursor: not-allowed;
+}
+
+
 
 .food-log-submit-button:hover {
     background-color: rgb(72, 104, 2);
