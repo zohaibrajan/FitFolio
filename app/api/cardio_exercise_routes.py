@@ -41,6 +41,13 @@ def create_cardio_exercise():
 
         calories_burned_per_minute = round(calories_burned / duration)
 
+        exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
+
+        if exercise_exists:
+            return {
+                "errors": "Exercise already exists"
+            }
+
         exercise = CardioExercise(
             exercise_name = data["exercise_name"],
             intensity = data["intensity"],
