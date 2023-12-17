@@ -25,8 +25,45 @@
     max-width: 775px;
 }
 
-.create-exercise {
+.create-exercise-container {
+    display: flex;
+    justify-content: space-between
+}
+
+.create-exercise-text {
     display: flex;
     flex-direction: column;
+    gap: 15px;
     padding: 15px;
+    width: 60%;
+    max-width: 410px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: center;
+
+}
+
+.create-exercise-text > p {
+    font-size: 12px;
+}
+
+.cardio-input {
+    width: 100%
+}
+
+.create-exercise-form {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    flex-direction: column;
+    padding: 15px 15px 15px 30px;
+    gap: 10px
+}
+
+.cardio-labels {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-exercise-button-container {
+    display: flex;
+    justify-content: center;
 }
