@@ -1,14 +1,61 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
+import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import "./ExercisePage.css";
 
 function ExercisePage() {
+  const dispatch = useDispatch();
+  const cardioExercisesObj = useSelector((state) => state.cardioExercises);
+  const weightExercisesObj = useSelector((state) => state.weightExercises);
+  const cardioExercises = Object.values(cardioExercisesObj);
+  const weightExercises = Object.values(weightExercisesObj);
   const [exerciseName, setExerciseName] = useState("");
   const [intensity, setIntensity] = useState("");
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [duration, setDuration] = useState(0);
   const [sets, setSets] = useState(0);
   const [exerciseType, setExerciseType] = useState("cardio");
+  const [errors, setErrors] = useState({});
+  const disabled = exerciseName === "" || Object.values(errors).length > 0;
+  console.log(disabled)
+  const buttonStyle = disabled ? "create-exercise-button-disabled" : "create-exercise-button";
+
+  useEffect(() => {
+    dispatch(getAllCardioExercisesThunk());
+    dispatch(getAllWeightExercisesThunk());
+  }, [dispatch]);
+
+  const checkForExercise = (exerciseName) => {
+    if (exerciseType === "cardio") {
+      cardioExercises.forEach((exercise) => {
+        if ((exercise.exerciseName).toLowerCase() === (exerciseName).toLowerCase()) {
+          setErrors({ exerciseName: "Exercise already exists" });
+          return
+        }
+      });
+    } else {
+      for (let exercise in weightExercises) {
+        if (weightExercises[exercise].name === exerciseName) {
+          setErrors({ exerciseName: "Exercise already exists" });
+          return
+        }
+      }
+    }
+  }
+
+  const checkDuration = (duration) => {
+    if (duration <= 0) {
+      setErrors({ duration: "Duration must be greater than 0" });
+    }
+  }
+
+  const checkCaloriesBurned = (caloriesBurned) => {
+    if (caloriesBurned <= 0) {
+      setErrors({ caloriesBurned: "Calories burned must be greater than 0" });
+    }
+  }
 
   return (
     <div className="exercise-page-container">
@@ -26,11 +73,25 @@ function ExercisePage() {
                 type="text"
                 value={exerciseName}
                 name="exercise-name"
-                onChange={(e) => setExerciseName(e.target.value)}
+                onBlur={() => checkForExercise(exerciseName)}
+                onChange={(e) => {
+                  setExerciseName(e.target.value);
+                  setErrors({ exerciseName: "" });
+                }}
               />
             </label>
+            {errors.exerciseName ? (
+              <div className="exercise-name-error">{errors.exerciseName}</div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
             <label
-              style={{ display: "flex", flexDirection: "column", gap: "3px" }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "3px",
+                marginBottom: "7px",
+              }}
             >
               Exercise Type
               <select
@@ -45,7 +106,7 @@ function ExercisePage() {
             </label>
             {exerciseType === "cardio" ? (
               <>
-                <label className="cardio-labels">
+                <label className="cardio-labels" style={{ marginBottom: "5px"}}>
                   Intensity?
                   <select
                     className="cardio-input"
@@ -65,9 +126,18 @@ function ExercisePage() {
                     type="number"
                     value={duration}
                     min={0}
-                    onChange={(e) => setDuration(e.target.value)}
+                    onBlur={() => checkDuration(duration)}
+                    onChange={(e) => {
+                      setDuration(e.target.value);
+                      setErrors({ duration: "" });
+                    }}
                   />
                 </label>
+                {errors.duration ? (
+                  <div className="exercise-name-error">{errors.duration}</div>
+                ) : (
+                  <div className="exercise-name-error"></div>
+                )}
                 <label className="cardio-labels">
                   Calories Burned
                   <input
@@ -75,9 +145,18 @@ function ExercisePage() {
                     type="number"
                     min={0}
                     value={caloriesBurned}
-                    onChange={(e) => setCaloriesBurned(e.target.value)}
+                    onBlur={() => checkCaloriesBurned(caloriesBurned)}
+                    onChange={(e) => {
+                      setCaloriesBurned(e.target.value);
+                      setErrors({ caloriesBurned: "" });
+                    }}
                   />
                 </label>
+                {errors.caloriesBurned ? (
+                  <div className="exercise-name-error">{errors.caloriesBurned}</div>
+                ) : (
+                  <div className="exercise-name-error"></div>
+                )}
               </>
             ) : (
               <label>
@@ -91,7 +170,8 @@ function ExercisePage() {
             )}
             <div className="create-exercise-button-container">
               <button
-                className="create-exercise-button"
+                className={buttonStyle}
+                disabled={disabled}
                 onClick={() => {
                   console.log({
                     exerciseName,

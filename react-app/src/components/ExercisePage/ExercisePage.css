@@ -49,26 +49,28 @@
 }
 
 .cardio-input {
-    width: 90%%
+    width: 100%;
 }
 
 .create-exercise-form {
     display: flex;
     font-family: "Inter", Helvetica, Arial, sans-serif;
     flex-direction: column;
-    padding: 15px 15px 15px 30px;
-    gap: 10px
+    padding: 15px 0 15px 30px;
 }
 
 .cardio-labels {
     display: flex;
     flex-direction: column;
+    font-size: 15px;
+    font-weight: 600;
     gap: 3px;
 }
 
 .create-exercise-button-container {
     display: flex;
     justify-content: center;
+    margin-top: 5px;
 }
 
 .create-exercise-button {
@@ -88,6 +90,34 @@
     cursor: pointer;
 }
 
+.create-exercise-button-disabled {
+    display: flex;
+    border-radius: 3px;
+    justify-content: center;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    align-items: center;
+    background-color: #8c8c8c;
+    border: 1px solid #8c8c8c;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    width: 100px;
+    height: 30px;
+    cursor: not-allowed;
+}
+
 .create-exercise-button:hover {
     background-color: rgb(0, 72, 166);
+}
+
+.exercise-name-error {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    color: red;
+    font-size: 9px;
+    font-weight: 600;
+    height: 10px;
+    align-items: center;
+    margin-bottom: 2px;
 }
