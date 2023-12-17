@@ -42,7 +42,7 @@ function HomeNavBar({ path }) {
         Goal
       </div>
       <div onClick={exercise} className={exerciseClassName}>
-        Create Exercise
+        Exercise
       </div>
     </div>
   );

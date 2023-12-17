@@ -1,0 +1,32 @@
+.exercise-page-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.exercise-page-title {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: flex-start;
+    background-color: rgb(0, 102, 238);
+    border: 1px solid rgb(0, 102, 238);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.exercise-page-content {
+    display: flex;
+    border: 1px solid black;
+    flex-direction: column;
+    width: 60%;
+    min-width: 685px;
+    max-width: 775px;
+}
+
+.create-exercise {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}

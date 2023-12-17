@@ -11,7 +11,8 @@
     position: absolute;
     top: 48px;
     right: 30px;
-    width: 150px;
+    min-width: 140px;
+    max-width: 150px;
     gap: 2px;
     max-height: 100px;
     background-color: white;

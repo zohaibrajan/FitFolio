@@ -93,12 +93,12 @@ def delete_cardio_exercise(cardioExerciseId):
 
     if not cardio_exercise:
         return {
-            "errorMessage": "Sorry, Cardio Exercise Does Not Exist"
+            "error": "Sorry, Cardio Exercise Does Not Exist"
         }, 404
 
     if cardio_exercise.created_by_user_id != current_user.id:
         return {
-            "errorMessage": "Unauthorized"
+            "error": "Unauthorized"
         }, 403
 
     db.session.delete(cardio_exercise)
