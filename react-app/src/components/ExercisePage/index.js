@@ -18,7 +18,9 @@ function ExercisePage() {
         </div>
         <div className="create-exercise-container">
           <div className="create-exercise-form">
-            <label>
+            <label
+              style={{ display: "flex", flexDirection: "column", gap: "3px" }}
+            >
               Exercise Name
               <input
                 type="text"
@@ -27,7 +29,9 @@ function ExercisePage() {
                 onChange={(e) => setExerciseName(e.target.value)}
               />
             </label>
-            <label style={{ display: "flex", flexDirection: "column" }}>
+            <label
+              style={{ display: "flex", flexDirection: "column", gap: "3px" }}
+            >
               Exercise Type
               <select
                 style={{ width: "65%" }}
@@ -60,6 +64,7 @@ function ExercisePage() {
                     className="cardio-input"
                     type="number"
                     value={duration}
+                    min={0}
                     onChange={(e) => setDuration(e.target.value)}
                   />
                 </label>
@@ -68,6 +73,7 @@ function ExercisePage() {
                   <input
                     className="cardio-input"
                     type="number"
+                    min={0}
                     value={caloriesBurned}
                     onChange={(e) => setCaloriesBurned(e.target.value)}
                   />

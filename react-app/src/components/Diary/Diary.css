@@ -91,6 +91,7 @@
 
 .diary-details-container {
     display: flex;
+    background-color: rgb(246, 246, 246);
     flex-direction: column;
     border: 1px solid black;
     font-family: "Inter", Helvetica, Arial, sans-serif;
@@ -155,6 +156,7 @@
 .users-log-container {
     display: flex;
     flex-direction: column;
+    background-color: rgb(246, 246, 246);
     padding: 15px;
     gap: 15px;
 }
@@ -187,7 +189,7 @@ th {
 
 td {
     text-align: center;
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(235, 235, 235);
     font-size: 12px;
 }
 
