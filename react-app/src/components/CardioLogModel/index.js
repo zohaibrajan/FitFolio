@@ -13,8 +13,9 @@ import "./CardioLog.css";
 function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
-  const today = gettingTodaysDate()
-  const diaryDate = formattingUserInputDate(dateFromDiary)
+  const today = gettingTodaysDate();
+  const diaryDate = formattingUserInputDate(dateFromDiary);
+  const [isUserInput, setIsUserInput] = useState(formType === "update");
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [cardioExercise, setCardioExercise] = useState(
@@ -30,17 +31,18 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     formType === "update" ? log.date : diaryDate
   );
 
-
   useEffect(() => {
     dispatch(getAllCardioExercisesThunk());
   }, [dispatch]);
 
   useEffect(() => {
-    const exercise = cardioExercisesObj[cardioExercise];
-    if (exercise) {
-      setCaloriesBurned(exercise.caloriesPerMinute * duration);
+    if (!isUserInput) {
+      const exercise = cardioExercisesObj[cardioExercise];
+      if (exercise) {
+        setCaloriesBurned(exercise.caloriesPerMinute * duration);
+      }
     }
-  }, [cardioExercise, duration, cardioExercisesObj]);
+  }, [cardioExercise, duration, cardioExercisesObj, isUserInput]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,7 +104,10 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
           <select
             type="text"
             value={cardioExercise}
-            onChange={(e) => setCardioExercise(e.target.value)}
+            onChange={(e) => {
+              setCardioExercise(e.target.value)
+              setIsUserInput(false);
+            }}
             placeholder="Cardio Exercises"
           >
             {cardioExercises.map((exercise) => (
@@ -120,7 +125,10 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
             step={1}
             type="number"
             value={duration}
-            onChange={(e) => setDuration(e.target.value)}
+            onChange={(e) => {
+              setDuration(e.target.value)
+              setIsUserInput(false);
+            }}
           />
           min
         </label>
@@ -132,7 +140,12 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
             step={1}
             type="number"
             value={caloriesBurned}
-            onChange={(e) => setCaloriesBurned(e.target.value)}
+            onChange={(e) => {
+              if (formType !== "update") {
+                setIsUserInput(true);
+              }
+              setCaloriesBurned(e.target.value);
+            }}
           />
         </label>
         <label className="cardio-log-labels">
