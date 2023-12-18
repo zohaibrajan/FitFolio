@@ -1,26 +1,42 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
+import { createCardioExerciseThunk } from "../../store/cardioExercises";
+import { createCardioLogThunk } from "../../store/cardioLogs";
 import "./ExercisePage.css";
+import { gettingTodaysDate } from "../../utils";
 
 function ExercisePage() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const weightExercises = Object.values(weightExercisesObj);
   const [exerciseName, setExerciseName] = useState("");
-  const [intensity, setIntensity] = useState("");
-  const [caloriesBurned, setCaloriesBurned] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [sets, setSets] = useState(0);
+  const [intensity, setIntensity] = useState("Low");
+  const [caloriesBurned, setCaloriesBurned] = useState("");
+  const [duration, setDuration] = useState("");
+  const [sets, setSets] = useState("");
   const [exerciseType, setExerciseType] = useState("cardio");
-  const [errors, setErrors] = useState({});
-  const disabled = exerciseName === "" || Object.values(errors).length > 0;
-  console.log(disabled)
-  const buttonStyle = disabled ? "create-exercise-button-disabled" : "create-exercise-button";
+  const [errors, setErrors] = useState({
+    exercise: "",
+    duration: "",
+    calories: "",
+  });
+  const disabled =
+    exerciseName === "" ||
+    duration === "" ||
+    caloriesBurned === "" ||
+    errors.exercise.length > 0 ||
+    errors.duration.length > 0 ||
+    errors.calories.length > 0;
+  const buttonStyle = disabled
+    ? "create-exercise-button-disabled"
+    : "create-exercise-button";
 
   useEffect(() => {
     dispatch(getAllCardioExercisesThunk());
@@ -30,32 +46,66 @@ function ExercisePage() {
   const checkForExercise = (exerciseName) => {
     if (exerciseType === "cardio") {
       cardioExercises.forEach((exercise) => {
-        if ((exercise.exerciseName).toLowerCase() === (exerciseName).toLowerCase()) {
-          setErrors({ exerciseName: "Exercise already exists" });
-          return
+        if (
+          exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+        ) {
+          setErrors({ ...errors, exercise: "Exercise already exists" });
+          return;
         }
       });
-    } else {
-      for (let exercise in weightExercises) {
-        if (weightExercises[exercise].name === exerciseName) {
-          setErrors({ exerciseName: "Exercise already exists" });
-          return
-        }
-      }
+      // } else {
+      //   for (let exercise in weightExercises) {
+      //     if (weightExercises[exercise].name === exerciseName) {
+      //       setErrors({ exerciseName: "Exercise already exists" });
+      //       return
+      //     }
+      //   }
     }
-  }
+  };
 
   const checkDuration = (duration) => {
     if (duration <= 0) {
-      setErrors({ duration: "Duration must be greater than 0" });
+      setErrors({ ...errors, duration: "Must be greater than 0" });
     }
-  }
+  };
 
   const checkCaloriesBurned = (caloriesBurned) => {
     if (caloriesBurned <= 0) {
-      setErrors({ caloriesBurned: "Calories burned must be greater than 0" });
+      setErrors({
+        ...errors,
+        calories: "Must be greater than 0",
+      });
     }
-  }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (exerciseType === "cardio") {
+      const cardioExerciseForm = new FormData();
+      const cardioLog = new FormData();
+      cardioLog.append("duration", duration);
+      cardioLog.append("calories_burned", caloriesBurned);
+      cardioLog.append("date", gettingTodaysDate());
+      cardioLog.append("exercise_name", exerciseName);
+      cardioExerciseForm.append("exercise_name", exerciseName);
+      cardioExerciseForm.append("intensity", intensity);
+      cardioExerciseForm.append("duration", duration);
+      cardioExerciseForm.append("calories_burned", caloriesBurned);
+      try {
+        await dispatch(createCardioExerciseThunk(cardioExerciseForm));
+        await dispatch(createCardioLogThunk(cardioLog));
+        history.replace("/my-home/diary")
+      } catch (e) {
+        // const errors = await e.json();
+        console.error(e);
+      }
+    } else {
+      // dispatch(createWeightExerciseThunk({
+      //   exerciseName,
+      //   sets,
+      // }));
+    }
+  };
 
   return (
     <div className="exercise-page-container">
@@ -64,9 +114,9 @@ function ExercisePage() {
           <span>Create a New Exercise</span>
         </div>
         <div className="create-exercise-container">
-          <div className="create-exercise-form">
+          <form className="create-exercise-form" onSubmit={handleSubmit}>
             <label
-              style={{ display: "flex", flexDirection: "column", gap: "3px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "3px", fontWeight: "bold" }}
             >
               Exercise Name
               <input
@@ -76,12 +126,12 @@ function ExercisePage() {
                 onBlur={() => checkForExercise(exerciseName)}
                 onChange={(e) => {
                   setExerciseName(e.target.value);
-                  setErrors({ exerciseName: "" });
+                  setErrors({ ...errors, exercise: "" });
                 }}
               />
             </label>
-            {errors.exerciseName ? (
-              <div className="exercise-name-error">{errors.exerciseName}</div>
+            {errors.exercise ? (
+              <div className="exercise-name-error">{errors.exercise}</div>
             ) : (
               <div className="exercise-name-error"></div>
             )}
@@ -91,6 +141,7 @@ function ExercisePage() {
                 flexDirection: "column",
                 gap: "3px",
                 marginBottom: "7px",
+                fontWeight: "bold",
               }}
             >
               Exercise Type
@@ -106,7 +157,10 @@ function ExercisePage() {
             </label>
             {exerciseType === "cardio" ? (
               <>
-                <label className="cardio-labels" style={{ marginBottom: "5px"}}>
+                <label
+                  className="cardio-labels"
+                  style={{ marginBottom: "5px" }}
+                >
                   Intensity?
                   <select
                     className="cardio-input"
@@ -114,13 +168,13 @@ function ExercisePage() {
                     value={intensity}
                     onChange={(e) => setIntensity(e.target.value)}
                   >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
                   </select>
                 </label>
                 <label className="cardio-labels">
-                  How Long?
+                  How Long? (Minutes)
                   <input
                     className="cardio-input"
                     type="number"
@@ -129,7 +183,7 @@ function ExercisePage() {
                     onBlur={() => checkDuration(duration)}
                     onChange={(e) => {
                       setDuration(e.target.value);
-                      setErrors({ duration: "" });
+                      setErrors({ ...errors, duration: "" });
                     }}
                   />
                 </label>
@@ -148,12 +202,14 @@ function ExercisePage() {
                     onBlur={() => checkCaloriesBurned(caloriesBurned)}
                     onChange={(e) => {
                       setCaloriesBurned(e.target.value);
-                      setErrors({ caloriesBurned: "" });
+                      setErrors({ ...errors, calories: "" });
                     }}
                   />
                 </label>
-                {errors.caloriesBurned ? (
-                  <div className="exercise-name-error">{errors.caloriesBurned}</div>
+                {errors.calories ? (
+                  <div className="exercise-name-error">
+                    {errors.calories}
+                  </div>
                 ) : (
                   <div className="exercise-name-error"></div>
                 )}
@@ -170,23 +226,14 @@ function ExercisePage() {
             )}
             <div className="create-exercise-button-container">
               <button
+                type="submit"
                 className={buttonStyle}
                 disabled={disabled}
-                onClick={() => {
-                  console.log({
-                    exerciseName,
-                    exerciseType,
-                    intensity,
-                    duration,
-                    caloriesBurned,
-                    sets,
-                  });
-                }}
               >
                 Add Exercise
               </button>
             </div>
-          </div>
+          </form>
           <div className="create-exercise-text">
             <h3>Creating a New Exercise</h3>
             <p>

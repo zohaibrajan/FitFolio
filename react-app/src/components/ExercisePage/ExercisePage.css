@@ -49,6 +49,7 @@
 }
 
 .cardio-input {
+    min-width: 100%;
     width: 100%;
 }
 
@@ -114,6 +115,7 @@
 .exercise-name-error {
     display: flex;
     font-family: "Inter", Helvetica, Arial, sans-serif;
+    width: 100%;
     color: red;
     font-size: 9px;
     font-weight: 600;
