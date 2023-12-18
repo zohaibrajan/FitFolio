@@ -1,4 +1,5 @@
 const ALL_CARDIO_EXERCISES = "exercises/ALL_CARDIO_EXERCISES";
+const CREATE_CARDIO_EXERCISE = "exercises/CREATE_CARDIO_EXERCISE";
 
 
 const getAllCardioExercises = (cardioExercises) => ({
@@ -6,6 +7,10 @@ const getAllCardioExercises = (cardioExercises) => ({
   cardioExercises,
 });
 
+const createCardioExercise = (cardioExercise) => ({
+  type: CREATE_CARDIO_EXERCISE,
+  cardioExercise,
+});
 
 export const getAllCardioExercisesThunk = () => async (dispatch) => {
   const res = await fetch("/api/cardio-exercises");
@@ -17,6 +22,20 @@ export const getAllCardioExercisesThunk = () => async (dispatch) => {
   }
 };
 
+export const createCardioExerciseThunk = (exercise) => async (dispatch) => {
+  const res = await fetch("/api/cardio-exercises/new", {
+    method: "POST",
+    body: exercise
+  });
+
+  if (res.ok) {
+    const newExercise = await res.json();
+    dispatch(createCardioExercise(newExercise));
+    return newExercise;
+  }
+};
+
+
 const cardioExerciseReducer = (state = {}, action) => {
   switch (action.type) {
     case ALL_CARDIO_EXERCISES:
@@ -25,6 +44,8 @@ const cardioExerciseReducer = (state = {}, action) => {
         newState[exercise.id] = exercise;
       });
       return newState;
+    case CREATE_CARDIO_EXERCISE:
+      return { ...state, [action.cardioExercise.cardioExercise.id]: action.cardioExercise.cardioExercise };
     default:
       return state;
   }

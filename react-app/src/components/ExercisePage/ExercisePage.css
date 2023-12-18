@@ -1,0 +1,125 @@
+.exercise-page-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.exercise-page-title {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: flex-start;
+    background-color: rgb(0, 102, 238);
+    border: 1px solid rgb(0, 102, 238);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.exercise-page-content {
+    display: flex;
+    border: 1px solid black;
+    flex-direction: column;
+    width: 60%;
+    min-width: 685px;
+    max-width: 775px;
+
+}
+
+.create-exercise-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(246, 246, 246);
+}
+
+.create-exercise-text {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    width: 60%;
+    max-width: 410px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: center;
+
+}
+
+.create-exercise-text > p {
+    font-size: 12px;
+}
+
+.cardio-input {
+    min-width: 100%;
+    width: 100%;
+}
+
+.create-exercise-form {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    flex-direction: column;
+    padding: 15px 0 15px 30px;
+}
+
+.cardio-labels {
+    display: flex;
+    flex-direction: column;
+    font-size: 15px;
+    font-weight: 600;
+    gap: 3px;
+}
+
+.create-exercise-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.create-exercise-button {
+    display: flex;
+    border-radius: 3px;
+    justify-content: center;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    align-items: center;
+    background-color: rgb(0, 102, 238);
+    border: 1px solid rgb(0, 102, 238);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.create-exercise-button-disabled {
+    display: flex;
+    border-radius: 3px;
+    justify-content: center;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    align-items: center;
+    background-color: #8c8c8c;
+    border: 1px solid #8c8c8c;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    width: 100px;
+    height: 30px;
+    cursor: not-allowed;
+}
+
+.create-exercise-button:hover {
+    background-color: rgb(0, 72, 166);
+}
+
+.exercise-name-error {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    width: 100%;
+    color: red;
+    font-size: 9px;
+    font-weight: 600;
+    height: 10px;
+    align-items: center;
+    margin-bottom: 2px;
+}

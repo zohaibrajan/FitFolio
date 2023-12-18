@@ -5,3 +5,4 @@ from .food_form import FoodForm
 from .goal_form import GoalForm
 from .weight_log_form import WeightLogForm
 from .food_log_form import FoodLogForm
+from .cardio_exercise_form import CardioExerciseForm
