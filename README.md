@@ -60,11 +60,15 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 ### Landing Page
 ![](./images/landingpage.png)
 
-### Home Page
-![](./images/homepage.png)
+### Sign-up Page
+![](./images/signup.gif)
+
+### Home Page / Diary
+![](./images/homepage.gif)
+
+### Goal Page
+![](./images/goal.gif)
 
 
-### Connect
-Connect with me on [LinkedIn](https://www.linkedin.com/in/zohaib-rajan-718198216/),
-you can also take a look at other projects I have contributed [here](https://github.com/zohaibrajan).
-I look forward to chatting with you!!
+### Let's Connect
+[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/zohaib-rajan-718198216/)
