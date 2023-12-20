@@ -60,8 +60,14 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 ### Landing Page
 ![](./images/landingpage.png)
 
-### Home Page
+### Sign-up Page
+![](./images/signup.gif)
+
+### Home Page / Diary
 ![](./images/homepage.gif)
+
+### Goal Page
+![](./images/goal.gif)
 
 
 ### Let's Connect
