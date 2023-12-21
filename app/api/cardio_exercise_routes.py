@@ -70,7 +70,7 @@ def update_cardio_exercise(cardioExerciseId):
         if exercise_exists:
             return {
                 "errors": "Exercise already exists"
-            }
+            }, 400
 
         cardio_exercise.exercise_name = data["exercise_name"].title()
         cardio_exercise.intensity = data["intensity"]
