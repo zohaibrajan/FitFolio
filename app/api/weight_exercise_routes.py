@@ -42,28 +42,15 @@ def get_cardio_exercise(weightExerciseId):
 @weight_exercise_routes.route("<int:weightExerciseId>", methods=["PUT"])
 @login_required
 @verify_weight_exercise
-def update_weight_exercise(weightExerciseId):
+def update_weight_exercise(weight_exercise):
     """Update a Weight Exercise"""
-    weight_exercise = WeightExercise.query.get(weightExerciseId)
-
-    # if not weight_exercise:
-    #     return {
-    #         "errorMessage": "Sorry, Weight Exercise Does Not Exist"
-    #     }, 404
-
-    # if weight_exercise.created_by_user_id != current_user.id:
-    #     return {
-    #         "errorMessage": "Unauthorized"
-    #     }, 403
-
-
     form = WeightExerciseForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
 
     if form.validate_on_submit():
         data = form.data
 
-        exercise_exists = WeightExercise.query.filter(WeightExercise.exercise_name == data["exercise_name"]).first()
+        exercise_exists = WeightExercise.query.filter(WeightExercise.exercise_name.ilike(data["exercise_name"])).first()
 
         if exercise_exists:
             return {
