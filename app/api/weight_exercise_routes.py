@@ -30,7 +30,7 @@ def get_my_weight_exercises():
 
 @weight_exercise_routes.route("<int:weightExerciseId>")
 @login_required
-def get_cardio_exercise(weightExerciseId):
+def get_weight_exercise(weightExerciseId):
     """Get a single Weight Exercise"""
     exercise = WeightExercise.query.get(weightExerciseId)
 
@@ -39,20 +39,9 @@ def get_cardio_exercise(weightExerciseId):
     }
 
 
-@weight_exercise_routes.route("<int:weightExerciseId>", methods=["DELETE"])
-@login_required
-@verify_weight_exercise
-def delete_weight_exercise(weight_exercise):
-    """Delete a Weight Exercise"""
-    db.session.delete(weight_exercise)
-    db.session.commit()
-
-    return {
-        "message": "Successfully Deleted"
-    }
 
 
-@weight_exercise_routes.route("<int:weightExerciseId>", methods=["PUT"])
+@weight_exercise_routes.route("<int:weightExerciseId>", methods=["PUT"], endpoint="update_weight_exercise")
 @login_required
 @verify_weight_exercise
 def update_weight_exercise(weight_exercise):
@@ -82,6 +71,17 @@ def update_weight_exercise(weight_exercise):
             "errors": form.errors
         }, 400
 
+@weight_exercise_routes.route("<int:weightExerciseId>", methods=["DELETE"], endpoint="delete_weight_exercise")
+@login_required
+@verify_weight_exercise
+def delete_weight_exercise(weight_exercise):
+    """Delete a Weight Exercise"""
+    db.session.delete(weight_exercise)
+    db.session.commit()
+
+    return {
+        "message": "Weight Exercise Deleted"
+    }
 
 @weight_exercise_routes.route("/new", methods=["POST"])
 @login_required
