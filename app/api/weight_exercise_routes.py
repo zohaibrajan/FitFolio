@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import db, WeightExercise
 from app.forms import WeightExerciseForm
+from app.utils import verify_weight_exercise
 
 
 weight_exercise_routes = Blueprint("weight-exercise", __name__)
@@ -27,8 +28,6 @@ def get_my_weight_exercises():
     }
 
 
-
-
 @weight_exercise_routes.route("<int:weightExerciseId>")
 @login_required
 def get_cardio_exercise(weightExerciseId):
@@ -42,19 +41,20 @@ def get_cardio_exercise(weightExerciseId):
 
 @weight_exercise_routes.route("<int:weightExerciseId>", methods=["PUT"])
 @login_required
-def update_cardio_exercise(weightExerciseId):
+@verify_weight_exercise
+def update_weight_exercise(weightExerciseId):
     """Update a Weight Exercise"""
     weight_exercise = WeightExercise.query.get(weightExerciseId)
 
-    if not weight_exercise:
-        return {
-            "errorMessage": "Sorry, Weight Exercise Does Not Exist"
-        }, 404
+    # if not weight_exercise:
+    #     return {
+    #         "errorMessage": "Sorry, Weight Exercise Does Not Exist"
+    #     }, 404
 
-    if weight_exercise.created_by_user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
+    # if weight_exercise.created_by_user_id != current_user.id:
+    #     return {
+    #         "errorMessage": "Unauthorized"
+    #     }, 403
 
 
     form = WeightExerciseForm()
@@ -62,9 +62,8 @@ def update_cardio_exercise(weightExerciseId):
 
     if form.validate_on_submit():
         data = form.data
-        weight_exercise.name = data["exercise_name"]
 
-        exercise_exists = WeightExercise.query.filter(WeightExercise.name == data["exercise_name"]).first()
+        exercise_exists = WeightExercise.query.filter(WeightExercise.exercise_name == data["exercise_name"]).first()
 
         if exercise_exists:
             return {
@@ -72,6 +71,7 @@ def update_cardio_exercise(weightExerciseId):
             }, 400
 
 
+        weight_exercise.exercise_name = data["exercise_name"]
         db.session.commit()
 
         return {
