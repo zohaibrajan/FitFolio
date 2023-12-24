@@ -39,6 +39,8 @@ def get_cardio_exercise(weightExerciseId):
     }
 
 
+
+
 @weight_exercise_routes.route("<int:weightExerciseId>", methods=["PUT"])
 @login_required
 @verify_weight_exercise
@@ -59,6 +61,40 @@ def update_weight_exercise(weight_exercise):
 
 
         weight_exercise.exercise_name = data["exercise_name"]
+        db.session.commit()
+
+        return {
+            "weightExercise": weight_exercise.to_dict()
+        }
+    else:
+        return {
+            "errors": form.errors
+        }, 400
+
+
+@weight_exercise_routes.route("/new", methods=["POST"])
+@login_required
+def create_weight_exercise():
+    """Create a Weight Exercise"""
+    form = WeightExerciseForm()
+    form["csrf_token"].data = request.cookies["csrf_token"]
+
+    if form.validate_on_submit():
+        data = form.data
+
+        exercise_exists = WeightExercise.query.filter(WeightExercise.exercise_name.ilike(data["exercise_name"])).first()
+
+        if exercise_exists:
+            return {
+                "errorMessage": "Sorry, Exercise Already Exists"
+            }, 400
+
+        weight_exercise = WeightExercise(
+            exercise_name=data["exercise_name"],
+            created_by_user_id=current_user.id
+        )
+
+        db.session.add(weight_exercise)
         db.session.commit()
 
         return {

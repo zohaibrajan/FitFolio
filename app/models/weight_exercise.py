@@ -20,9 +20,3 @@ class WeightExercise(db.Model):
             "exerciseName": self.exercise_name,
         }
 
-    def to_dict_with_user(self):
-        return {
-            "id": self.id,
-            "exerciseName": self.exercise_name,
-            "createdByUserId": self.created_by_user_id
-        }
