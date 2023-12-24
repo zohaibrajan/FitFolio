@@ -2,7 +2,7 @@ from flask_login import current_user
 from app.models import WeightExercise
 
 def verify_weight_exercise(func):
-    def wrapper(weightExerciseId, *args, **kwargs):
+    def wrapper(weightExerciseId):
         weight_exercise = WeightExercise.query.get(weightExerciseId)
 
         if not weight_exercise:
@@ -15,6 +15,8 @@ def verify_weight_exercise(func):
                 "errorMessage": "Unauthorized"
             }, 403
 
-        return func(weight_exercise, *args, **kwargs)
+        return func(weight_exercise)
 
     return wrapper
+
+

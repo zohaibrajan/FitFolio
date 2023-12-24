@@ -28,16 +28,21 @@ def get_my_weight_exercises():
     }
 
 
-@weight_exercise_routes.route("<int:weightExerciseId>")
+@weight_exercise_routes.route("<int:weightExerciseId>", endpoint="get_weight_exercise")
 @login_required
 def get_weight_exercise(weightExerciseId):
     """Get a single Weight Exercise"""
     exercise = WeightExercise.query.get(weightExerciseId)
 
+    if not exercise:
+        return {
+            "errorMessage": "Sorry, Weight Exercise Does Not Exist"
+        }, 404
+
+
     return {
         "weightExercise": exercise.to_dict()
     }
-
 
 
 

@@ -34,6 +34,11 @@ def get_cardio_exercise(cardioExerciseId):
     """Get a single Cardio Exercise"""
     exercise = CardioExercise.query.get(cardioExerciseId)
 
+    if not exercise:
+        return {
+            "errorMessage": "Sorry, Cardio Exercise Does Not Exist"
+        }, 404
+
     return {
         "cardioExercise": exercise.to_dict()
     }
