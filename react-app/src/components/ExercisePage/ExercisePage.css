@@ -2,6 +2,7 @@
     display: flex;
     justify-content: center;
     margin-top: 35px;
+
 }
 
 .exercise-page-title {
@@ -58,6 +59,9 @@
     font-family: "Inter", Helvetica, Arial, sans-serif;
     flex-direction: column;
     padding: 15px 0 15px 30px;
+    min-height: 326px;
+    width: 185px;
+
 }
 
 .cardio-labels {
