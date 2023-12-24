@@ -39,6 +39,17 @@ def get_cardio_exercise(weightExerciseId):
     }
 
 
+@weight_exercise_routes.route("<int:weightExerciseId>", methods=["DELETE"])
+@login_required
+@verify_weight_exercise
+def delete_weight_exercise(weight_exercise):
+    """Delete a Weight Exercise"""
+    db.session.delete(weight_exercise)
+    db.session.commit()
+
+    return {
+        "message": "Successfully Deleted"
+    }
 
 
 @weight_exercise_routes.route("<int:weightExerciseId>", methods=["PUT"])
