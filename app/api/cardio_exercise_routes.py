@@ -34,6 +34,11 @@ def get_cardio_exercise(cardioExerciseId):
     """Get a single Cardio Exercise"""
     exercise = CardioExercise.query.get(cardioExerciseId)
 
+    if not exercise:
+        return {
+            "errorMessage": "Sorry, Cardio Exercise Does Not Exist"
+        }, 404
+
     return {
         "cardioExercise": exercise.to_dict()
     }
@@ -70,7 +75,7 @@ def update_cardio_exercise(cardioExerciseId):
         if exercise_exists:
             return {
                 "errors": "Exercise already exists"
-            }
+            }, 400
 
         cardio_exercise.exercise_name = data["exercise_name"].title()
         cardio_exercise.intensity = data["intensity"]

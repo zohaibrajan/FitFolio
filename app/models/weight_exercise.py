@@ -19,3 +19,4 @@ class WeightExercise(db.Model):
             "id": self.id,
             "exerciseName": self.exercise_name,
         }
+

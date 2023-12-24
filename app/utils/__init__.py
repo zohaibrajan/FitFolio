@@ -1,0 +1,1 @@
+from .weight_exercise_helpers import verify_weight_exercise
