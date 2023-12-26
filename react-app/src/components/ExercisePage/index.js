@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { createCardioExerciseThunk } from "../../store/cardioExercises";
+import { createWeightExerciseThunk } from "../../store/weightExercises";
+import { createWeightLogThunk } from "../../store/weightLogs";
 import { createCardioLogThunk } from "../../store/cardioLogs";
 import "./ExercisePage.css";
 import { gettingTodaysDate } from "../../utils";
@@ -21,19 +23,34 @@ function ExercisePage() {
   const [caloriesBurned, setCaloriesBurned] = useState("");
   const [duration, setDuration] = useState("");
   const [sets, setSets] = useState("");
+  const [reps, setReps] = useState("");
+  const [weightPerRep, setWeightPerRep] = useState("");
   const [exerciseType, setExerciseType] = useState("cardio");
-  const [errors, setErrors] = useState({
+  const [cardioErrors, setCardioErrors] = useState({
     exercise: "",
     duration: "",
     calories: "",
   });
+  const [weightErrors, setWeightErrors] = useState({
+    exercise: "",
+    sets: "",
+    reps: "",
+    weightPerRep: "",
+  });
+
+  const isEmpty = (str) => str === "";
+  const hasErrors = (errors) =>
+    Object.values(errors).some((error) => error.length > 0);
+
+  const commonChecks = isEmpty(exerciseName);
+  const cardioChecks =
+    [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
+  const weightChecks =
+    [sets, reps, weightPerRep].some(isEmpty) || hasErrors(weightErrors);
+
   const disabled =
-    exerciseName === "" ||
-    duration === "" ||
-    caloriesBurned === "" ||
-    errors.exercise.length > 0 ||
-    errors.duration.length > 0 ||
-    errors.calories.length > 0;
+    commonChecks || (exerciseType === "cardio" ? cardioChecks : weightChecks);
+
   const buttonStyle = disabled
     ? "create-exercise-button-disabled"
     : "create-exercise-button";
@@ -49,31 +66,60 @@ function ExercisePage() {
         if (
           exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
         ) {
-          setErrors({ ...errors, exercise: "Exercise already exists" });
+          setCardioErrors({
+            ...cardioErrors,
+            exercise: "Exercise already exists",
+          });
           return;
         }
       });
-      // } else {
-      //   for (let exercise in weightExercises) {
-      //     if (weightExercises[exercise].name === exerciseName) {
-      //       setErrors({ exerciseName: "Exercise already exists" });
-      //       return
-      //     }
-      //   }
+    } else {
+      weightExercises.forEach((exercise) => {
+        if (
+          exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+        ) {
+          setWeightErrors({
+            ...weightErrors,
+            exercise: "Exercise already exists",
+          });
+          return;
+        }
+      });
     }
   };
 
   const checkDuration = (duration) => {
     if (duration <= 0) {
-      setErrors({ ...errors, duration: "Must be greater than 0" });
+      setCardioErrors({ ...cardioErrors, duration: "Must be greater than 0" });
     }
   };
 
   const checkCaloriesBurned = (caloriesBurned) => {
     if (caloriesBurned <= 0) {
-      setErrors({
-        ...errors,
+      setCardioErrors({
+        ...cardioErrors,
         calories: "Must be greater than 0",
+      });
+    }
+  };
+
+  const checkSets = (sets) => {
+    if (sets <= 0) {
+      setWeightErrors({ ...weightErrors, sets: "Must be greater than 0" });
+    }
+  };
+
+  const checkReps = (reps) => {
+    if (reps <= 0) {
+      setWeightErrors({ ...weightErrors, reps: "Must be greater than 0" });
+    }
+  };
+
+  const checkWeightPerRep = (weightPerRep) => {
+    if (weightPerRep <= 0) {
+      setWeightErrors({
+        ...weightErrors,
+        weightPerRep: "Must be greater than 0",
       });
     }
   };
@@ -94,16 +140,29 @@ function ExercisePage() {
       try {
         await dispatch(createCardioExerciseThunk(cardioExerciseForm));
         await dispatch(createCardioLogThunk(cardioLog));
-        history.replace("/my-home/diary")
+        history.replace("/my-home/diary");
       } catch (e) {
-        // const errors = await e.json();
+        // const cardioErrors = await e.json();
         console.error(e);
       }
     } else {
-      // dispatch(createWeightExerciseThunk({
-      //   exerciseName,
-      //   sets,
-      // }));
+      const strengthExerciseForm = new FormData();
+      const strengthLog = new FormData();
+      strengthLog.append("sets", sets);
+      strengthLog.append("repetitions", reps);
+      strengthLog.append("weight_per_rep", weightPerRep);
+      strengthLog.append("date", gettingTodaysDate());
+      strengthLog.append("exercise_name", exerciseName);
+      strengthExerciseForm.append("exercise_name", exerciseName);
+
+      try {
+        await dispatch(createWeightExerciseThunk(strengthExerciseForm));
+        await dispatch(createWeightLogThunk(strengthLog));
+        history.replace("/my-home/diary");
+      } catch (e) {
+        // const strengthErrors = await e.json();
+        console.error(e);
+      }
     }
   };
 
@@ -116,7 +175,13 @@ function ExercisePage() {
         <div className="create-exercise-container">
           <form className="create-exercise-form" onSubmit={handleSubmit}>
             <label
-              style={{ display: "flex", flexDirection: "column", gap: "3px", fontWeight: "bold" }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "3px",
+                fontWeight: "bold",
+                width1: "100%",
+              }}
             >
               Exercise Name
               <input
@@ -126,12 +191,15 @@ function ExercisePage() {
                 onBlur={() => checkForExercise(exerciseName)}
                 onChange={(e) => {
                   setExerciseName(e.target.value);
-                  setErrors({ ...errors, exercise: "" });
+                  setCardioErrors({ ...cardioErrors, exercise: "" });
+                  setWeightErrors({ ...weightErrors, exercise: "" });
                 }}
               />
             </label>
-            {errors.exercise ? (
-              <div className="exercise-name-error">{errors.exercise}</div>
+            {cardioErrors.exercise || weightErrors.exercise ? (
+              <div className="exercise-name-error">
+                {cardioErrors.exercise || weightErrors.exercise}
+              </div>
             ) : (
               <div className="exercise-name-error"></div>
             )}
@@ -173,6 +241,7 @@ function ExercisePage() {
                     <option value="High">High</option>
                   </select>
                 </label>
+                <div className="exercise-name-error"></div>
                 <label className="cardio-labels">
                   How Long? (Minutes)
                   <input
@@ -183,12 +252,14 @@ function ExercisePage() {
                     onBlur={() => checkDuration(duration)}
                     onChange={(e) => {
                       setDuration(e.target.value);
-                      setErrors({ ...errors, duration: "" });
+                      setCardioErrors({ ...cardioErrors, duration: "" });
                     }}
                   />
                 </label>
-                {errors.duration ? (
-                  <div className="exercise-name-error">{errors.duration}</div>
+                {cardioErrors.duration ? (
+                  <div className="exercise-name-error">
+                    {cardioErrors.duration}
+                  </div>
                 ) : (
                   <div className="exercise-name-error"></div>
                 )}
@@ -202,34 +273,80 @@ function ExercisePage() {
                     onBlur={() => checkCaloriesBurned(caloriesBurned)}
                     onChange={(e) => {
                       setCaloriesBurned(e.target.value);
-                      setErrors({ ...errors, calories: "" });
+                      setCardioErrors({ ...cardioErrors, calories: "" });
                     }}
                   />
                 </label>
-                {errors.calories ? (
+                {cardioErrors.calories ? (
                   <div className="exercise-name-error">
-                    {errors.calories}
+                    {cardioErrors.calories}
                   </div>
                 ) : (
                   <div className="exercise-name-error"></div>
                 )}
               </>
             ) : (
-              <label>
-                Sets?
-                <input
-                  type="number"
-                  value={sets}
-                  onChange={(e) => setSets(e.target.value)}
-                />
-              </label>
+              <>
+                <label className="cardio-labels">
+                  Sets
+                  <input
+                    className="cardio-input"
+                    type="number"
+                    value={sets}
+                    onBlur={() => checkSets(sets)}
+                    onChange={(e) => {
+                      setSets(e.target.value);
+                      setWeightErrors({ ...weightErrors, sets: "" });
+                    }}
+                  />
+                </label>
+                {weightErrors.sets ? (
+                  <div className="exercise-name-error">{weightErrors.sets}</div>
+                ) : (
+                  <div className="exercise-name-error"></div>
+                )}
+                <label className="cardio-labels">
+                  Repetitions:
+                  <input
+                    className="cardio-input"
+                    type="number"
+                    value={reps}
+                    onBlur={() => checkReps(reps)}
+                    onChange={(e) => {
+                      setReps(e.target.value);
+                      setWeightErrors({ ...weightErrors, reps: "" });
+                    }}
+                  />
+                </label>
+                {weightErrors.reps ? (
+                  <div className="exercise-name-error">{weightErrors.reps}</div>
+                ) : (
+                  <div className="exercise-name-error"></div>
+                )}
+                <label className="cardio-labels">
+                  Weight Per Repetition:
+                  <input
+                    className="cardio-input"
+                    type="number"
+                    value={weightPerRep}
+                    onBlur={() => checkWeightPerRep(weightPerRep)}
+                    onChange={(e) => {
+                      setWeightPerRep(e.target.value);
+                      setWeightErrors({ ...weightErrors, weightPerRep: "" });
+                    }}
+                  />
+                </label>
+                {weightErrors.weightPerRep ? (
+                  <div className="exercise-name-error">
+                    {weightErrors.weightPerRep}
+                  </div>
+                ) : (
+                  <div className="exercise-name-error"></div>
+                )}
+              </>
             )}
             <div className="create-exercise-button-container">
-              <button
-                type="submit"
-                className={buttonStyle}
-                disabled={disabled}
-              >
+              <button type="submit" className={buttonStyle} disabled={disabled}>
                 Add Exercise
               </button>
             </div>
