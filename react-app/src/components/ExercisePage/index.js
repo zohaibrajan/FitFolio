@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { createCardioExerciseThunk } from "../../store/cardioExercises";
+import { createWeightExerciseThunk } from "../../store/weightExercises";
+import { createWeightLogThunk } from "../../store/weightLogs";
 import { createCardioLogThunk } from "../../store/cardioLogs";
 import "./ExercisePage.css";
 import { gettingTodaysDate } from "../../utils";
@@ -144,10 +146,23 @@ function ExercisePage() {
         console.error(e);
       }
     } else {
-      // dispatch(createWeightExerciseThunk({
-      //   exerciseName,
-      //   sets,
-      // }));
+      const strengthExerciseForm = new FormData();
+      const strengthLog = new FormData();
+      strengthLog.append("sets", sets);
+      strengthLog.append("repetitions", reps);
+      strengthLog.append("weight_per_rep", weightPerRep);
+      strengthLog.append("date", gettingTodaysDate());
+      strengthLog.append("exercise_name", exerciseName);
+      strengthExerciseForm.append("exercise_name", exerciseName);
+
+      try {
+        await dispatch(createWeightExerciseThunk(strengthExerciseForm));
+        await dispatch(createWeightLogThunk(strengthLog));
+        history.replace("/my-home/diary");
+      } catch (e) {
+        // const strengthErrors = await e.json();
+        console.error(e);
+      }
     }
   };
 
