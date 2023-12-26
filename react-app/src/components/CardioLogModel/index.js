@@ -13,11 +13,14 @@ import "./CardioLog.css";
 function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
-  const today = gettingTodaysDate()
-  const diaryDate = formattingUserInputDate(dateFromDiary)
+  const today = gettingTodaysDate();
+  const diaryDate = formattingUserInputDate(dateFromDiary);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
-  const [cardioExercise, setCardioExercise] = useState(
+  const [searchTerm, setSearchTerm] = useState(
+    formType === "update" ? log.cardioExercise.exerciseName : ""
+  );
+  const [cardioExerciseId, setCardioExerciseId] = useState(
     formType === "update" ? log.cardioExercise.id : 1
   );
   const [duration, setDuration] = useState(
@@ -30,17 +33,30 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     formType === "update" ? log.date : diaryDate
   );
 
+  const [isExerciseSelected, setIsExerciseSelected] = useState(
+    formType === "update" ? true : false
+  );
 
   useEffect(() => {
     dispatch(getAllCardioExercisesThunk());
   }, [dispatch]);
 
   useEffect(() => {
-    const exercise = cardioExercisesObj[cardioExercise];
+    const exercise = cardioExercisesObj[cardioExerciseId];
     if (exercise) {
       setCaloriesBurned(exercise.caloriesPerMinute * duration);
     }
-  }, [cardioExercise, duration, cardioExercisesObj]);
+  }, [cardioExerciseId, duration, cardioExercisesObj]);
+
+  const filteredCardioExercises = cardioExercises.filter((exercise) =>
+    exercise.exerciseName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleExerciseClick = (exercise) => {
+    setSearchTerm(exercise.exerciseName);
+    setCardioExerciseId(exercise.id);
+    setIsExerciseSelected(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +66,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     formData.append("calories_burned", Number(caloriesBurned));
     formData.append(
       "exercise_name",
-      cardioExercisesObj[cardioExercise].exerciseName
+      cardioExercisesObj[cardioExerciseId].exerciseName
     );
     formData.append("date", date);
 
@@ -97,20 +113,38 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <label className="cardio-log-labels">
-          Cardio Exercises:
-          <select
+        <label
+          className="cardio-log-labels"
+          style={{ display: "flex", flexDirection: "column", gap: "5px" }}
+        >
+          Cardio Exercise:
+          <input
             type="text"
-            value={cardioExercise}
-            onChange={(e) => setCardioExercise(e.target.value)}
-            placeholder="Cardio Exercises"
-          >
-            {cardioExercises.map((exercise) => (
-              <option key={exercise.id} value={exercise.id}>
-                {exercise.exerciseName}
-              </option>
-            ))}
-          </select>
+            style={{
+              margin: "0px",
+            }}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setIsExerciseSelected(false);
+            }}
+            placeholder="Search for an exercise"
+          ></input>
+          {searchTerm &&
+            !isExerciseSelected &&
+            filteredCardioExercises.length > 0 && (
+              <div className="scrollable-cardio-exercises">
+                {filteredCardioExercises.map((exercise) => (
+                  <button
+                    key={exercise.id}
+                    className="cardio-exercise-list-item"
+                    onClick={() => handleExerciseClick(exercise)}
+                  >
+                    {exercise.exerciseName}
+                  </button>
+                ))}
+              </div>
+            )}
         </label>
         <label className="cardio-log-labels">
           Duration:
@@ -145,7 +179,11 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <button className="cardio-log-submit-button" type="submit">
+        <button
+          disabled={!isExerciseSelected || duration < 1 || caloriesBurned < 1}
+          className="cardio-log-submit-button"
+          type="submit"
+        >
           Submit
         </button>
       </form>
