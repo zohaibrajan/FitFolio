@@ -95,7 +95,11 @@ function LoginFormPage() {
               )}
             </div>
             <div className="login-submit-button-container">
-              <button className="login-submit-button" type="submit">
+              <button
+                disabled={email.length < 1 || password.length < 1}
+                className="login-submit-button"
+                type="submit"
+              >
                 Log In
               </button>
             </div>

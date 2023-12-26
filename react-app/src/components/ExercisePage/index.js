@@ -8,6 +8,7 @@ import { createCardioExerciseThunk } from "../../store/cardioExercises";
 import { createWeightExerciseThunk } from "../../store/weightExercises";
 import { createWeightLogThunk } from "../../store/weightLogs";
 import { createCardioLogThunk } from "../../store/cardioLogs";
+import MyExercises from "../MyExercises";
 import "./ExercisePage.css";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { formattingUserInputDate } from "../../utils";
@@ -372,6 +373,7 @@ function ExercisePage() {
           </div>
         </div>
       </div>
+      <MyExercises />
     </div>
   );
 }
