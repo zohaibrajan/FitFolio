@@ -74,3 +74,10 @@
 .weight-log-submit-button:hover {
     background-color: rgb(72, 104, 2);
 }
+
+
+.weight-log-submit-button:disabled:hover,
+.weight-log-submit-button:disabled {
+    background-color: #8C8C8C;
+    cursor: not-allowed;
+}

@@ -144,6 +144,7 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="weight-log-labels">
           Sets:
           <input
+            disabled={!isExerciseSelected}
             className="weight-log-inputs"
             min={1}
             step={1}
@@ -155,6 +156,7 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="weight-log-labels">
           Repetitions:
           <input
+            disabled={!isExerciseSelected}
             className="weight-log-inputs"
             min={1}
             step={1}
@@ -166,6 +168,7 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="weight-log-labels">
           Weight Per Repetition:
           <input
+            disabled={!isExerciseSelected}
             className="weight-log-inputs"
             min={1}
             step={1}
@@ -184,7 +187,13 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <button className="weight-log-submit-button" type="submit">
+        <button
+          disabled={
+            !isExerciseSelected || reps < 1 || weightPerRep < 1 || sets < 1
+          }
+          className="weight-log-submit-button"
+          type="submit"
+        >
           Submit
         </button>
       </form>
