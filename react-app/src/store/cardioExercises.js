@@ -2,6 +2,7 @@ const ALL_CARDIO_EXERCISES = "exercises/ALL_CARDIO_EXERCISES";
 const CREATE_CARDIO_EXERCISE = "exercises/CREATE_CARDIO_EXERCISE";
 
 
+
 const getAllCardioExercises = (cardioExercises) => ({
   type: ALL_CARDIO_EXERCISES,
   cardioExercises,
@@ -34,7 +35,6 @@ export const createCardioExerciseThunk = (exercise) => async (dispatch) => {
     return newExercise;
   }
 };
-
 
 const cardioExerciseReducer = (state = {}, action) => {
   switch (action.type) {

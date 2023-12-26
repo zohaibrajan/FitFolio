@@ -1,6 +1,7 @@
 const ALL_WEIGHT_EXERCISES = "exercises/ALL_WEIGHT_EXERCISES";
 const CREATE_WEIGHT_EXERCISE = "exercises/CREATE_WEIGHT_EXERCISE";
 
+
 const getAllWeightExercises = (weightExercises) => ({
   type: ALL_WEIGHT_EXERCISES,
   weightExercises,

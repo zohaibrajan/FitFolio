@@ -8,6 +8,7 @@ import cardioLogReducer from './cardioLogs';
 import weightLogReducer from './weightLogs';
 import foodLogReducer from './foodLogs';
 import goalReducer from './goal';
+import userExercisesReducer from './userOwnedExercises';
 
 const rootReducer = combineReducers({
   session,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   goal: goalReducer,
   cardioLogs: cardioLogReducer,
   weightLogs: weightLogReducer,
-  foodLogs: foodLogReducer
+  foodLogs: foodLogReducer,
+  userExercises: userExercisesReducer
 });
 
 

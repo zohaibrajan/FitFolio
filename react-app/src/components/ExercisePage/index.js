@@ -373,7 +373,7 @@ function ExercisePage() {
           </div>
         </div>
       </div>
-      <MyExercises />
+      <MyExercises exerciseType={exerciseType}/>
     </div>
   );
 }
