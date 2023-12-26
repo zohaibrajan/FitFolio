@@ -11,6 +11,40 @@
     background-color: rgb(240, 240, 240);
 }
 
+.scrollable-weight-exercises {
+    position: absolute;
+    top: 72px;
+    width: 82.8%;
+    gap: 2px;
+    max-height: 100px;
+    background-color: white;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.weight-log-exercise-list-item {
+    cursor: pointer;
+    padding: 0;
+    padding-top: 2px;
+    font-size: 12px;
+    padding-bottom: 2px;
+    border: none;
+    color: black;
+    background-color: transparent;
+    font-family: "Inter",
+        Helvetica,
+        Arial,
+        sans-serif;
+    ;
+}
+
+.weight-log-exercise-list-item:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+
 .weight-log-labels {
     font-weight: 600;
 }

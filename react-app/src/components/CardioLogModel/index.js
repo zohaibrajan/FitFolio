@@ -149,6 +149,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="cardio-log-labels">
           Duration:
           <input
+          disabled={!isExerciseSelected}
             className="duration-cb"
             min={1}
             step={1}
@@ -161,6 +162,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="cardio-log-labels">
           Calories Burned:
           <input
+            disabled={!isExerciseSelected}
             className="duration-cb"
             min={1}
             step={1}

@@ -26,9 +26,7 @@
 .scrollable-cardio-exercises {
     position: absolute;
     top: 72px;
-    right: 23px;
-    min-width: 140px;
-    max-width: 150px;
+    width: 80.5%;
     gap: 2px;
     max-height: 100px;
     background-color: white;

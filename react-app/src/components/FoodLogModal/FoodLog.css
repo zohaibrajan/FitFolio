@@ -10,9 +10,7 @@
 .scrollable-list {
     position: absolute;
     top: 48px;
-    right: 30px;
-    min-width: 140px;
-    max-width: 150px;
+    width: 80.5%;
     gap: 2px;
     max-height: 100px;
     background-color: white;
