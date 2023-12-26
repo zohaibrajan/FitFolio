@@ -1,4 +1,3 @@
-
 .cardio-log-form {
     display: flex;
     flex-direction: column;
@@ -17,10 +16,44 @@
     font-weight: 600;
 }
 
-.cardio-log-labels > input, .cardio-log-labels > select {
+.cardio-log-labels>input,
+.cardio-log-labels>select {
     margin-left: 5px;
     margin-right: 5px;
     padding: 3px;
+}
+
+.scrollable-cardio-exercises {
+    position: absolute;
+    top: 72px;
+    width: 80.5%;
+    gap: 2px;
+    max-height: 100px;
+    background-color: white;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.cardio-exercise-list-item {
+    cursor: pointer;
+    padding: 0;
+    padding-top: 2px;
+    font-size: 12px;
+    padding-bottom: 2px;
+    border: none;
+    color: black;
+    background-color: transparent;
+    font-family: "Inter",
+        Helvetica,
+        Arial,
+        sans-serif;
+    ;
+}
+
+.cardio-exercise-list-item:hover {
+    background-color: rgb(240, 240, 240);
 }
 
 .duration-cb {
@@ -37,6 +70,13 @@
     border: none;
 }
 
+
 .cardio-log-submit-button:hover {
     background-color: rgb(72, 104, 2);
+}
+
+.cardio-log-submit-button:disabled,
+.cardio-log-submit-button:disabled:hover {
+    background-color: #8C8C8C;
+    cursor: not-allowed;
 }

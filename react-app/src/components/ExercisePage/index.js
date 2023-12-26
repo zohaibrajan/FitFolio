@@ -9,11 +9,13 @@ import { createWeightExerciseThunk } from "../../store/weightExercises";
 import { createWeightLogThunk } from "../../store/weightLogs";
 import { createCardioLogThunk } from "../../store/cardioLogs";
 import "./ExercisePage.css";
-import { gettingTodaysDate } from "../../utils";
+import { useSelectedDate } from "../../context/SelectedDate";
+import { formattingUserInputDate } from "../../utils";
 
 function ExercisePage() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const date = useSelectedDate();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
@@ -131,7 +133,7 @@ function ExercisePage() {
       const cardioLog = new FormData();
       cardioLog.append("duration", duration);
       cardioLog.append("calories_burned", caloriesBurned);
-      cardioLog.append("date", gettingTodaysDate());
+      cardioLog.append("date", formattingUserInputDate(date.selectedDate));
       cardioLog.append("exercise_name", exerciseName);
       cardioExerciseForm.append("exercise_name", exerciseName);
       cardioExerciseForm.append("intensity", intensity);
@@ -151,7 +153,7 @@ function ExercisePage() {
       strengthLog.append("sets", sets);
       strengthLog.append("repetitions", reps);
       strengthLog.append("weight_per_rep", weightPerRep);
-      strengthLog.append("date", gettingTodaysDate());
+      strengthLog.append("date", formattingUserInputDate(date.selectedDate));
       strengthLog.append("exercise_name", exerciseName);
       strengthExerciseForm.append("exercise_name", exerciseName);
 

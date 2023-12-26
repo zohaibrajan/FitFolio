@@ -4,9 +4,12 @@ import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
-import { createWeightLogThunk, updateWeightLogThunk, deleteAWeightLog } from "../../store/weightLogs";
+import {
+  createWeightLogThunk,
+  updateWeightLogThunk,
+  deleteAWeightLog,
+} from "../../store/weightLogs";
 import "./WeightLog.css";
-
 
 function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const dispatch = useDispatch();
@@ -27,6 +30,22 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   const [weightPerRep, setWeightPerRep] = useState(
     formType === "update" ? log.weightPerRep : 0
   );
+  const [isExerciseSelected, setIsExerciseSelected] = useState(
+    formType === "update" ? true : false
+  );
+  const [searchTerm, setSearchTerm] = useState(
+    formType === "update" ? log.weightExercise.exerciseName : ""
+  );
+
+  const filteredWeightExercises = weightExercises.filter((exercise) =>
+    exercise.exerciseName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleExerciseClick = (exercise) => {
+    setSearchTerm(exercise.exerciseName);
+    setExerciseId(exercise.id);
+    setIsExerciseSelected(true);
+  };
 
   useEffect(() => {
     dispatch(getAllWeightExercisesThunk());
@@ -68,15 +87,15 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
           method: "PUT",
           body: formData,
         });
-        dispatch(deleteAWeightLog(log.id))
-        closeModal()
+        dispatch(deleteAWeightLog(log.id));
+        closeModal();
       } else {
         try {
           await dispatch(updateWeightLogThunk(log.id, formData));
-          closeModal()
+          closeModal();
         } catch (e) {
-          const errors = await e.json()
-          console.error(errors)
+          const errors = await e.json();
+          console.error(errors);
         }
       }
     }
@@ -89,24 +108,43 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <label className="weight-log-labels">
-          Weight Exercises
-          <select
+        <label
+          className="weight-log-labels"
+          style={{ display: "flex", flexDirection: "column", gap: "5px" }}
+        >
+          Weight Exercise:
+          <input
             type="text"
-            value={exerciseId}
-            onChange={(e) => setExerciseId(e.target.value)}
-            placeholder="Weight Exercises"
-          >
-            {weightExercises.map((exercise) => (
-              <option key={exercise.id} value={exercise.id}>
-                {exercise.exerciseName}
-              </option>
-            ))}
-          </select>
+            style={{
+              margin: "0px",
+            }}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setIsExerciseSelected(false);
+            }}
+            placeholder="Search for an exercise"
+          />
+          {searchTerm &&
+            !isExerciseSelected &&
+            filteredWeightExercises.length > 0 && (
+              <div className="scrollable-weight-exercises">
+                {filteredWeightExercises.map((exercise) => (
+                  <button
+                    key={exercise.id}
+                    className="weight-log-exercise-list-item"
+                    onClick={() => handleExerciseClick(exercise)}
+                  >
+                    {exercise.exerciseName}
+                  </button>
+                ))}
+              </div>
+            )}
         </label>
         <label className="weight-log-labels">
           Sets:
           <input
+            disabled={!isExerciseSelected}
             className="weight-log-inputs"
             min={1}
             step={1}
@@ -118,6 +156,7 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="weight-log-labels">
           Repetitions:
           <input
+            disabled={!isExerciseSelected}
             className="weight-log-inputs"
             min={1}
             step={1}
@@ -129,6 +168,7 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="weight-log-labels">
           Weight Per Repetition:
           <input
+            disabled={!isExerciseSelected}
             className="weight-log-inputs"
             min={1}
             step={1}
@@ -147,7 +187,13 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <button className="weight-log-submit-button" type="submit">
+        <button
+          disabled={
+            !isExerciseSelected || reps < 1 || weightPerRep < 1 || sets < 1
+          }
+          className="weight-log-submit-button"
+          type="submit"
+        >
           Submit
         </button>
       </form>
