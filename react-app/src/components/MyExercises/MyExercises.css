@@ -1,14 +1,19 @@
-.side-panel {
-    position: absolute;
-    right: 0;
-    top: 100px;
-    width: 300px;
-    height: 100px;
-    background-color: #f0f0f0;
-    overflow: auto;
-    transition: transform 2s ease-in-out;
+.exercise-container {
+    display: flex;
+    flex-direction: row;
+    min-width: 685px;
+    max-width: 775px;
+    justify-content: space-between;
 }
 
-.hidden {
-    transform: translateX(100%);
+.edit-exercise-panel-parent {
+    position: relative;
+    width: 40%;
+    height: 300px;
+    border: 3px solid black;
+}
+
+.exercise-card {
+    display: flex;
+    flex-direction: row
 }

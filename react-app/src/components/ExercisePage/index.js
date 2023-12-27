@@ -188,7 +188,11 @@ function ExercisePage() {
           <span>Create a New Exercise</span>
         </div>
         <div className="create-exercise-container">
-          <form className="create-exercise-form" onSubmit={handleSubmit}>
+          <form
+            className="create-exercise-form"
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+          >
             <label
               style={{
                 display: "flex",
