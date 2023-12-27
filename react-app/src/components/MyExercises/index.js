@@ -3,7 +3,6 @@ import {
   getUsersCardioExercisesThunk,
   getUsersWeightExercisesThunk,
 } from "../../store/userOwnedExercises";
-import { useSelectedDate } from "../../context/SelectedDate";
 import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
