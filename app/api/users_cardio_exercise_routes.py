@@ -49,7 +49,7 @@ def update_user_cardio_exercise(user_cardio_exercise):
         duration = data["duration"]
         calories_burned = data["calories_burned"]
 
-        calories_burned_per_minute = round(calories_burned / duration)
+        calories_burned_per_minute = calories_burned / duration
 
         exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
         user_exercise_exists = UserCardioExerciseVersion.query.filter(

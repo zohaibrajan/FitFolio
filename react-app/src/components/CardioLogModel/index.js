@@ -11,7 +11,12 @@ import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
 import "./CardioLog.css";
 import { useSelectedDate } from "../../context/SelectedDate";
 
-function CardioLogModal({ formType = "create", log = {}, exerciseName = "", exerciseId = 1 }) {
+function CardioLogModal({
+  formType = "create",
+  log = {},
+  exerciseName = "",
+  exerciseId = 1,
+}) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
@@ -45,9 +50,13 @@ function CardioLogModal({ formType = "create", log = {}, exerciseName = "", exer
   useEffect(() => {
     const exercise = cardioExercisesObj[cardioExerciseId];
     if (exercise) {
-      setCaloriesBurned(exercise.caloriesPerMinute * duration);
+      if (formType === "update" && duration === log.duration) {
+        setCaloriesBurned(log.caloriesBurned);
+      } else {
+        setCaloriesBurned(exercise.caloriesPerMinute * duration);
+      }
     }
-  }, [cardioExerciseId, duration, cardioExercisesObj]);
+  }, [cardioExerciseId, duration, cardioExercisesObj, formType, log]);
 
   const filteredCardioExercises = cardioExercises.filter((exercise) =>
     exercise.exerciseName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -65,10 +74,7 @@ function CardioLogModal({ formType = "create", log = {}, exerciseName = "", exer
     const formData = new FormData();
     formData.append("duration", Number(duration));
     formData.append("calories_burned", Number(caloriesBurned));
-    formData.append(
-      "exercise_name",
-      searchTerm
-    );
+    formData.append("exercise_name", searchTerm);
     formData.append("date", date);
 
     if (formType === "create") {
@@ -150,7 +156,7 @@ function CardioLogModal({ formType = "create", log = {}, exerciseName = "", exer
         <label className="cardio-log-labels">
           Duration:
           <input
-          disabled={!isExerciseSelected}
+            disabled={!isExerciseSelected}
             className="duration-cb"
             min={1}
             step={1}
