@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import CardioExercise, db
+from app.models import CardioExercise, db, UserCardioExerciseVersion
 from app.forms import CardioExerciseForm
 
 
@@ -116,7 +116,7 @@ def delete_cardio_exercise(cardioExerciseId):
 @cardio_exercise_routes.route("/new", methods=["POST"])
 @login_required
 def create_cardio_exercise():
-    """Create a Cardio Exercise"""
+    """Create a Cardio Exercise and a User's Version of it"""
     form = CardioExerciseForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
 
@@ -132,21 +132,31 @@ def create_cardio_exercise():
         if exercise_exists:
             return {
                 "errors": "Exercise already exists"
-            }
+            }, 400
 
-        exercise = CardioExercise(
-            exercise_name = data["exercise_name"].title(),
-            intensity = data["intensity"],
-            calories_per_minute = calories_burned_per_minute,
-            created_by_user_id = current_user.id
+
+        cardio_exercise = CardioExercise(
+            created_by_user_id=current_user.id,
+            exercise_name=data["exercise_name"].title(),
+            intensity=data["intensity"],
+            calories_per_minute=calories_burned_per_minute
         )
+        db.session.add(cardio_exercise)
+        db.session.flush()  # This is needed to get the id of the new cardio_exercise
 
-        db.session.add(exercise)
+        user_exercise_version = UserCardioExerciseVersion(
+            user_id=current_user.id,
+            cardio_exercise_id=cardio_exercise.id,
+            exercise_name=data["exercise_name"].title(),
+            intensity=data["intensity"],
+            calories_per_minute=calories_burned_per_minute
+        )
+        db.session.add(user_exercise_version)
         db.session.commit()
 
         return {
-            "cardioExercise": exercise.to_dict()
-        }, 201
+            "cardioExercise": cardio_exercise.to_dict()
+        }
 
     if form.errors:
         return form.errors

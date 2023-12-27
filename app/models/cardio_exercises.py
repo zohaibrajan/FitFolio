@@ -14,6 +14,7 @@ class CardioExercise(db.Model):
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
 
     cardio_logs = db.relationship("CardioLog", back_populates='exercise', cascade='all, delete-orphan')
+    versions = db.relationship('UserCardioExerciseVersion', back_populates='cardio_exercise')
     created_by = db.relationship("User", back_populates="cardio_exercises")
 
 
