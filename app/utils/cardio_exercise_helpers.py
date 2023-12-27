@@ -1,9 +1,9 @@
 from flask_login import current_user
-from app.models import CardioExercise
+from app.models import UserCardioExerciseVersion
 
 def verify_cardio_exercise(func):
-    def wrapper(cardioExerciseId):
-        cardio_exercise = CardioExercise.query.get(cardioExerciseId)
+    def wrapper(userCardioExerciseId):
+        cardio_exercise = UserCardioExerciseVersion.query.get(userCardioExerciseId)
 
         if not cardio_exercise:
             return {
