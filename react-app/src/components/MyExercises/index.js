@@ -3,6 +3,10 @@ import {
   getUsersCardioExercisesThunk,
   getUsersWeightExercisesThunk,
 } from "../../store/userOwnedExercises";
+import { useSelectedDate } from "../../context/SelectedDate";
+import OpenModalButton from "../OpenModalButton";
+import CardioLogModal from "../CardioLogModel";
+import WeightLogModal from "../WeightLogModal";
 import { useDispatch, useSelector } from "react-redux";
 
 function MyExercises({ exerciseType }) {
@@ -10,7 +14,6 @@ function MyExercises({ exerciseType }) {
   const dispatch = useDispatch();
   const userExercisesObj = useSelector((state) => state.userExercises);
   const userExercises = Object.values(userExercisesObj);
-
 
   useEffect(() => {
     if (exerciseType === "Cardio") {
@@ -28,8 +31,18 @@ function MyExercises({ exerciseType }) {
         <div className="exercise-container">
           {userExercises.length > 0 ? (
             userExercises.map((exercise) => (
-              <div className="exercise-card">
+              <div key={exercise.id} className="exercise-card">
                 <p>{exercise.exerciseName}</p>
+                <OpenModalButton
+                  modalComponent={
+                    exerciseType === "Cardio" ? (
+                      <CardioLogModal exerciseName={exercise.exerciseName} exerciseId={exercise.id}/>
+                    ) : (
+                      <WeightLogModal exerciseName={exercise.exerciseName} exerciseIdProp={exercise.id}/>
+                    )
+                  }
+                  buttonText={"Add to Diary"}
+                />
               </div>
             ))
           ) : (

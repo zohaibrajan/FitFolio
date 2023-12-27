@@ -9,19 +9,20 @@ import {
 } from "../../store/cardioLogs";
 import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
 import "./CardioLog.css";
+import { useSelectedDate } from "../../context/SelectedDate";
 
-function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
+function CardioLogModal({ formType = "create", log = {}, exerciseName = "", exerciseId = 1 }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
-  const diaryDate = formattingUserInputDate(dateFromDiary);
+  const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [searchTerm, setSearchTerm] = useState(
-    formType === "update" ? log.cardioExercise.exerciseName : ""
+    formType === "update" ? log.cardioExercise.exerciseName : exerciseName
   );
   const [cardioExerciseId, setCardioExerciseId] = useState(
-    formType === "update" ? log.cardioExercise.id : 1
+    formType === "update" ? log.cardioExercise.id : exerciseId
   );
   const [duration, setDuration] = useState(
     formType === "update" ? log.duration : 0
@@ -34,7 +35,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   );
 
   const [isExerciseSelected, setIsExerciseSelected] = useState(
-    formType === "update" ? true : false
+    formType === "update" || exerciseName ? true : false
   );
 
   useEffect(() => {

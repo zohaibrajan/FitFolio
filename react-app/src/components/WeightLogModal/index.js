@@ -10,12 +10,13 @@ import {
   deleteAWeightLog,
 } from "../../store/weightLogs";
 import "./WeightLog.css";
+import { useSelectedDate } from "../../context/SelectedDate";
 
-function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
+function WeightLogModal({ formType = "create", log = {}, exerciseName = "", exerciseIdProp = 1}) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
-  const diaryDate = formattingUserInputDate(dateFromDiary);
+  const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate);
   const history = useHistory();
   const weightExerciseObj = useSelector((state) => state.weightExercises);
   const weightExercises = Object.values(weightExerciseObj);
@@ -23,7 +24,7 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     formType === "update" ? log.date : diaryDate
   );
   const [exerciseId, setExerciseId] = useState(
-    formType === "update" ? log.weightExercise.id : 1
+    formType === "update" ? log.weightExercise.id : exerciseIdProp
   );
   const [sets, setSets] = useState(formType === "update" ? log.sets : 0);
   const [reps, setReps] = useState(formType === "update" ? log.repetitions : 0);
@@ -31,10 +32,10 @@ function WeightLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     formType === "update" ? log.weightPerRep : 0
   );
   const [isExerciseSelected, setIsExerciseSelected] = useState(
-    formType === "update" ? true : false
+    formType === "update" || exerciseName ? true : false
   );
   const [searchTerm, setSearchTerm] = useState(
-    formType === "update" ? log.weightExercise.exerciseName : ""
+    formType === "update" ? log.weightExercise.exerciseName : exerciseName
   );
 
   const filteredWeightExercises = weightExercises.filter((exercise) =>
