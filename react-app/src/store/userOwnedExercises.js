@@ -24,7 +24,7 @@ export const getUsersWeightExercisesThunk = () => async (dispatch) => {
 
 
 export const getUsersCardioExercisesThunk = () => async (dispatch) => {
-  const res = await fetch(`/api/cardio-exercises/my-exercises`);
+  const res = await fetch(`/api/users-cardio-exercises`);
 
   if (res.ok) {
     const exercises = await res.json();
