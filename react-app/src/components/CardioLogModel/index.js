@@ -67,7 +67,7 @@ function CardioLogModal({ formType = "create", log = {}, exerciseName = "", exer
     formData.append("calories_burned", Number(caloriesBurned));
     formData.append(
       "exercise_name",
-      cardioExercisesObj[cardioExerciseId].exerciseName
+      searchTerm
     );
     formData.append("date", date);
 

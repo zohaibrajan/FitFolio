@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
+import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { createCardioExerciseThunk } from "../../store/cardioExercises";
 import { createWeightExerciseThunk } from "../../store/weightExercises";
@@ -19,6 +20,8 @@ function ExercisePage() {
   const date = useSelectedDate();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
+  const usersExercisesObj = useSelector((state) => state.userExercises);
+  const usersExercises = Object.values(usersExercisesObj);
   const cardioExercises = Object.values(cardioExercisesObj);
   const weightExercises = Object.values(weightExercisesObj);
   const [exerciseName, setExerciseName] = useState("");
@@ -59,23 +62,32 @@ function ExercisePage() {
     : "create-exercise-button";
 
   useEffect(() => {
-    dispatch(getAllCardioExercisesThunk());
-    dispatch(getAllWeightExercisesThunk());
-  }, [dispatch]);
+    if (exerciseType === "cardio") {
+      dispatch(getAllCardioExercisesThunk());
+      dispatch(getUsersCardioExercisesThunk());
+    } else {
+      dispatch(getAllWeightExercisesThunk());
+    }
+  }, [dispatch, exerciseType]);
 
   const checkForExercise = (exerciseName) => {
     if (exerciseType === "cardio") {
-      cardioExercises.forEach((exercise) => {
-        if (
-          exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
-        ) {
-          setCardioErrors({
-            ...cardioErrors,
-            exercise: "Exercise already exists",
-          });
-          return;
-        }
-      });
+      const exerciseExists =
+        cardioExercises.some(
+          (exercise) =>
+            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+        ) ||
+        usersExercises.some(
+          (exercise) =>
+            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+        );
+
+      if (exerciseExists) {
+        setCardioErrors({
+          ...cardioErrors,
+          exercise: "Exercise already exists",
+        });
+      }
     } else {
       weightExercises.forEach((exercise) => {
         if (
@@ -373,7 +385,7 @@ function ExercisePage() {
           </div>
         </div>
       </div>
-      <MyExercises exerciseType={exerciseType}/>
+      <MyExercises exerciseType={exerciseType} />
     </div>
   );
 }

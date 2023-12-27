@@ -1,5 +1,6 @@
 const GET_USERS_WEIGHT_EXERCISES = 'userOwnedExercises/GET_USERS_WEIGHT_EXERCISES';
 const GET_USERS_CARDIO_EXERCISES = 'userOwnedExercises/GET_USERS_CARDIO_EXERCISES';
+const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
 
 
 const getUsersCardioExercises = (cardioExercises) => ({
@@ -10,6 +11,10 @@ const getUsersCardioExercises = (cardioExercises) => ({
 const getUsersWeightExercises = (weightExercises) => ({
     type: GET_USERS_WEIGHT_EXERCISES,
     weightExercises,
+});
+
+export const clearUserExercises = () => ({
+    type: CLEAR_USER_EXERCISES,
 });
 
 export const getUsersWeightExercisesThunk = () => async (dispatch) => {
@@ -38,7 +43,8 @@ const userExercisesReducer = (state = {}, action) => {
     switch (action.type) {
         case GET_USERS_CARDIO_EXERCISES:
             const cardioExercises = {};
-            action.cardioExercises.cardioExercises.forEach((exercise) => {
+            if (!action.cardioExercises.userCardioExercises) return {};
+            action.cardioExercises.userCardioExercises.forEach((exercise) => {
                 cardioExercises[exercise.id] = exercise
             })
             return cardioExercises;
@@ -48,6 +54,8 @@ const userExercisesReducer = (state = {}, action) => {
                 weightExercises[exercise.id] = exercise
             })
             return weightExercises;
+        case CLEAR_USER_EXERCISES:
+            return {};
         default:
             return state
     }

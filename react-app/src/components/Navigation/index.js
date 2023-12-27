@@ -8,6 +8,7 @@ import { clearGoalState } from "../../store/goal";
 import { clearCardioLogState } from "../../store/cardioLogs";
 import { clearFoodLogState } from "../../store/foodLogs";
 import { clearWeightLogState } from "../../store/weightLogs";
+import { clearUserExercises } from "../../store/userOwnedExercises";
 
 function Navigation({ isLoaded }) {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ function Navigation({ isLoaded }) {
     dispatch(clearCardioLogState())
     dispatch(clearFoodLogState())
     dispatch(clearWeightLogState())
+    dispatch(clearUserExercises())
     await dispatch(logout());
     history.replace("/");
     return;
