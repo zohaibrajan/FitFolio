@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { getUsersWeightExercisesThunk } from "../../store/userOwnedExercises";
 import {
+  getUsersCardioExercisesFilteredThunk,
   deleteUserCardioExerciseThunk,
-  getUsersWeightExercisesThunk,
-} from "../../store/userOwnedExercises";
-import { getUsersCardioExercisesFilteredThunk } from "../../store/userOwnedExercisesFiltered";
+} from "../../store/userOwnedExercisesFiltered";
 import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
@@ -16,8 +16,8 @@ function MyExercises({ exerciseType }) {
   const dispatch = useDispatch();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState({});
-  const userExercisesObj = useSelector((state) => state.userExercises);
-  const userExercises = Object.values(userExercisesObj)
+  const userExercisesObj = useSelector((state) => state.userExercisesFiltered);
+  const userExercises = Object.values(userExercisesObj);
 
   useEffect(() => {
     if (exerciseType === "Cardio") {
@@ -29,13 +29,12 @@ function MyExercises({ exerciseType }) {
 
   useEffect(() => {
     setIsPanelOpen(false);
-  }
-  , [exerciseType])
+  }, [exerciseType]);
 
   const handleDelete = (e, exerciseId) => {
     e.preventDefault();
     dispatch(deleteUserCardioExerciseThunk(exerciseId));
-  }
+  };
 
   return (
     <>

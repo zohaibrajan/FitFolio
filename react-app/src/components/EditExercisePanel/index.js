@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercisesFiltered";
+import { updateCardioExerciseAllExercises } from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId, setIsPanelOpen }) {
@@ -118,9 +119,10 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
       cardioExerciseForm.append("duration", duration);
       cardioExerciseForm.append("calories_burned", caloriesBurned);
       try {
-        await dispatch(
+        const exercise = await dispatch(
           updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm)
         );
+        await dispatch(updateCardioExerciseAllExercises(exercise));
         setIsPanelOpen(false);
       } catch (e) {
         console.error(e);
