@@ -75,6 +75,7 @@ def update_user_cardio_exercise(user_cardio_exercise):
 
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
             UserCardioExerciseVersion.created_by_user_id == current_user.id,
+            UserCardioExerciseVersion.is_deleted == False,
             UserCardioExerciseVersion.id != exercise_id,
             UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
         ).first()

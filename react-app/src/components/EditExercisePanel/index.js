@@ -9,7 +9,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   const dispatch = useDispatch();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
-  const usersExercisesObj = useSelector((state) => state.userExercises);
+  const usersExercisesObj = useSelector((state) => state.userExercisesFiltered);
   const usersExercises = Object.values(usersExercisesObj);
   const cardioExercises = Object.values(cardioExercisesObj);
   const weightExercises = Object.values(weightExercisesObj);
