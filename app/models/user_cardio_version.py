@@ -17,5 +17,6 @@ class UserCardioExerciseVersion(db.Model):
         return {
             "id": self.id,
             "exerciseName": self.exercise_name,
-            "caloriesPerMinute": self.calories_per_minute
+            "caloriesPerMinute": self.calories_per_minute,
+            "intensity": self.intensity,
         }

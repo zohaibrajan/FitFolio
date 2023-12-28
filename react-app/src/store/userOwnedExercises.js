@@ -1,6 +1,12 @@
 const GET_USERS_WEIGHT_EXERCISES = 'userOwnedExercises/GET_USERS_WEIGHT_EXERCISES';
 const GET_USERS_CARDIO_EXERCISES = 'userOwnedExercises/GET_USERS_CARDIO_EXERCISES';
 const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
+const UPDATE_CARDIO_EXERCISE = 'userOwnedExercises/UPDATE_CARDIO_EXERCISE';
+
+const updateCardioExercise = (exercise) => ({
+    type: UPDATE_CARDIO_EXERCISE,
+    exercise,
+});
 
 
 const getUsersCardioExercises = (cardioExercises) => ({
@@ -37,6 +43,19 @@ export const getUsersCardioExercisesThunk = () => async (dispatch) => {
     return exercises;
   }
 };
+
+export const updateCardioExerciseThunk = (exerciseId, formData) => async (dispatch) => {
+    const res = await fetch(`/api/users-cardio-exercises/${exerciseId}`, {
+        method: 'PUT',
+        body: formData
+    });
+
+    if (res.ok) {
+        const exercise = await res.json();
+        dispatch(updateCardioExercise(exercise));
+        return exercise;
+    }
+}
 
 
 const userExercisesReducer = (state = {}, action) => {

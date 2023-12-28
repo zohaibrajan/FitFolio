@@ -79,7 +79,7 @@ def update_user_cardio_exercise(user_cardio_exercise):
         }, 400
 
 
-@user_cardio_exercise_routes.route("/<int:userCardioExerciseId>", methods=["DELETE"])
+@user_cardio_exercise_routes.route("/<int:userCardioExerciseId>", methods=["DELETE"], endpoint="delete_user_cardio_exercise")
 @login_required
 @verify_cardio_exercise
 def delete_user_cardio_exercise(user_cardio_exercise):

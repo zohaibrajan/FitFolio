@@ -26,6 +26,11 @@ function MyExercises({ exerciseType }) {
     }
   }, [dispatch, exerciseType]);
 
+  useEffect(() => {
+    setIsPanelOpen(false);
+  }
+  , [exerciseType])
+
   return (
     <>
         <div className="exercise-container">

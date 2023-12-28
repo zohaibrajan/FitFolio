@@ -21,8 +21,8 @@ def seed_user_cardio_exercises():
 
 def undo_user_cardio_exercises():
     if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.user_cardio_exercises RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.user_cardio_exercise_versions RESTART IDENTITY CASCADE;")
     else:
-        db.session.execute(text("DELETE FROM user_cardio_exercises"))
+        db.session.execute(text("DELETE FROM user_cardio_exercise_versions"))
 
     db.session.commit()
