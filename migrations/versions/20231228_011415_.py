@@ -119,6 +119,7 @@ def upgrade():
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
     sa.Column('intensity', sa.String(), nullable=False),
     sa.Column('calories_per_minute', sa.Float(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['cardio_exercise_id'], ['cardio_exercises.id'], ),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
