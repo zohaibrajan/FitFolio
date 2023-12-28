@@ -196,8 +196,6 @@ def create_user_cardio_log():
             user_id = int(current_user.id)
         )
 
-        print(exercise_from_form)
-
         db.session.add(new_cardio_log)
         db.session.commit()
 

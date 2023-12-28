@@ -96,6 +96,7 @@ function Diary() {
     ? "next-date-button-disabled"
     : "next-date-button";
 
+
   return (
     <>
       <div className="diary-container">

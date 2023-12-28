@@ -22,6 +22,7 @@ function CardioLogModal({
   const today = gettingTodaysDate();
   const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
+  const usersExercisesObj = useSelector((state) => state.userExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [searchTerm, setSearchTerm] = useState(
     formType === "update" ? log.cardioExercise.exerciseName : exerciseName
@@ -49,6 +50,7 @@ function CardioLogModal({
 
   useEffect(() => {
     const exercise = cardioExercisesObj[cardioExerciseId];
+    console.log(exercise);
     if (exercise) {
       if (formType === "update" && duration === log.duration) {
         setCaloriesBurned(log.caloriesBurned);

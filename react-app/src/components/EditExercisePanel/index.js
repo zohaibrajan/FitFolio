@@ -13,6 +13,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
   const cardioExercises = Object.values(cardioExercisesObj);
   const weightExercises = Object.values(weightExercisesObj);
   const [intensity, setIntensity] = useState(selectedExercise.intensity);
+  const [isFormModified, setIsFormModified] = useState(false);
   const [exerciseType, setExerciseType] = useState(exerciseTypeFromMyExercises);
   const [exerciseName, setExerciseName] = useState(
     selectedExercise.exerciseName
@@ -45,7 +46,16 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
     setExerciseName(selectedExercise.exerciseName);
     setCaloriesBurned(selectedExercise.caloriesPerMinute * duration);
     setIntensity(selectedExercise.intensity);
+    setCardioErrors({
+      exercise: "",
+      duration: "",
+      calories: "",
+    });
+    setWeightErrors({
+      exercise: "",
+    });
   }, [selectedExercise, duration]);
+
 
   const checkForExercise = (exerciseName) => {
     if (exerciseType === "Cardio") {
@@ -104,7 +114,9 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
       cardioExerciseForm.append("duration", duration);
       cardioExerciseForm.append("calories_burned", caloriesBurned);
       try {
-        await dispatch(updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm));
+        await dispatch(
+          updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm)
+        );
       } catch (e) {
         console.error(e);
       }
@@ -128,6 +140,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
             onBlur={() => checkForExercise(exerciseName)}
             onChange={(e) => {
               setExerciseName(e.target.value);
+              setIsFormModified(true);
               setCardioErrors({ ...cardioErrors, exercise: "" });
               setWeightErrors({ ...weightErrors, exercise: "" });
             }}
@@ -146,7 +159,11 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
             type="text"
             name="exerciseType"
             value={exerciseType}
-            onChange={(e) => setExerciseType(e.target.value)}
+            onBlur={() => checkForExercise(exerciseName)}
+            onChange={(e) => {
+              setExerciseType(e.target.value);
+              setIsFormModified(true);
+            }}
           >
             <option value="Cardio">Cardio</option>
             <option value="Strength">Strength</option>
@@ -160,7 +177,11 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
                 className="cardio-input"
                 name="intensity"
                 value={intensity}
-                onChange={(e) => setIntensity(e.target.value)}
+                onBlur={() => checkForExercise(exerciseName)}
+                onChange={(e) => {
+                  setIntensity(e.target.value);
+                  setIsFormModified(true);
+                }}
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -172,9 +193,13 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
               <input
                 type="number"
                 value={duration}
-                onBlur={() => checkDuration(duration)}
+                onBlur={() => {
+                  checkDuration(duration)
+                  checkForExercise(exerciseName)
+                }}
                 onChange={(e) => {
                   setDuration(e.target.value);
+                  setIsFormModified(true);
                   setCardioErrors({ ...cardioErrors, duration: "" });
                 }}
               ></input>
@@ -189,9 +214,13 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
               <input
                 type="number"
                 value={caloriesBurned}
-                onBlur={() => checkCaloriesBurned(caloriesBurned)}
+                onBlur={() => {
+                  checkCaloriesBurned(caloriesBurned)
+                  checkForExercise(exerciseName);
+                }}
                 onChange={(e) => {
                   setCaloriesBurned(e.target.value);
+                  setIsFormModified(true);
                   setCardioErrors({ ...cardioErrors, calories: "" });
                 }}
               ></input>
@@ -207,7 +236,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
             <p>For Strength Exercises, only the name is required</p>
           </>
         )}
-        <button disabled={disabled} type="submit">
+        <button disabled={disabled || !isFormModified} type="submit">
           Confirm
         </button>
       </form>
