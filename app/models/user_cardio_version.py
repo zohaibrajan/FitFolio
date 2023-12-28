@@ -4,7 +4,7 @@ class UserCardioExerciseVersion(db.Model):
     __tablename__ = 'user_cardio_exercise_versions'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')))
+    created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')))
     cardio_exercise_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('cardio_exercises.id')))
     exercise_name = db.Column(db.String(50), nullable=False)
     intensity = db.Column(db.String, nullable=False)

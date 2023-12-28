@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
   const [duration, setDuration] = useState(60);
+  const dispatch = useDispatch();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
   const usersExercisesObj = useSelector((state) => state.userExercises);
@@ -43,7 +45,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
     setExerciseName(selectedExercise.exerciseName);
     setCaloriesBurned(selectedExercise.caloriesPerMinute * duration);
     setIntensity(selectedExercise.intensity);
-  }, [selectedExercise, duration, intensity]);
+  }, [selectedExercise, duration]);
 
   const checkForExercise = (exerciseName) => {
     if (exerciseType === "Cardio") {
@@ -93,7 +95,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (exerciseType === "Cardio") {
       const cardioExerciseForm = new FormData();
@@ -101,8 +103,11 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
       cardioExerciseForm.append("intensity", intensity);
       cardioExerciseForm.append("duration", duration);
       cardioExerciseForm.append("calories_burned", caloriesBurned);
-
-      console.log(selectedExercise)
+      try {
+        await dispatch(updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm));
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 

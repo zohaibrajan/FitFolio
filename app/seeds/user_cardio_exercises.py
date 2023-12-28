@@ -9,7 +9,7 @@ def seed_user_cardio_exercises():
 
             for row in csvreader:
                   exercise = UserCardioExerciseVersion(
-                        user_id = int(row[0]),
+                        created_by_user_id = int(row[0]),
                         cardio_exercise_id = int(row[1]),
                         exercise_name = row[2],
                         intensity = row[3],

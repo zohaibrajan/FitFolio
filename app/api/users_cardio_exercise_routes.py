@@ -12,7 +12,7 @@ user_cardio_exercise_routes = Blueprint("user-cardio-exercise", __name__)
 @login_required
 def get_all_user_cardio_exercises():
     """Getting all created by User Cardio Exercises"""
-    exercises = UserCardioExerciseVersion.query.filter(UserCardioExerciseVersion.user_id == current_user.id).all()
+    exercises = UserCardioExerciseVersion.query.filter(UserCardioExerciseVersion.created_by_user_id == current_user.id).all()
 
     return {
         "userCardioExercises": [exercise.to_dict() for exercise in exercises]
@@ -49,11 +49,11 @@ def update_user_cardio_exercise(user_cardio_exercise):
         duration = data["duration"]
         calories_burned = data["calories_burned"]
 
-        calories_burned_per_minute = calories_burned / duration
+        calories_burned_per_minute = round(calories_burned / duration)
 
         exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
-        UserCardioExerciseVersion.user_id == current_user.id,
+        UserCardioExerciseVersion.created_by_user_id == current_user.id,
         UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
         ).first()
 

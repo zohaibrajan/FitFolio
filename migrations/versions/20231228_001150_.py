@@ -1,16 +1,19 @@
 """empty message
 
-Revision ID: bed08a52251f
-Revises: 
-Create Date: 2023-12-27 14:31:17.569593
+Revision ID: a4e488acfcf2
+Revises:
+Create Date: 2023-12-28 00:11:50.648302
 
 """
 from alembic import op
 import sqlalchemy as sa
 
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get("SCHEMA")
 
 # revision identifiers, used by Alembic.
-revision = 'bed08a52251f'
+revision = 'a4e488acfcf2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,6 +35,10 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
+
     op.create_table('cardio_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
@@ -41,6 +48,10 @@ def upgrade():
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE cardio_exercises SET SCHEMA {SCHEMA};")
+
     op.create_table('foods',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
@@ -51,6 +62,10 @@ def upgrade():
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE days SET SCHEMA {SCHEMA};")
+
     op.create_table('goals',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -62,6 +77,10 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE goals SET SCHEMA {SCHEMA};")
+
     op.create_table('weight_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
@@ -69,6 +88,10 @@ def upgrade():
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE weight_exercises SET SCHEMA {SCHEMA};")
+
     op.create_table('cardio_logs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=False),
@@ -80,6 +103,11 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE cardio_logs SET SCHEMA {SCHEMA};")
+
+
     op.create_table('food_logs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('servings', sa.Integer(), nullable=False),
@@ -92,17 +120,26 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE food_logs SET SCHEMA {SCHEMA};")
+
+
     op.create_table('user_cardio_exercise_versions',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('created_by_user_id', sa.Integer(), nullable=True),
     sa.Column('cardio_exercise_id', sa.Integer(), nullable=True),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
     sa.Column('intensity', sa.String(), nullable=False),
     sa.Column('calories_per_minute', sa.Float(), nullable=False),
     sa.ForeignKeyConstraint(['cardio_exercise_id'], ['cardio_exercises.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE user_cardio_exercise_versions SET SCHEMA {SCHEMA};")
+
     op.create_table('weight_logs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('sets', sa.Integer(), nullable=False),
@@ -115,6 +152,9 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 

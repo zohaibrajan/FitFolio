@@ -1,8 +1,9 @@
 from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal
+from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserCardioExerciseVersion
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime, date
+from sqlalchemy import and_
 
 user_routes = Blueprint('users', __name__)
 def calculate_bmr_for_women(weight_kg, height_cm, age_years):
@@ -169,6 +170,14 @@ def create_user_cardio_log():
         exercise_from_form = data['exercise_name']
 
         exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
+
+        if not exercise:
+            exercise = UserCardioExerciseVersion.query.where(
+                and_(
+                    UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserCardioExerciseVersion.created_by_user_id == current_user.id
+                )
+            ).first()
 
         if not exercise:
             return {

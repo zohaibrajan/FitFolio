@@ -44,16 +44,19 @@ export const getUsersCardioExercisesThunk = () => async (dispatch) => {
   }
 };
 
-export const updateCardioExerciseThunk = (exerciseId, formData) => async (dispatch) => {
+export const updateUserCardioExerciseThunk = (exerciseId, formData) => async (dispatch) => {
     const res = await fetch(`/api/users-cardio-exercises/${exerciseId}`, {
-        method: 'PUT',
-        body: formData
+      method: "PUT",
+      body: formData,
     });
 
     if (res.ok) {
         const exercise = await res.json();
         dispatch(updateCardioExercise(exercise));
         return exercise;
+    } else {
+        const errors = await res.json();
+        return errors;
     }
 }
 
@@ -73,6 +76,12 @@ const userExercisesReducer = (state = {}, action) => {
                 weightExercises[exercise.id] = exercise
             })
             return weightExercises;
+        case UPDATE_CARDIO_EXERCISE:
+            console.log('------', action)
+            return {
+                ...state,
+                [action.exercise.userCardioExercise.id]: action.exercise.userCardioExercise
+            }
         case CLEAR_USER_EXERCISES:
             return {};
         default:
