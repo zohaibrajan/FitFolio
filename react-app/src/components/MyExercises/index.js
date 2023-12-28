@@ -79,6 +79,7 @@ function MyExercises({ exerciseType }) {
                 exerciseTypeFromMyExercises={exerciseType}
                 selectedExercise={selectedExercise}
                 exerciseId={selectedExercise.id}
+                setIsPanelOpen={setIsPanelOpen}
               />
             )}
           </div>

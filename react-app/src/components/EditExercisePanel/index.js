@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
-function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId }) {
+function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId, setIsPanelOpen }) {
   const [duration, setDuration] = useState(60);
   const dispatch = useDispatch();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
@@ -54,6 +54,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
     setWeightErrors({
       exercise: "",
     });
+    setIsFormModified(false);
   }, [selectedExercise, duration]);
 
 
@@ -120,6 +121,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
         await dispatch(
           updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm)
         );
+        setIsPanelOpen(false);
       } catch (e) {
         console.error(e);
       }
