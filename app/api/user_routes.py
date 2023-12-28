@@ -190,10 +190,13 @@ def create_user_cardio_log():
         new_cardio_log = CardioLog(
             duration = data['duration'],
             calories_burned = data['calories_burned'],
-            exercise_id = int(exercise.id),
+            exercise_id = int(exercise.id) if isinstance(exercise, CardioExercise) else None,
+            user_exercise_id = int(exercise.id) if isinstance(exercise, UserCardioExerciseVersion) else None,
             date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
             user_id = int(current_user.id)
         )
+
+        print(exercise_from_form)
 
         db.session.add(new_cardio_log)
         db.session.commit()

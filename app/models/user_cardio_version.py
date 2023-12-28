@@ -11,6 +11,7 @@ class UserCardioExerciseVersion(db.Model):
     calories_per_minute = db.Column(db.Float, nullable=False)
 
     user = db.relationship('User', back_populates='cardio_exercise_versions')
+    cardio_logs = db.relationship("CardioLog", back_populates='user_exercise')
     cardio_exercise = db.relationship('CardioExercise', back_populates='versions')
 
     def to_dict(self):
