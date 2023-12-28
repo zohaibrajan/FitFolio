@@ -13,8 +13,7 @@ user_cardio_exercise_routes = Blueprint("user-cardio-exercise", __name__)
 def get_all_user_cardio_exercises():
     """Getting all created by User Cardio Exercises"""
     exercises = UserCardioExerciseVersion.query.filter(
-        UserCardioExerciseVersion.created_by_user_id == current_user.id,
-        UserCardioExerciseVersion.is_deleted == False
+        UserCardioExerciseVersion.created_by_user_id == current_user.id
         ).all()
 
     return {
@@ -95,5 +94,6 @@ def delete_user_cardio_exercise(user_cardio_exercise):
     db.session.commit()
 
     return {
-        "message": "Cardio Exercise Deleted"
+        "message": "Cardio Exercise Deleted",
+        "userCardioExercise": user_cardio_exercise.to_dict()
     }

@@ -75,7 +75,8 @@ def create_cardio_exercise():
             cardio_exercise_id=cardio_exercise.id,
             exercise_name=data["exercise_name"].title(),
             intensity=data["intensity"],
-            calories_per_minute=calories_burned_per_minute
+            calories_per_minute=calories_burned_per_minute,
+            is_deleted=False
         )
         db.session.add(user_exercise_version)
         db.session.commit()

@@ -24,4 +24,5 @@ class UserCardioExerciseVersion(db.Model):
             "exerciseName": self.exercise_name,
             "caloriesPerMinute": self.calories_per_minute,
             "intensity": self.intensity,
+            "isDeleted": self.is_deleted,
         }

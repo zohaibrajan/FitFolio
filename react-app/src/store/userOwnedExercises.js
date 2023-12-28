@@ -2,9 +2,15 @@ const GET_USERS_WEIGHT_EXERCISES = 'userOwnedExercises/GET_USERS_WEIGHT_EXERCISE
 const GET_USERS_CARDIO_EXERCISES = 'userOwnedExercises/GET_USERS_CARDIO_EXERCISES';
 const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
 const UPDATE_CARDIO_EXERCISE = 'userOwnedExercises/UPDATE_CARDIO_EXERCISE';
+const DELETE_CARDIO_EXERCISE = 'userOwnedExercises/DELETE_CARDIO_EXERCISE';
 
 const updateCardioExercise = (exercise) => ({
     type: UPDATE_CARDIO_EXERCISE,
+    exercise,
+});
+
+const deleteCardioExercise = (exercise) => ({
+    type: DELETE_CARDIO_EXERCISE,
     exercise,
 });
 
@@ -31,6 +37,18 @@ export const getUsersWeightExercisesThunk = () => async (dispatch) => {
     dispatch(getUsersWeightExercises(exercises));
     return exercises;
   }
+};
+
+export const deleteUserCardioExerciseThunk = (exerciseId) => async (dispatch) => {
+    const res = await fetch(`/api/users-cardio-exercises/${exerciseId}`, {
+        method: "DELETE",
+    });
+
+    if (res.ok) {
+        const exercise = await res.json();
+        dispatch(deleteCardioExercise(exercise));
+        return exercise;
+    }
 };
 
 
@@ -77,11 +95,14 @@ const userExercisesReducer = (state = {}, action) => {
             })
             return weightExercises;
         case UPDATE_CARDIO_EXERCISE:
-            console.log('------', action)
             return {
                 ...state,
                 [action.exercise.userCardioExercise.id]: action.exercise.userCardioExercise
             }
+        case DELETE_CARDIO_EXERCISE:
+            const newState = { ...state };
+            delete newState[action.exercise.userCardioExercise.id];
+            return newState;
         case CLEAR_USER_EXERCISES:
             return {};
         default:

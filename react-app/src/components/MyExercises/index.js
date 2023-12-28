@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   getUsersCardioExercisesThunk,
+  deleteUserCardioExerciseThunk,
   getUsersWeightExercisesThunk,
 } from "../../store/userOwnedExercises";
 import OpenModalButton from "../OpenModalButton";
@@ -31,59 +32,79 @@ function MyExercises({ exerciseType }) {
   }
   , [exerciseType])
 
+  const handleDelete = (e, exerciseId) => {
+    e.preventDefault();
+    dispatch(deleteUserCardioExerciseThunk(exerciseId));
+  }
+
   return (
     <>
-        <div className="exercise-container">
-          <div className="all-exercise-cards">
-            <h1>My {exerciseType} Exercises</h1>
-            {userExercises.length > 0 ? (
-              userExercises.map((exercise) => (
-                <div key={exercise.id} className="exercise-card">
-                  <p>{exercise.exerciseName}</p>
-                  <OpenModalButton
-                    modalComponent={
-                      exerciseType === "Cardio" ? (
-                        <CardioLogModal
-                          exerciseName={exercise.exerciseName}
-                          exerciseId={exercise.id}
-                        />
-                      ) : (
-                        <WeightLogModal
-                          exerciseName={exercise.exerciseName}
-                          exerciseIdProp={exercise.id}
-                        />
-                      )
-                    }
-                    buttonText={"Add to Diary"}
-                  />
-                  <button
-                    onClick={() => {
-                      setIsPanelOpen(true);
-                      setSelectedExercise(exercise);
-                    }}
-                  >
-                    Edit Exercise
-                  </button>
-                </div>
-              ))
-            ) : (
-              <div className="exercise-card">
-                <h2>No Exercises</h2>
+      <div className="exercise-container">
+        <div className="all-exercise-cards">
+          <h1>My {exerciseType} Exercises</h1>
+          {userExercises.length > 0 ? (
+            userExercises.map((exercise) => (
+              <div key={exercise.id} className="exercise-card">
+                <p>{exercise.exerciseName}</p>
+                <OpenModalButton
+                  modalComponent={
+                    exerciseType === "Cardio" ? (
+                      <CardioLogModal
+                        exerciseName={exercise.exerciseName}
+                        exerciseId={exercise.id}
+                      />
+                    ) : (
+                      <WeightLogModal
+                        exerciseName={exercise.exerciseName}
+                        exerciseIdProp={exercise.id}
+                      />
+                    )
+                  }
+                  buttonText={"Add to Diary"}
+                />
+                <button
+                  onClick={(e) => handleDelete(e, exercise.id)}
+                  style={{
+                    padding: "0",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    cursor: "pointer",
+                  }}
+                  title="Delete"
+                >
+                  <i
+                    className="fa-solid fa-circle-minus"
+                    style={{ color: "#ff0000" }}
+                  ></i>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsPanelOpen(true);
+                    setSelectedExercise(exercise);
+                  }}
+                >
+                  Edit Exercise
+                </button>
               </div>
-            )}
-          </div>
-
-          <div className="edit-exercise-panel-parent">
-            {isPanelOpen && (
-              <EditExercisePanel
-                exerciseTypeFromMyExercises={exerciseType}
-                selectedExercise={selectedExercise}
-                exerciseId={selectedExercise.id}
-                setIsPanelOpen={setIsPanelOpen}
-              />
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="exercise-card">
+              <h2>No Exercises</h2>
+            </div>
+          )}
         </div>
+
+        <div className="edit-exercise-panel-parent">
+          {isPanelOpen && (
+            <EditExercisePanel
+              exerciseTypeFromMyExercises={exerciseType}
+              selectedExercise={selectedExercise}
+              exerciseId={selectedExercise.id}
+              setIsPanelOpen={setIsPanelOpen}
+            />
+          )}
+        </div>
+      </div>
     </>
   );
 }

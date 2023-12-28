@@ -36,6 +36,7 @@ export const createCardioExerciseThunk = (exercise) => async (dispatch) => {
   }
 };
 
+
 const cardioExerciseReducer = (state = {}, action) => {
   switch (action.type) {
     case ALL_CARDIO_EXERCISES:
