@@ -49,16 +49,31 @@ function CardioLogModal({
   }, [dispatch]);
 
   useEffect(() => {
-    const exercise = cardioExercisesObj[cardioExerciseId];
-    console.log(exercise);
-    if (exercise) {
-      if (formType === "update" && duration === log.duration) {
-        setCaloriesBurned(log.caloriesBurned);
-      } else {
+    if (exerciseName.length > 0) {
+      const exercise = usersExercisesObj[exerciseId];
+      if (exercise) {
         setCaloriesBurned(exercise.caloriesPerMinute * duration);
       }
+    } else {
+      const exercise = cardioExercisesObj[cardioExerciseId];
+      if (exercise) {
+        if (formType === "update" && duration === log.duration) {
+          setCaloriesBurned(log.caloriesBurned);
+        } else {
+          setCaloriesBurned(exercise.caloriesPerMinute * duration);
+        }
+      }
     }
-  }, [cardioExerciseId, duration, cardioExercisesObj, formType, log]);
+  }, [
+    cardioExerciseId,
+    duration,
+    cardioExercisesObj,
+    formType,
+    log,
+    exerciseId,
+    usersExercisesObj,
+    exerciseName,
+  ]);
 
   const filteredCardioExercises = cardioExercises.filter((exercise) =>
     exercise.exerciseName.toLowerCase().includes(searchTerm.toLowerCase())

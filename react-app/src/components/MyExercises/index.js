@@ -78,6 +78,7 @@ function MyExercises({ exerciseType }) {
               <EditExercisePanel
                 exerciseTypeFromMyExercises={exerciseType}
                 selectedExercise={selectedExercise}
+                exerciseId={selectedExercise.id}
               />
             )}
           </div>

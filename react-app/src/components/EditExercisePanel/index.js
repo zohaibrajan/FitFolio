@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
-function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
+function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId }) {
   const [duration, setDuration] = useState(60);
   const dispatch = useDispatch();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
@@ -57,15 +57,17 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
   }, [selectedExercise, duration]);
 
 
-  const checkForExercise = (exerciseName) => {
+  const checkForExercise = (exerciseName, exerciseId) => {
     if (exerciseType === "Cardio") {
       const exerciseExists =
         cardioExercises.some(
           (exercise) =>
+            exercise.id !== exerciseId &&
             exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
+            exercise.id !== exerciseId &&
             exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
         );
 
@@ -78,6 +80,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
     } else {
       weightExercises.forEach((exercise) => {
         if (
+          exercise.id !== exerciseId &&
           exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
         ) {
           setWeightErrors({
@@ -159,7 +162,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
             type="text"
             name="exerciseType"
             value={exerciseType}
-            onBlur={() => checkForExercise(exerciseName)}
+            onBlur={() => checkForExercise(exerciseName, exerciseId)}
             onChange={(e) => {
               setExerciseType(e.target.value);
               setIsFormModified(true);
@@ -177,7 +180,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
                 className="cardio-input"
                 name="intensity"
                 value={intensity}
-                onBlur={() => checkForExercise(exerciseName)}
+                onBlur={() => checkForExercise(exerciseName, exerciseId)}
                 onChange={(e) => {
                   setIntensity(e.target.value);
                   setIsFormModified(true);
@@ -195,7 +198,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
                 value={duration}
                 onBlur={() => {
                   checkDuration(duration)
-                  checkForExercise(exerciseName)
+                  checkForExercise(exerciseName, exerciseId)
                 }}
                 onChange={(e) => {
                   setDuration(e.target.value);
@@ -216,7 +219,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises }) {
                 value={caloriesBurned}
                 onBlur={() => {
                   checkCaloriesBurned(caloriesBurned)
-                  checkForExercise(exerciseName);
+                  checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
                   setCaloriesBurned(e.target.value);

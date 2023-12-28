@@ -51,10 +51,14 @@ def update_user_cardio_exercise(user_cardio_exercise):
 
         calories_burned_per_minute = round(calories_burned / duration)
 
+        exercise_id = user_cardio_exercise.id
+
         exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
+
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
-        UserCardioExerciseVersion.created_by_user_id == current_user.id,
-        UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
+            UserCardioExerciseVersion.created_by_user_id == current_user.id,
+            UserCardioExerciseVersion.id != exercise_id,
+            UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
         ).first()
 
         if exercise_exists or user_exercise_exists:
