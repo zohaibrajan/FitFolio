@@ -1,8 +1,9 @@
 .exercise-page-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-top: 35px;
-
+    gap: 25px;
 }
 
 .exercise-page-title {
@@ -45,7 +46,7 @@
 
 }
 
-.create-exercise-text > p {
+.create-exercise-text>p {
     font-size: 12px;
 }
 

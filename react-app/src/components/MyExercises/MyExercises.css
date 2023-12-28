@@ -1,0 +1,19 @@
+.exercise-container {
+    display: flex;
+    flex-direction: row;
+    min-width: 685px;
+    max-width: 775px;
+    justify-content: space-between;
+}
+
+.edit-exercise-panel-parent {
+    position: relative;
+    width: 40%;
+    height: 300px;
+    border: 3px solid black;
+}
+
+.exercise-card {
+    display: flex;
+    flex-direction: row
+}

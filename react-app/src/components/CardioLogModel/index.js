@@ -9,19 +9,26 @@ import {
 } from "../../store/cardioLogs";
 import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
 import "./CardioLog.css";
+import { useSelectedDate } from "../../context/SelectedDate";
 
-function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
+function CardioLogModal({
+  formType = "create",
+  log = {},
+  exerciseName = "",
+  exerciseId = 1,
+}) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
-  const diaryDate = formattingUserInputDate(dateFromDiary);
+  const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
+  const usersExercisesObj = useSelector((state) => state.userExercises);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [searchTerm, setSearchTerm] = useState(
-    formType === "update" ? log.cardioExercise.exerciseName : ""
+    formType === "update" ? log.cardioExercise.exerciseName : exerciseName
   );
   const [cardioExerciseId, setCardioExerciseId] = useState(
-    formType === "update" ? log.cardioExercise.id : 1
+    formType === "update" ? log.cardioExercise.id : exerciseId
   );
   const [duration, setDuration] = useState(
     formType === "update" ? log.duration : 0
@@ -34,7 +41,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   );
 
   const [isExerciseSelected, setIsExerciseSelected] = useState(
-    formType === "update" ? true : false
+    formType === "update" || exerciseName ? true : false
   );
 
   useEffect(() => {
@@ -42,11 +49,31 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   }, [dispatch]);
 
   useEffect(() => {
-    const exercise = cardioExercisesObj[cardioExerciseId];
-    if (exercise) {
-      setCaloriesBurned(exercise.caloriesPerMinute * duration);
+    if (exerciseName.length > 0) {
+      const exercise = usersExercisesObj[exerciseId];
+      if (exercise) {
+        setCaloriesBurned(exercise.caloriesPerMinute * duration);
+      }
+    } else {
+      const exercise = cardioExercisesObj[cardioExerciseId];
+      if (exercise) {
+        if (formType === "update" && duration === log.duration) {
+          setCaloriesBurned(log.caloriesBurned);
+        } else {
+          setCaloriesBurned(exercise.caloriesPerMinute * duration);
+        }
+      }
     }
-  }, [cardioExerciseId, duration, cardioExercisesObj]);
+  }, [
+    cardioExerciseId,
+    duration,
+    cardioExercisesObj,
+    formType,
+    log,
+    exerciseId,
+    usersExercisesObj,
+    exerciseName,
+  ]);
 
   const filteredCardioExercises = cardioExercises.filter((exercise) =>
     exercise.exerciseName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -64,10 +91,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     const formData = new FormData();
     formData.append("duration", Number(duration));
     formData.append("calories_burned", Number(caloriesBurned));
-    formData.append(
-      "exercise_name",
-      cardioExercisesObj[cardioExerciseId].exerciseName
-    );
+    formData.append("exercise_name", searchTerm);
     formData.append("date", date);
 
     if (formType === "create") {
@@ -149,7 +173,7 @@ function CardioLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
         <label className="cardio-log-labels">
           Duration:
           <input
-          disabled={!isExerciseSelected}
+            disabled={!isExerciseSelected}
             className="duration-cb"
             min={1}
             step={1}

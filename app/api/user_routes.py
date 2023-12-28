@@ -1,8 +1,9 @@
 from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal
+from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserCardioExerciseVersion
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime, date
+from sqlalchemy import and_
 
 user_routes = Blueprint('users', __name__)
 def calculate_bmr_for_women(weight_kg, height_cm, age_years):
@@ -106,31 +107,40 @@ def update_a_users_cardio_log(cardioLogId):
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-            data = form.data
-            exercise_from_form = data['exercise_name']
+        data = form.data
+        exercise_from_form = data['exercise_name']
 
-            exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
+        exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
 
-            if not exercise:
-                return {
-                    "errorMessage": "Sorry, exercise Does Not Exist"
-                }, 404
+        if not exercise:
+            exercise = UserCardioExerciseVersion.query.where(
+                and_(
+                    UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserCardioExerciseVersion.created_by_user_id == current_user.id
+                )
+            ).first()
 
-            if not data['calories_burned']:
-                data['calories_burned'] = int(data['duration']) * exercise.calories_per_minute
+        if not exercise:
+            return {
+                "errorMessage": "Sorry, exercise Does Not Exist"
+            }, 404
+
+        if not data['calories_burned']:
+            data['calories_burned'] = int(data['duration']) * exercise.calories_per_minute
 
 
-            updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
+        updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
 
-            cardio_log.duration = data['duration']
-            cardio_log.calories_burned = data['calories_burned']
-            cardio_log.exercise_id = int(exercise.id)
-            cardio_log.date = updated_date
-            cardio_log.user_id = int(current_user.id)
+        cardio_log.duration = data['duration']
+        cardio_log.calories_burned = data['calories_burned']
+        cardio_log.exercise_id = int(exercise.id) if isinstance(exercise, CardioExercise) else None
+        cardio_log.user_exercise_id = int(exercise.id) if isinstance(exercise, UserCardioExerciseVersion) else None
+        cardio_log.date = updated_date
+        cardio_log.user_id = int(current_user.id)
 
-            db.session.commit()
+        db.session.commit()
 
-            return cardio_log.to_dict(), 201
+        return cardio_log.to_dict(), 201
 
     if form.errors:
         return form.errors
@@ -171,6 +181,14 @@ def create_user_cardio_log():
         exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
 
         if not exercise:
+            exercise = UserCardioExerciseVersion.query.where(
+                and_(
+                    UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserCardioExerciseVersion.created_by_user_id == current_user.id
+                )
+            ).first()
+
+        if not exercise:
             return {
                 "errorMessage": "Sorry, exercise Does Not Exist"
             }, 404
@@ -181,7 +199,8 @@ def create_user_cardio_log():
         new_cardio_log = CardioLog(
             duration = data['duration'],
             calories_burned = data['calories_burned'],
-            exercise_id = int(exercise.id),
+            exercise_id = int(exercise.id) if isinstance(exercise, CardioExercise) else None,
+            user_exercise_id = int(exercise.id) if isinstance(exercise, UserCardioExerciseVersion) else None,
             date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
             user_id = int(current_user.id)
         )
