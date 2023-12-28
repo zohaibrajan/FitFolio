@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercises";
+import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercisesFiltered";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId, setIsPanelOpen }) {

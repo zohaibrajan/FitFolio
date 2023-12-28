@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
-  getUsersCardioExercisesThunk,
   deleteUserCardioExerciseThunk,
   getUsersWeightExercisesThunk,
 } from "../../store/userOwnedExercises";
+import { getUsersCardioExercisesFilteredThunk } from "../../store/userOwnedExercisesFiltered";
 import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
@@ -21,7 +21,7 @@ function MyExercises({ exerciseType }) {
 
   useEffect(() => {
     if (exerciseType === "Cardio") {
-      dispatch(getUsersCardioExercisesThunk());
+      dispatch(getUsersCardioExercisesFilteredThunk());
     } else {
       dispatch(getUsersWeightExercisesThunk());
     }

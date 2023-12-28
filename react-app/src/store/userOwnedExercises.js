@@ -1,13 +1,8 @@
 const GET_USERS_WEIGHT_EXERCISES = 'userOwnedExercises/GET_USERS_WEIGHT_EXERCISES';
 const GET_USERS_CARDIO_EXERCISES = 'userOwnedExercises/GET_USERS_CARDIO_EXERCISES';
 const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
-const UPDATE_CARDIO_EXERCISE = 'userOwnedExercises/UPDATE_CARDIO_EXERCISE';
 const DELETE_CARDIO_EXERCISE = 'userOwnedExercises/DELETE_CARDIO_EXERCISE';
 
-const updateCardioExercise = (exercise) => ({
-    type: UPDATE_CARDIO_EXERCISE,
-    exercise,
-});
 
 const deleteCardioExercise = (exercise) => ({
     type: DELETE_CARDIO_EXERCISE,
@@ -62,21 +57,7 @@ export const getUsersCardioExercisesThunk = () => async (dispatch) => {
   }
 };
 
-export const updateUserCardioExerciseThunk = (exerciseId, formData) => async (dispatch) => {
-    const res = await fetch(`/api/users-cardio-exercises/${exerciseId}`, {
-      method: "PUT",
-      body: formData,
-    });
 
-    if (res.ok) {
-        const exercise = await res.json();
-        dispatch(updateCardioExercise(exercise));
-        return exercise;
-    } else {
-        const errors = await res.json();
-        return errors;
-    }
-}
 
 
 const userExercisesReducer = (state = {}, action) => {
@@ -94,11 +75,6 @@ const userExercisesReducer = (state = {}, action) => {
                 weightExercises[exercise.id] = exercise
             })
             return weightExercises;
-        case UPDATE_CARDIO_EXERCISE:
-            return {
-                ...state,
-                [action.exercise.userCardioExercise.id]: action.exercise.userCardioExercise
-            }
         case DELETE_CARDIO_EXERCISE:
             const newState = { ...state };
             delete newState[action.exercise.userCardioExercise.id];

@@ -55,8 +55,6 @@ function CardioLogModal({
       exercise = usersExercisesObj[cardioExerciseId];
     }
 
-    console.log(exercise);
-
     if (exercise) {
       if (formType === "update" && duration === log.duration) {
         setCaloriesBurned(log.caloriesBurned);

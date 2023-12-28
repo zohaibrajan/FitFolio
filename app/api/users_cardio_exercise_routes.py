@@ -21,6 +21,22 @@ def get_all_user_cardio_exercises():
     }
 
 
+@user_cardio_exercise_routes.route("/filtered")
+@login_required
+def get_filtered_user_cardio_exercises():
+    """Getting all created by User Cardio Exercises"""
+    exercises = UserCardioExerciseVersion.query.filter(
+        UserCardioExerciseVersion.created_by_user_id == current_user.id,
+        UserCardioExerciseVersion.is_deleted == False
+        ).all()
+
+    return {
+        "userCardioExercises": [exercise.to_dict() for exercise in exercises]
+    }
+
+
+
+
 @user_cardio_exercise_routes.route("/<int:userCardioExerciseId>")
 @login_required
 def get_user_cardio_exercise(userCardioExerciseId):
