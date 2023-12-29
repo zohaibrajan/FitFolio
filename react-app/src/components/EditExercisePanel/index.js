@@ -19,8 +19,6 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   const [exerciseName, setExerciseName] = useState(
     selectedExercise.exerciseName.split('*')[0]
   );
-
-  console.log(exerciseName)
   const [caloriesBurned, setCaloriesBurned] = useState(
     selectedExercise.caloriesPerMinute * duration
   );
