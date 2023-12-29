@@ -69,7 +69,7 @@ def create_weight_exercise():
         user_exercise_version = UserWeightExerciseVersion(
             created_by_user_id=current_user.id,
             weight_exercise_id=weight_exercise.id,
-            exercise_name=data["exercise_name"]
+            exercise_name=data["exercise_name"].title() + "*", # * indicates the original version
             is_deleted=False
         )
 
@@ -79,7 +79,6 @@ def create_weight_exercise():
         return {
             "weightExercise": weight_exercise.to_dict()
         }
-    else:
-        return {
-            "errors": form.errors
-        }, 400
+
+    if form.errors:
+        return form.errors, 400

@@ -1,9 +1,9 @@
 from flask_login import current_user
-from app.models import WeightExercise
+from app.models import UserWeightExerciseVersion
 
 def verify_weight_exercise(func):
     def wrapper(weightExerciseId):
-        weight_exercise = WeightExercise.query.get(weightExerciseId)
+        weight_exercise = UserWeightExerciseVersion.query.get(weightExerciseId)
 
         if not weight_exercise:
             return {
@@ -18,5 +18,3 @@ def verify_weight_exercise(func):
         return func(weight_exercise)
 
     return wrapper
-
-
