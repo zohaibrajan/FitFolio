@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercisesFiltered";
-import { updateCardioExerciseAllExercises } from "../../store/userOwnedExercises";
+import { updateUserCardioExerciseThunk, updateUserWeightExerciseThunk } from "../../store/userOwnedExercisesFiltered";
+import { updateCardioExerciseAllExercises, updateWeightExerciseAllExercises } from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId, setIsPanelOpen }) {
@@ -80,18 +80,24 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
         });
       }
     } else {
-      weightExercises.forEach((exercise) => {
-        if (
-          exercise.id !== exerciseId &&
-          exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
-        ) {
-          setWeightErrors({
-            ...weightErrors,
-            exercise: "Exercise already exists",
-          });
-          return;
-        }
-      });
+      const exerciseExists =
+        weightExercises.some(
+          (exercise) =>
+            exercise.id !== exerciseId &&
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+        ) ||
+        usersExercises.some(
+          (exercise) =>
+            exercise.id !== exerciseId &&
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+        );
+
+      if (exerciseExists) {
+        setWeightErrors({
+          ...weightErrors,
+          exercise: "Exercise already exists",
+        });
+      }
     }
   };
 
@@ -123,6 +129,18 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
           updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm)
         );
         await dispatch(updateCardioExerciseAllExercises(exercise));
+        setIsPanelOpen(false);
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      const weightExerciseForm = new FormData();
+      weightExerciseForm.append("exercise_name", exerciseName.trim());
+      try {
+        const exercise = await dispatch(
+          updateUserWeightExerciseThunk(selectedExercise.id, weightExerciseForm)
+        );
+        await dispatch(updateWeightExerciseAllExercises(exercise));
         setIsPanelOpen(false);
       } catch (e) {
         console.error(e);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getUsersWeightExercisesThunk } from "../../store/userOwnedExercises";
 import {
   getUsersCardioExercisesFilteredThunk,
+  getUsersWeightExercisesFilteredThunk,
   deleteUserCardioExerciseThunk,
 } from "../../store/userOwnedExercisesFiltered";
 import OpenModalButton from "../OpenModalButton";
@@ -23,7 +23,7 @@ function MyExercises({ exerciseType }) {
     if (exerciseType === "Cardio") {
       dispatch(getUsersCardioExercisesFilteredThunk());
     } else {
-      dispatch(getUsersWeightExercisesThunk());
+      dispatch(getUsersWeightExercisesFilteredThunk());
     }
   }, [dispatch, exerciseType]);
 

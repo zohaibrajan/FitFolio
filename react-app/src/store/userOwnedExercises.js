@@ -2,6 +2,7 @@ const GET_USERS_WEIGHT_EXERCISES = 'userOwnedExercises/GET_USERS_WEIGHT_EXERCISE
 const GET_USERS_CARDIO_EXERCISES = 'userOwnedExercises/GET_USERS_CARDIO_EXERCISES';
 const UPDATE_CARDIO_EXERCISE = 'userOwnedExercises/UPDATE_CARDIO_EXERCISE';
 const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
+const UPDATE_WEIGHT_EXERCISE = 'userOwnedExercises/UPDATE_WEIGHT_EXERCISE';
 
 
 export const updateCardioExerciseAllExercises = (exercise) => ({
@@ -9,7 +10,10 @@ export const updateCardioExerciseAllExercises = (exercise) => ({
     exercise,
 });
 
-
+export const updateWeightExerciseAllExercises = (exercise) => ({
+    type: UPDATE_WEIGHT_EXERCISE,
+    exercise,
+});
 
 const getUsersCardioExercises = (cardioExercises) => ({
     type: GET_USERS_CARDIO_EXERCISES,
@@ -67,6 +71,11 @@ const userExercisesReducer = (state = {}, action) => {
             return {
                 ...state,
                 [action.exercise.userCardioExercise.id]: action.exercise.userCardioExercise,
+            };
+        case UPDATE_WEIGHT_EXERCISE:
+            return {
+                ...state,
+                [action.exercise.userWeightExercise.id]: action.exercise.userWeightExercise,
             };
         case CLEAR_USER_EXERCISES:
             return {};

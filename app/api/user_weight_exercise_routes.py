@@ -16,7 +16,7 @@ def get_all_user_weight_exercise_versions():
         ).all()
 
     return {
-        "userWeightExerciseVersions": [exercise.to_dict() for exercise in exercises]
+        "userWeightExercises": [exercise.to_dict() for exercise in exercises]
     }
 
 
@@ -30,7 +30,7 @@ def get_filtered_user_weight_exercise_versions():
         ).all()
 
     return {
-        "userWeightExerciseVersions": [exercise.to_dict() for exercise in exercises]
+        "userWeightExercises": [exercise.to_dict() for exercise in exercises]
     }
 
 
@@ -46,7 +46,7 @@ def get_user_weight_exercise_version(userWeightExerciseVersionId):
         }, 404
 
     return {
-        "userWeightExerciseVersion": exercise.to_dict()
+        "userWeightExercise": exercise.to_dict()
     }
 
 
@@ -76,7 +76,7 @@ def update_user_weight_exercise_version(weight_exercise):
         db.session.commit()
 
         return {
-            "userWeightExerciseVersion": weight_exercise.to_dict()
+            "userWeightExercise": weight_exercise.to_dict()
         }
 
     if form.errors:
@@ -94,5 +94,5 @@ def delete_user_weight_exercise_version(weight_exercise):
     db.session.commit()
 
     return {
-        "userWeightExerciseVersion": weight_exercise.to_dict()
+        "userWeightExercise": weight_exercise.to_dict()
     }
