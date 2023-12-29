@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     foods = db.relationship("Food", back_populates="created_by", cascade="all, delete-orphan")
     cardio_exercises = db.relationship("CardioExercise", back_populates="created_by", cascade="all, delete-orphan")
     cardio_exercise_versions = db.relationship('UserCardioExerciseVersion', back_populates='user')
+    weight_exercise_versions = db.relationship('UserWeightExerciseVersion', back_populates='user')
     weight_exercises = db.relationship("WeightExercise", back_populates="created_by", cascade="all, delete-orphan")
     weight_logs = db.relationship("WeightLog", back_populates="user", cascade="all, delete-orphan")
     cardio_logs = db.relationship("CardioLog", back_populates="user", cascade="all, delete-orphan")
