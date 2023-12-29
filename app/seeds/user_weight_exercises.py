@@ -10,7 +10,7 @@ def seed_user_weight_exercises():
             for row in csvreader:
                   exercise = UserWeightExerciseVersion(
                         created_by_user_id = int(row[0]),
-                        exercise_name = row[1],
+                        exercise_name = row[1] + "*",
                         weight_exercise_id = int(row[2]),
                         is_deleted = False
                   )
