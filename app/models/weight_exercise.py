@@ -12,6 +12,7 @@ class WeightExercise(db.Model):
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
 
     weight_logs = db.relationship("WeightLog", back_populates="exercise", cascade="all, delete-orphan")
+    versions = db.relationship("UserWeightExerciseVersion", back_populates="weight_exercise")
     created_by = db.relationship("User", back_populates="weight_exercises")
 
     def to_dict(self):
@@ -19,4 +20,3 @@ class WeightExercise(db.Model):
             "id": self.id,
             "exerciseName": self.exercise_name,
         }
-
