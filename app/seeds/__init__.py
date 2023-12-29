@@ -8,6 +8,7 @@ from .foods import seed_foods, undo_foods
 from .food_logs import seed_foods_logs, undo_foods_logs
 from .goals import seed_goals, undo_goals
 from .user_cardio_exercises import seed_user_cardio_exercises, undo_user_cardio_exercises
+from .user_weight_exercises import seed_user_weight_exercises, undo_user_weight_exercises
 
 from app.models.db import db, environment, SCHEMA
 
@@ -29,6 +30,7 @@ def seed():
         undo_foods()
         undo_weight_logs()
         undo_cardio_logs()
+        undo_user_weight_exercises()
         undo_weight_exercises()
         undo_user_cardio_exercises()
         undo_cardio_exercises()
@@ -37,6 +39,7 @@ def seed():
     seed_cardio_exercises()
     seed_user_cardio_exercises()
     seed_weight_exercises()
+    seed_user_weight_exercises()
     seed_cardio_logs()
     seed_weight_logs()
     seed_foods()
@@ -53,6 +56,7 @@ def undo():
     undo_foods()
     undo_weight_logs()
     undo_cardio_logs()
+    undo_user_weight_exercises()
     undo_weight_exercises()
     undo_user_cardio_exercises()
     undo_cardio_exercises()
