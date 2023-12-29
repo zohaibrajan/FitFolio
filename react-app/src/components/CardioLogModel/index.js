@@ -23,6 +23,7 @@ function CardioLogModal({
   const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const usersExercisesObj = useSelector((state) => state.userExercises);
+  const [exercise, setExercise] = useState(null);
   const cardioExercises = Object.values(cardioExercisesObj);
   const [searchTerm, setSearchTerm] = useState(
     formType === "update" ? log.cardioExercise.exerciseName : exerciseName
@@ -43,6 +44,7 @@ function CardioLogModal({
   const [isExerciseSelected, setIsExerciseSelected] = useState(
     formType === "update" || exerciseName ? true : false
   );
+  const [prevDuration, setPrevDuration] = useState(duration);
 
   useEffect(() => {
     dispatch(getAllCardioExercisesThunk());
@@ -56,22 +58,24 @@ function CardioLogModal({
     }
 
     if (exercise) {
+      setExercise(exercise);
+    }
+  }, [cardioExerciseId, cardioExercisesObj, usersExercisesObj, searchTerm]);
+
+  useEffect(() => {
+    if (exercise) {
       if (formType === "update" && duration === log.duration) {
         setCaloriesBurned(log.caloriesBurned);
-      } else {
+      } else if (duration !== prevDuration) {
         setCaloriesBurned(exercise.caloriesPerMinute * duration);
+        setPrevDuration(duration);
       }
     }
-  }, [
-    cardioExerciseId,
-    duration,
-    cardioExercisesObj,
-    formType,
-    log,
-    exerciseId,
-    usersExercisesObj,
-    searchTerm,
-  ]);
+  }, [exercise, formType, duration, log, prevDuration]);
+
+  const handleCaloriesChange = (e) => {
+    setCaloriesBurned(e.target.value);
+  };
 
   const filteredCardioExercises = cardioExercises.filter((exercise) =>
     exercise.exerciseName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -191,7 +195,7 @@ function CardioLogModal({
             step={1}
             type="number"
             value={caloriesBurned}
-            onChange={(e) => setCaloriesBurned(e.target.value)}
+            onChange={handleCaloriesChange}
           />
         </label>
         <label className="cardio-log-labels">
