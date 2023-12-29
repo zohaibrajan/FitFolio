@@ -2,7 +2,7 @@ from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 class UserCardioExerciseVersion(db.Model):
     __tablename__ = 'user_cardio_exercise_versions'
-    
+
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
@@ -12,6 +12,7 @@ class UserCardioExerciseVersion(db.Model):
     exercise_name = db.Column(db.String(50), nullable=False)
     intensity = db.Column(db.String, nullable=False)
     calories_per_minute = db.Column(db.Float, nullable=False)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     user = db.relationship('User', back_populates='cardio_exercise_versions')
     cardio_logs = db.relationship("CardioLog", back_populates='user_exercise')
@@ -23,4 +24,5 @@ class UserCardioExerciseVersion(db.Model):
             "exerciseName": self.exercise_name,
             "caloriesPerMinute": self.calories_per_minute,
             "intensity": self.intensity,
+            "isDeleted": self.is_deleted,
         }

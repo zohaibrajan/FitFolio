@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercises";
+import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercisesFiltered";
+import { updateCardioExerciseAllExercises } from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId, setIsPanelOpen }) {
@@ -8,7 +9,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   const dispatch = useDispatch();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
-  const usersExercisesObj = useSelector((state) => state.userExercises);
+  const usersExercisesObj = useSelector((state) => state.userExercisesFiltered);
   const usersExercises = Object.values(usersExercisesObj);
   const cardioExercises = Object.values(cardioExercisesObj);
   const weightExercises = Object.values(weightExercisesObj);
@@ -16,8 +17,10 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   const [isFormModified, setIsFormModified] = useState(false);
   const [exerciseType, setExerciseType] = useState(exerciseTypeFromMyExercises);
   const [exerciseName, setExerciseName] = useState(
-    selectedExercise.exerciseName
+    selectedExercise.exerciseName.split('*')[0]
   );
+
+  console.log(exerciseName)
   const [caloriesBurned, setCaloriesBurned] = useState(
     selectedExercise.caloriesPerMinute * duration
   );
@@ -43,7 +46,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
     commonChecks || (exerciseType === "Cardio" ? cardioChecks : weightChecks);
 
   useEffect(() => {
-    setExerciseName(selectedExercise.exerciseName);
+    setExerciseName(selectedExercise.exerciseName.split("*")[0]);
     setCaloriesBurned(selectedExercise.caloriesPerMinute * duration);
     setIntensity(selectedExercise.intensity);
     setCardioErrors({
@@ -58,18 +61,18 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   }, [selectedExercise, duration]);
 
 
-  const checkForExercise = (exerciseName, exerciseId) => {
+  const checkForExercise = (exerciseName) => {
     if (exerciseType === "Cardio") {
       const exerciseExists =
         cardioExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
         );
 
       if (exerciseExists) {
@@ -113,14 +116,15 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
     e.preventDefault();
     if (exerciseType === "Cardio") {
       const cardioExerciseForm = new FormData();
-      cardioExerciseForm.append("exercise_name", exerciseName);
+      cardioExerciseForm.append("exercise_name", exerciseName.trim());
       cardioExerciseForm.append("intensity", intensity);
       cardioExerciseForm.append("duration", duration);
       cardioExerciseForm.append("calories_burned", caloriesBurned);
       try {
-        await dispatch(
+        const exercise = await dispatch(
           updateUserCardioExerciseThunk(selectedExercise.id, cardioExerciseForm)
         );
+        await dispatch(updateCardioExerciseAllExercises(exercise));
         setIsPanelOpen(false);
       } catch (e) {
         console.error(e);
@@ -164,7 +168,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
             type="text"
             name="exerciseType"
             value={exerciseType}
-            onBlur={() => checkForExercise(exerciseName, exerciseId)}
+            onBlur={() => checkForExercise(exerciseName)}
             onChange={(e) => {
               setExerciseType(e.target.value);
               setIsFormModified(true);

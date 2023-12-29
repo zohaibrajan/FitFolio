@@ -14,6 +14,7 @@ def seed_user_cardio_exercises():
                         exercise_name = row[2],
                         intensity = row[3],
                         calories_per_minute = int(row[4]),
+                        is_deleted = False
                   )
                   db.session.add(exercise)
                   db.session.commit()

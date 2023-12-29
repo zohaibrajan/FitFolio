@@ -1,12 +1,14 @@
 const GET_USERS_WEIGHT_EXERCISES = 'userOwnedExercises/GET_USERS_WEIGHT_EXERCISES';
 const GET_USERS_CARDIO_EXERCISES = 'userOwnedExercises/GET_USERS_CARDIO_EXERCISES';
-const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
 const UPDATE_CARDIO_EXERCISE = 'userOwnedExercises/UPDATE_CARDIO_EXERCISE';
+const CLEAR_USER_EXERCISES = 'userOwnedExercises/CLEAR_USER_EXERCISES';
 
-const updateCardioExercise = (exercise) => ({
+
+export const updateCardioExerciseAllExercises = (exercise) => ({
     type: UPDATE_CARDIO_EXERCISE,
     exercise,
 });
+
 
 
 const getUsersCardioExercises = (cardioExercises) => ({
@@ -33,7 +35,6 @@ export const getUsersWeightExercisesThunk = () => async (dispatch) => {
   }
 };
 
-
 export const getUsersCardioExercisesThunk = () => async (dispatch) => {
   const res = await fetch(`/api/users-cardio-exercises`);
 
@@ -44,21 +45,7 @@ export const getUsersCardioExercisesThunk = () => async (dispatch) => {
   }
 };
 
-export const updateUserCardioExerciseThunk = (exerciseId, formData) => async (dispatch) => {
-    const res = await fetch(`/api/users-cardio-exercises/${exerciseId}`, {
-      method: "PUT",
-      body: formData,
-    });
 
-    if (res.ok) {
-        const exercise = await res.json();
-        dispatch(updateCardioExercise(exercise));
-        return exercise;
-    } else {
-        const errors = await res.json();
-        return errors;
-    }
-}
 
 
 const userExercisesReducer = (state = {}, action) => {
@@ -77,11 +64,10 @@ const userExercisesReducer = (state = {}, action) => {
             })
             return weightExercises;
         case UPDATE_CARDIO_EXERCISE:
-            console.log('------', action)
             return {
                 ...state,
-                [action.exercise.userCardioExercise.id]: action.exercise.userCardioExercise
-            }
+                [action.exercise.userCardioExercise.id]: action.exercise.userCardioExercise,
+            };
         case CLEAR_USER_EXERCISES:
             return {};
         default:
