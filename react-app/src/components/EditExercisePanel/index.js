@@ -59,18 +59,18 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   }, [selectedExercise, duration]);
 
 
-  const checkForExercise = (exerciseName, exerciseId) => {
+  const checkForExercise = (exerciseName) => {
     if (exerciseType === "Cardio") {
       const exerciseExists =
         cardioExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
         );
 
       if (exerciseExists) {
@@ -114,7 +114,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
     e.preventDefault();
     if (exerciseType === "Cardio") {
       const cardioExerciseForm = new FormData();
-      cardioExerciseForm.append("exercise_name", exerciseName);
+      cardioExerciseForm.append("exercise_name", exerciseName.trim());
       cardioExerciseForm.append("intensity", intensity);
       cardioExerciseForm.append("duration", duration);
       cardioExerciseForm.append("calories_burned", caloriesBurned);
@@ -166,7 +166,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
             type="text"
             name="exerciseType"
             value={exerciseType}
-            onBlur={() => checkForExercise(exerciseName, exerciseId)}
+            onBlur={() => checkForExercise(exerciseName)}
             onChange={(e) => {
               setExerciseType(e.target.value);
               setIsFormModified(true);

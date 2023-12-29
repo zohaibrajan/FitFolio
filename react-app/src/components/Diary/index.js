@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteCardioLogThunk } from "../../store/cardioLogs";
 import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
+import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import DatePicker from "react-datepicker";
 import { addDays, subDays } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
@@ -42,6 +43,7 @@ function Diary() {
     dispatch(getAllCardioLogsForADateThunk(formattedDateForFetch));
     dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));
     dispatch(getAllFoodLogsForADayThunk(formattedDateForFetch));
+    dispatch(getUsersCardioExercisesThunk());
   }, [dispatch, selectedDate]);
 
   useEffect(() => {

@@ -71,7 +71,7 @@ def create_cardio_exercise():
         db.session.flush()  # This is needed to get the id of the new cardio_exercise
 
         user_exercise_version = UserCardioExerciseVersion(
-            user_id=current_user.id,
+            created_by_user_id=current_user.id,
             cardio_exercise_id=cardio_exercise.id,
             exercise_name=data["exercise_name"].title(),
             intensity=data["intensity"],

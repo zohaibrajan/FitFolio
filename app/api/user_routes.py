@@ -184,6 +184,7 @@ def create_user_cardio_log():
             exercise = UserCardioExerciseVersion.query.where(
                 and_(
                     UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserCardioExerciseVersion.is_deleted == False,
                     UserCardioExerciseVersion.created_by_user_id == current_user.id
                 )
             ).first()
