@@ -41,6 +41,11 @@ function MyExercises({ exerciseType }) {
       <div className="exercise-container">
         <div className="all-exercise-cards">
           <h1>My {exerciseType} Exercises</h1>
+          <p>
+            Welcome to the exercise section! Exercises marked with{" "}
+            <span style={{ color: "rgb(0, 102, 238)" }}>*</span> are custom
+            exercises.
+          </p>
           {userExercises.length > 0 ? (
             userExercises.map((exercise) => (
               <div key={exercise.id} className="exercise-card">
