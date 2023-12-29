@@ -145,6 +145,7 @@ function CardioLogModal({
             style={{
               margin: "0px",
             }}
+            disabled={exerciseName.length > 0}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);

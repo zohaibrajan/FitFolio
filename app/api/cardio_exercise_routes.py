@@ -51,7 +51,8 @@ def create_cardio_exercise():
 
         exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
-        UserCardioExerciseVersion.user_id == current_user.id,
+        UserCardioExerciseVersion.created_by_user_id == current_user.id,
+        UserCardioExerciseVersion.is_deleted == False,
         UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
         ).first()
 
@@ -73,7 +74,7 @@ def create_cardio_exercise():
         user_exercise_version = UserCardioExerciseVersion(
             created_by_user_id=current_user.id,
             cardio_exercise_id=cardio_exercise.id,
-            exercise_name=data["exercise_name"].title(),
+            exercise_name=data["exercise_name"].title() + "*",
             intensity=data["intensity"],
             calories_per_minute=calories_burned_per_minute,
             is_deleted=False

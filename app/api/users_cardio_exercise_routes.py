@@ -71,7 +71,7 @@ def update_user_cardio_exercise(user_cardio_exercise):
 
         exercise_id = user_cardio_exercise.id
 
-        exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
+        # exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
 
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
             UserCardioExerciseVersion.created_by_user_id == current_user.id,
@@ -80,12 +80,12 @@ def update_user_cardio_exercise(user_cardio_exercise):
             UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
         ).first()
 
-        if exercise_exists or user_exercise_exists:
+        if user_exercise_exists:
             return {
                 "errorMessage": "Sorry, Cardio Exercise Already Exists"
             }, 400
 
-        user_cardio_exercise.exercise_name = data["exercise_name"]
+        user_cardio_exercise.exercise_name = data["exercise_name"].title() + "*"
         user_cardio_exercise.intensity = data["intensity"]
         user_cardio_exercise.calories_per_minute = calories_burned_per_minute
 

@@ -17,8 +17,10 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   const [isFormModified, setIsFormModified] = useState(false);
   const [exerciseType, setExerciseType] = useState(exerciseTypeFromMyExercises);
   const [exerciseName, setExerciseName] = useState(
-    selectedExercise.exerciseName
+    selectedExercise.exerciseName.split('*')[0]
   );
+
+  console.log(exerciseName)
   const [caloriesBurned, setCaloriesBurned] = useState(
     selectedExercise.caloriesPerMinute * duration
   );
@@ -44,7 +46,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
     commonChecks || (exerciseType === "Cardio" ? cardioChecks : weightChecks);
 
   useEffect(() => {
-    setExerciseName(selectedExercise.exerciseName);
+    setExerciseName(selectedExercise.exerciseName.split("*")[0]);
     setCaloriesBurned(selectedExercise.caloriesPerMinute * duration);
     setIntensity(selectedExercise.intensity);
     setCardioErrors({
