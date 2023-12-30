@@ -1,14 +1,16 @@
 .exercise-container {
     display: flex;
     flex-direction: row;
+    width: 60%;
     min-width: 685px;
     max-width: 775px;
+    min-height: 310px;
     justify-content: space-between;
 }
 
 .edit-exercise-panel-parent {
     position: relative;
-    width: 40%;
+    width: 35%;
     height: 300px;
 }
 
@@ -20,6 +22,7 @@
 
 .all-exercise-cards {
     border: 1px solid black;
+    min-width: 480px;
 }
 
 td {

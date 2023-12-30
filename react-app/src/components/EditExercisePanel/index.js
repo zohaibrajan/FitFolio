@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUserCardioExerciseThunk, updateUserWeightExerciseThunk } from "../../store/userOwnedExercisesFiltered";
-import { updateCardioExerciseAllExercises, updateWeightExerciseAllExercises } from "../../store/userOwnedExercises";
+import {
+  updateUserCardioExerciseThunk,
+  updateUserWeightExerciseThunk,
+} from "../../store/userOwnedExercisesFiltered";
+import {
+  updateCardioExerciseAllExercises,
+  updateWeightExerciseAllExercises,
+} from "../../store/userOwnedExercises";
 import "./EditExercisePanel.css";
 
-function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exerciseId, setIsPanelOpen }) {
+function EditExercisePanel({
+  selectedExercise,
+  exerciseTypeFromMyExercises,
+  exerciseId,
+  setIsPanelOpen,
+}) {
   const [duration, setDuration] = useState(60);
   const dispatch = useDispatch();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
@@ -15,9 +26,9 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
   const weightExercises = Object.values(weightExercisesObj);
   const [intensity, setIntensity] = useState(selectedExercise.intensity);
   const [isFormModified, setIsFormModified] = useState(false);
-  const [exerciseType, setExerciseType] = useState(exerciseTypeFromMyExercises);
+  const exerciseType = exerciseTypeFromMyExercises;
   const [exerciseName, setExerciseName] = useState(
-    selectedExercise.exerciseName.split('*')[0]
+    selectedExercise.exerciseName.split("*")[0]
   );
   const [caloriesBurned, setCaloriesBurned] = useState(
     selectedExercise.caloriesPerMinute * duration
@@ -58,19 +69,20 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
     setIsFormModified(false);
   }, [selectedExercise, duration]);
 
-
   const checkForExercise = (exerciseName) => {
     if (exerciseType === "Cardio") {
       const exerciseExists =
         cardioExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+            exercise.exerciseName.toLowerCase() ===
+              exerciseName.trim().toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+            exercise.exerciseName.split("*")[0].toLowerCase() ===
+              exerciseName.trim().toLowerCase()
         );
 
       if (exerciseExists) {
@@ -84,12 +96,14 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
         weightExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+            exercise.exerciseName.toLowerCase() ===
+              exerciseName.trim().toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+            exercise.exerciseName.toLowerCase() ===
+              exerciseName.trim().toLowerCase()
         );
 
       if (exerciseExists) {
@@ -115,6 +129,7 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
       });
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -150,13 +165,15 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
 
   return (
     <div className={`side-panel`}>
-      <h1>Edit Exercise</h1>
+      <div className="edit-exercise-panel-title-container">
+        <span>Edit Exercise</span>
+      </div>
       <form
         className="edit-exercise-form"
         encType="multipart/form-data"
         onSubmit={handleSubmit}
       >
-        <label>
+        <label className="edit-exercise-panel-label">
           Exercise Name:
           <input
             type="text"
@@ -178,25 +195,9 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
         ) : (
           <div className="exercise-name-error"></div>
         )}
-        <label>
-          Exercise Type:
-          <select
-            type="text"
-            name="exerciseType"
-            value={exerciseType}
-            onBlur={() => checkForExercise(exerciseName)}
-            onChange={(e) => {
-              setExerciseType(e.target.value);
-              setIsFormModified(true);
-            }}
-          >
-            <option value="Cardio">Cardio</option>
-            <option value="Strength">Strength</option>
-          </select>
-        </label>
         {exerciseType === "Cardio" ? (
           <>
-            <label className="cardio-labels" style={{ marginBottom: "5px" }}>
+            <label className="edit-exercise-panel-label">
               Intensity?
               <select
                 className="cardio-input"
@@ -213,14 +214,15 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
                 <option value="High">High</option>
               </select>
             </label>
-            <label>
+            <div className="exercise-name-error"></div>
+            <label className="edit-exercise-panel-label">
               Duration (Minutes):
               <input
                 type="number"
                 value={duration}
                 onBlur={() => {
-                  checkDuration(duration)
-                  checkForExercise(exerciseName, exerciseId)
+                  checkDuration(duration);
+                  checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
                   setDuration(e.target.value);
@@ -234,13 +236,13 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label>
+            <label className="edit-exercise-panel-label">
               Calories Burned:
               <input
                 type="number"
                 value={caloriesBurned}
                 onBlur={() => {
-                  checkCaloriesBurned(caloriesBurned)
+                  checkCaloriesBurned(caloriesBurned);
                   checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
@@ -258,12 +260,21 @@ function EditExercisePanel({ selectedExercise, exerciseTypeFromMyExercises, exer
           </>
         ) : (
           <>
-            <p>For Strength Exercises, only the name is required</p>
+            <div className="edit-exercise-panel-strength-text-container">
+              <p>For Strength Exercises, only the name is required</p>
+            </div>
+            <div className="exercise-name-error"></div>
           </>
         )}
-        <button disabled={disabled || !isFormModified} type="submit">
-          Confirm
-        </button>
+        <div className="edit-exercise-panel-submit-button-container">
+          <button
+            className="edit-exercise-panel-submit-button"
+            disabled={disabled || !isFormModified}
+            type="submit"
+          >
+            Confirm
+          </button>
+        </div>
       </form>
     </div>
   );

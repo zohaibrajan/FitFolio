@@ -75,11 +75,11 @@ function ExercisePage() {
       const exerciseExists =
         cardioExercises.some(
           (exercise) =>
-            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
-            exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
+            exercise.exerciseName.split("*")[0].toLowerCase() === exerciseName.trim().toLowerCase()
         );
 
       if (exerciseExists) {
