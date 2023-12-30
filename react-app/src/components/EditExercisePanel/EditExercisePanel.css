@@ -1,9 +1,10 @@
 .side-panel {
     position: absolute;
     width: 100%;
-    height: fit-content;
+    height: 100%;
     overflow: auto;
     transition: transform 2s ease-in-out;
+    border: 1px solid black
 }
 
 .edit-exercise-panel-title-container {

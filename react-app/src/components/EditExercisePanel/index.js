@@ -102,7 +102,7 @@ function EditExercisePanel({
         usersExercises.some(
           (exercise) =>
             exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() ===
+            exercise.exerciseName.split("*")[0].toLowerCase() ===
               exerciseName.trim().toLowerCase()
         );
 

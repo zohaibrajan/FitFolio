@@ -75,11 +75,13 @@ function ExercisePage() {
       const exerciseExists =
         cardioExercises.some(
           (exercise) =>
-            exercise.exerciseName.toLowerCase() === exerciseName.trim().toLowerCase()
+            exercise.exerciseName.toLowerCase() ===
+            exerciseName.trim().toLowerCase()
         ) ||
         usersExercises.some(
           (exercise) =>
-            exercise.exerciseName.split("*")[0].toLowerCase() === exerciseName.trim().toLowerCase()
+            exercise.exerciseName.split("*")[0].toLowerCase() ===
+            exerciseName.trim().toLowerCase()
         );
 
       if (exerciseExists) {
@@ -89,17 +91,24 @@ function ExercisePage() {
         });
       }
     } else {
-      weightExercises.forEach((exercise) => {
-        if (
-          exercise.exerciseName.toLowerCase() === exerciseName.toLowerCase()
-        ) {
-          setWeightErrors({
-            ...weightErrors,
-            exercise: "Exercise already exists",
-          });
-          return;
-        }
-      });
+      const exerciseExists =
+        weightExercises.some(
+          (exercise) =>
+            exercise.exerciseName.toLowerCase() ===
+            exerciseName.trim().toLowerCase()
+        ) ||
+        usersExercises.some(
+          (exercise) =>
+            exercise.exerciseName.split("*")[0].toLowerCase() ===
+            exerciseName.trim().toLowerCase()
+        );
+
+      if (exerciseExists) {
+        setCardioErrors({
+          ...cardioErrors,
+          exercise: "Exercise already exists",
+        });
+      }
     }
   };
 
