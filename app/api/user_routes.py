@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, request, render_template
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserCardioExerciseVersion
+from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserCardioExerciseVersion, UserWeightExerciseVersion
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime, date
 from sqlalchemy import and_
@@ -191,7 +191,7 @@ def create_user_cardio_log():
 
         if not exercise:
             return {
-                "errorMessage": "Sorry, exercise Does Not Exist"
+                "errorMessage": "Sorry, Exercise Does Not Exist"
             }, 404
 
         if not data['calories_burned']:
@@ -264,8 +264,17 @@ def create_user_weight_log():
         exercise = WeightExercise.query.where(WeightExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
 
         if not exercise:
+            exercise = UserWeightExerciseVersion.query.where(
+                and_(
+                    UserWeightExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserWeightExerciseVersion.is_deleted == False,
+                    UserWeightExerciseVersion.created_by_user_id == current_user.id
+                )
+            ).first()
+
+        if not exercise:
             return {
-                "errorMessage": "Sorry, exercise Does Not Exist"
+                "errorMessage": "Sorry, Exercise Does Not Exist"
             }, 404
 
 
@@ -273,7 +282,8 @@ def create_user_weight_log():
             sets = data['sets'],
             repetitions = data['repetitions'],
             weight_per_rep = data['weight_per_rep'],
-            exercise_id = int(exercise.id),
+            exercise_id = int(exercise.id) if isinstance(exercise, WeightExercise) else None,
+            user_exercise_id = int(exercise.id) if isinstance(exercise, UserWeightExerciseVersion) else None,
             date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
             user_id = int(current_user.id)
         )
@@ -313,6 +323,15 @@ def update_a_users_weight_log(weightLogId):
             exercise = WeightExercise.query.where(WeightExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
 
             if not exercise:
+                exercise = UserWeightExerciseVersion.query.where(
+                    and_(
+                        UserWeightExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                        UserWeightExerciseVersion.created_by_user_id == current_user.id
+                    )
+                ).first()
+
+
+            if not exercise:
                 return {
                     "errorMessage": "Sorry, exercise Does Not Exist"
                 }, 404
@@ -321,7 +340,8 @@ def update_a_users_weight_log(weightLogId):
 
             weight_log.sets = int(data['sets'])
             weight_log.repetitions = int(data['repetitions'])
-            weight_log.exercise_id = int(exercise.id)
+            weight_log.exercise_id = int(exercise.id) if isinstance(exercise, WeightExercise) else None
+            weight_log.user_exercise_id = int(exercise.id) if isinstance(exercise, UserWeightExerciseVersion) else None
             weight_log.weight_per_rep = int(data["weight_per_rep"])
             weight_log.date = updated_date
             weight_log.user_id = int(current_user.id)

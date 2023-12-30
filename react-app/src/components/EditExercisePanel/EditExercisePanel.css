@@ -1,12 +1,71 @@
 .side-panel {
     position: absolute;
     width: 100%;
-    height: fit-content;
-    background-color: #f0f0f0;
+    height: 100%;
     overflow: auto;
     transition: transform 2s ease-in-out;
+    border: 1px solid black
+}
+
+.edit-exercise-panel-title-container {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: flex-start;
+    background-color: rgb(0, 102, 238);
+    border: 1px solid rgb(0, 102, 238);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .hidden {
     transform: translateX(100%);
+}
+
+.edit-exercise-form {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.edit-exercise-panel-label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+}
+
+.edit-exercise-panel-submit-button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    background-color: rgb(133, 196, 0);
+    width: 65%;
+    padding: 5px;
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+
+.edit-exercise-panel-submit-button:hover {
+    background-color: rgb(72, 104, 2);
+}
+
+.edit-exercise-panel-strength-text-container {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.edit-exercise-panel-submit-button:disabled,
+.edit-exercise-panel-submit-button:disabled:hover {
+    background-color: #8C8C8C;
+    cursor: not-allowed;
+}
+
+.edit-exercise-panel-submit-button-container {
+    display: flex;
+    justify-content: center;
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { useModal } from "../../context/Modal";
@@ -19,6 +20,7 @@ function CardioLogModal({
 }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
+  const history = useHistory();
   const today = gettingTodaysDate();
   const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate);
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
@@ -130,6 +132,7 @@ function CardioLogModal({
         }
       }
     }
+    history.replace("/my-home/diary");
   };
 
   return (

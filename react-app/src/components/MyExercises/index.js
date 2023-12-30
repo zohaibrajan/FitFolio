@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getUsersWeightExercisesThunk } from "../../store/userOwnedExercises";
 import {
   getUsersCardioExercisesFilteredThunk,
+  getUsersWeightExercisesFilteredThunk,
   deleteUserCardioExerciseThunk,
+  deleteUserWeightExerciseThunk,
 } from "../../store/userOwnedExercisesFiltered";
 import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
@@ -23,7 +24,7 @@ function MyExercises({ exerciseType }) {
     if (exerciseType === "Cardio") {
       dispatch(getUsersCardioExercisesFilteredThunk());
     } else {
-      dispatch(getUsersWeightExercisesThunk());
+      dispatch(getUsersWeightExercisesFilteredThunk());
     }
   }, [dispatch, exerciseType]);
 
@@ -33,69 +34,94 @@ function MyExercises({ exerciseType }) {
 
   const handleDelete = (e, exerciseId) => {
     e.preventDefault();
-    dispatch(deleteUserCardioExerciseThunk(exerciseId));
+    if (exerciseType === "Cardio") {
+      dispatch(deleteUserCardioExerciseThunk(exerciseId));
+    } else {
+      dispatch(deleteUserWeightExerciseThunk(exerciseId));
+    }
   };
 
   return (
     <>
       <div className="exercise-container">
         <div className="all-exercise-cards">
-          <h1>My {exerciseType} Exercises</h1>
-          <p>
-            Welcome to the exercise section! Exercises marked with{" "}
-            <span style={{ color: "rgb(0, 102, 238)" }}>*</span> are custom
-            exercises.
-          </p>
-          {userExercises.length > 0 ? (
-            userExercises.map((exercise) => (
-              <div key={exercise.id} className="exercise-card">
-                <p>{exercise.exerciseName}</p>
-                <OpenModalButton
-                  modalComponent={
-                    exerciseType === "Cardio" ? (
-                      <CardioLogModal
-                        exerciseName={exercise.exerciseName}
-                        exerciseId={exercise.id}
-                      />
-                    ) : (
-                      <WeightLogModal
-                        exerciseName={exercise.exerciseName}
-                        exerciseIdProp={exercise.id}
-                      />
-                    )
-                  }
-                  buttonText={"Add to Diary"}
-                />
-                <button
-                  onClick={(e) => handleDelete(e, exercise.id)}
-                  style={{
-                    padding: "0",
-                    border: "none",
-                    backgroundColor: "transparent",
-                    cursor: "pointer",
-                  }}
-                  title="Delete"
-                >
-                  <i
-                    className="fa-solid fa-circle-minus"
-                    style={{ color: "#ff0000" }}
-                  ></i>
-                </button>
-                <button
-                  onClick={() => {
-                    setIsPanelOpen(true);
-                    setSelectedExercise(exercise);
-                  }}
-                >
-                  Edit Exercise
-                </button>
+          <div className="my-exercise-title-container">
+            <span>My {exerciseType} Exercises</span>
+          </div>
+          <div className="my-exercise-text">
+            <p>
+              Welcome to the exercise section! Exercises marked with{" "}
+              <span style={{ color: "rgb(0, 102, 238)" }}>*</span> are custom
+              exercises.
+            </p>
+          </div>
+
+          <table className="my-exercise-table">
+            <tr>
+              <th>Exercise Name</th>
+              <th></th>
+              <th>Delete</th>
+              <th>Edit</th>
+            </tr>
+
+            {userExercises.length > 0 ? (
+              userExercises.map((exercise) => (
+                <tr>
+                  <td>{exercise.exerciseName}</td>
+                  <td>
+                    <OpenModalButton
+                      modalComponent={
+                        exerciseType === "Cardio" ? (
+                          <CardioLogModal
+                            exerciseName={exercise.exerciseName}
+                            exerciseId={exercise.id}
+                          />
+                        ) : (
+                          <WeightLogModal
+                            exerciseName={exercise.exerciseName}
+                            exerciseIdProp={exercise.id}
+                          />
+                        )
+                      }
+                      buttonText={"Add to Diary"}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      onClick={(e) => handleDelete(e, exercise.id)}
+                      style={{
+                        padding: "0",
+                        border: "none",
+                        backgroundColor: "transparent",
+                        cursor: "pointer",
+                      }}
+                      title="Delete"
+                    >
+                      <i
+                        className="fa-solid fa-circle-minus"
+                        style={{ color: "#ff0000" }}
+                      ></i>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                    className="edit-my-exercise-button"
+                      onClick={() => {
+                        setIsPanelOpen(true);
+                        setSelectedExercise(exercise);
+                      }}
+                    >
+                      <i className="fa-solid fa-pen-to-square" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <div className="exercise-card">
+                <h2>No Exercises</h2>
               </div>
-            ))
-          ) : (
-            <div className="exercise-card">
-              <h2>No Exercises</h2>
-            </div>
-          )}
+            )}
+          </table>
         </div>
 
         <div className="edit-exercise-panel-parent">

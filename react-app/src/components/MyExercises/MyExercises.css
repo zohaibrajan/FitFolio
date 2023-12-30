@@ -1,19 +1,65 @@
 .exercise-container {
     display: flex;
     flex-direction: row;
+    width: 60%;
     min-width: 685px;
     max-width: 775px;
+    min-height: 310px;
     justify-content: space-between;
 }
 
 .edit-exercise-panel-parent {
     position: relative;
-    width: 40%;
+    width: 35%;
     height: 300px;
-    border: 3px solid black;
 }
 
 .exercise-card {
     display: flex;
-    flex-direction: row
+    flex-direction: row;
+    padding: 5px;
+}
+
+.all-exercise-cards {
+    border: 1px solid black;
+    min-width: 480px;
+}
+
+td {
+    text-align: center;
+    background-color: rgb(235, 235, 235);
+    font-size: 12px;
+}
+
+tr {
+    border-bottom: 1px solid white;
+}
+
+.my-exercise-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: "Inter",
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+.my-exercise-text {
+    display: flex;
+    padding: 5px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.my-exercise-title-container {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: flex-start;
+    background-color: rgb(0, 102, 238);
+    border: 1px solid rgb(0, 102, 238);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
 }
