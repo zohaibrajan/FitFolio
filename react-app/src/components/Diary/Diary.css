@@ -197,3 +197,10 @@ td {
 table {
     border-collapse: collapse;
 }
+
+.edit-my-exercise-button {
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
