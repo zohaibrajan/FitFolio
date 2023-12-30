@@ -119,8 +119,8 @@ function MyExercises({ exerciseType }) {
                 </tr>
               ))
             ) : (
-              <div className="exercise-card">
-                <h2>No Exercises</h2>
+              <div className="exercise-card-no-exercises">
+                <h4>No Exercise, add one from above </h4>
               </div>
             )}
           </table>
@@ -137,7 +137,7 @@ function MyExercises({ exerciseType }) {
               className="next-my-exercise-button"
               disabled={
                 currentPage ===
-                Math.ceil(userExercises.length / exercisesPerPage)
+                Math.ceil(userExercises.length / exercisesPerPage) || userExercises.length === 0
               }
             >
               Next
