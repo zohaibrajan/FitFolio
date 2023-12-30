@@ -11,6 +11,7 @@ import HomeNavBar from "./components/HomeNavBar";
 import Diary from "./components/Diary";
 import Goal from "./components/Goal";
 import ExercisePage from "./components/ExercisePage";
+import PageNotFound from "./components/PageNotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,9 @@ function App() {
           </Route>
           <Route path="/signup">
             <SignupFormPage />
+          </Route>
+          <Route>
+            <PageNotFound />
           </Route>
         </Switch>
       )}

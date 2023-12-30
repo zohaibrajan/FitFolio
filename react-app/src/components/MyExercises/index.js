@@ -19,6 +19,10 @@ function MyExercises({ exerciseType }) {
   const [selectedExercise, setSelectedExercise] = useState({});
   const userExercisesObj = useSelector((state) => state.userExercisesFiltered);
   const userExercises = Object.values(userExercisesObj);
+  const [currentPage, setCurrentPage] = useState(1);
+  const exercisesPerPage = 10;
+  const endIndex = currentPage * exercisesPerPage;
+  const startIndex = endIndex - exercisesPerPage;
 
   useEffect(() => {
     if (exerciseType === "Cardio") {
@@ -50,9 +54,7 @@ function MyExercises({ exerciseType }) {
           </div>
           <div className="my-exercise-text">
             <p>
-              Welcome to the exercise section! Exercises marked with{" "}
-              <span style={{ color: "rgb(0, 102, 238)" }}>*</span> are custom
-              exercises.
+              Welcome to the exercise section! Here you can view all of your
             </p>
           </div>
 
@@ -65,9 +67,9 @@ function MyExercises({ exerciseType }) {
             </tr>
 
             {userExercises.length > 0 ? (
-              userExercises.map((exercise) => (
+              userExercises.slice(startIndex, endIndex).map((exercise) => (
                 <tr>
-                  <td>{exercise.exerciseName}</td>
+                  <td>{exercise.exerciseName.split("*")[0]}</td>
                   <td>
                     <OpenModalButton
                       modalComponent={
@@ -105,7 +107,7 @@ function MyExercises({ exerciseType }) {
                   </td>
                   <td>
                     <button
-                    className="edit-my-exercise-button"
+                      className="edit-my-exercise-button"
                       onClick={() => {
                         setIsPanelOpen(true);
                         setSelectedExercise(exercise);
@@ -117,11 +119,30 @@ function MyExercises({ exerciseType }) {
                 </tr>
               ))
             ) : (
-              <div className="exercise-card">
-                <h2>No Exercises</h2>
+              <div className="exercise-card-no-exercises">
+                <h4>No Exercise, add one from above </h4>
               </div>
             )}
           </table>
+          <div className="pagination-my-exercise-button-container">
+            <button
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="previous-my-exercise-button"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="next-my-exercise-button"
+              disabled={
+                currentPage ===
+                Math.ceil(userExercises.length / exercisesPerPage) || userExercises.length === 0
+              }
+            >
+              Next
+            </button>
+          </div>
         </div>
 
         <div className="edit-exercise-panel-parent">

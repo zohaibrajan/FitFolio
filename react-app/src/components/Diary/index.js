@@ -183,8 +183,12 @@ function Diary() {
           </div>
 
           <div className="all-diary-logs">
-            <div className="diary-details-title">
+            <div className="diary-details-title" style={{display: "flex", justifyContent: "space-between"}}>
               <span>Todays Diary</span>
+              <span style={{ fontSize: "12px", fontWeight: "600" }}>
+                Exercise Marked with a *{" "}
+                are your custom exercises.
+              </span>
             </div>
             <div className="users-log-container">
               <div className="users-cardio-log">
