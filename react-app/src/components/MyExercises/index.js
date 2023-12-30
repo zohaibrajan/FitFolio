@@ -3,6 +3,7 @@ import {
   getUsersCardioExercisesFilteredThunk,
   getUsersWeightExercisesFilteredThunk,
   deleteUserCardioExerciseThunk,
+  deleteUserWeightExerciseThunk
 } from "../../store/userOwnedExercisesFiltered";
 import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
@@ -33,7 +34,11 @@ function MyExercises({ exerciseType }) {
 
   const handleDelete = (e, exerciseId) => {
     e.preventDefault();
-    dispatch(deleteUserCardioExerciseThunk(exerciseId));
+    if (exerciseType === "Cardio") {
+      dispatch(deleteUserCardioExerciseThunk(exerciseId));
+    } else {
+      dispatch(deleteUserWeightExerciseThunk(exerciseId));
+    }
   };
 
   return (

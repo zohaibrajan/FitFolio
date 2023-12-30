@@ -8,6 +8,8 @@ const GET_USERS_WEIGHT_EXERCISES_FILTERED =
   "userOwnedExercisesFiltered/GET_USERS_WEIGHT_EXERCISES_FILTERED";
 const UPDATE_WEIGHT_EXERCISE =
   "userOwnedExercisesFiltered/UPDATE_WEIGHT_EXERCISE";
+const DELETE_WEIGHT_EXERCISE =
+  "userOwnedExercisesFiltered/DELETE_WEIGHT_EXERCISE";
 
 const getUsersWeightExercisesFiltered = (weightExercises) => ({
   type: GET_USERS_WEIGHT_EXERCISES_FILTERED,
@@ -26,6 +28,11 @@ const updateWeightExercise = (exercise) => ({
 
 const deleteCardioExercise = (exercise) => ({
   type: DELETE_CARDIO_EXERCISE,
+  exercise,
+});
+
+const deleteWeightExercise = (exercise) => ({
+  type: DELETE_WEIGHT_EXERCISE,
   exercise,
 });
 
@@ -100,6 +107,18 @@ export const deleteUserCardioExerciseThunk =
     }
   };
 
+export const deleteUserWeightExerciseThunk = (exerciseId) => async (dispatch) => {
+  const res = await fetch(`/api/users-weight-exercises/${exerciseId}`, {
+    method: "DELETE",
+  });
+
+  if (res.ok) {
+    const exercise = await res.json();
+    dispatch(deleteWeightExercise(exercise));
+    return exercise;
+  }
+};
+
 const usersExercisesFilteredReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_USERS_CARDIO_EXERCISES_FILTERED:
@@ -130,6 +149,10 @@ const usersExercisesFilteredReducer = (state = {}, action) => {
       const newState2 = { ...state };
       delete newState2[action.exercise.userCardioExercise.id];
       return newState2;
+    case DELETE_WEIGHT_EXERCISE:
+      const newState4 = { ...state };
+      delete newState4[action.exercise.userWeightExercise.id];
+      return newState4;
     default:
       return state;
   }

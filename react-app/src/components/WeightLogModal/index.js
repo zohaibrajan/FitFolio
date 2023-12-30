@@ -23,9 +23,6 @@ function WeightLogModal({ formType = "create", log = {}, exerciseName = "", exer
   const [date, setDate] = useState(
     formType === "update" ? log.date : diaryDate
   );
-  const [exerciseId, setExerciseId] = useState(
-    formType === "update" ? log.weightExercise.id : exerciseIdProp
-  );
   const [sets, setSets] = useState(formType === "update" ? log.sets : 0);
   const [reps, setReps] = useState(formType === "update" ? log.repetitions : 0);
   const [weightPerRep, setWeightPerRep] = useState(
@@ -44,7 +41,6 @@ function WeightLogModal({ formType = "create", log = {}, exerciseName = "", exer
 
   const handleExerciseClick = (exercise) => {
     setSearchTerm(exercise.exerciseName);
-    setExerciseId(exercise.id);
     setIsExerciseSelected(true);
   };
 
@@ -54,19 +50,16 @@ function WeightLogModal({ formType = "create", log = {}, exerciseName = "", exer
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const exerciseName = weightExerciseObj[exerciseId].exerciseName;
-    const changeToDate = new Date(date);
-    const correctFormatForDate = changeToDate.toISOString().slice(0, 10);
 
     const formData = new FormData();
-    formData.append("exercise_name", exerciseName);
+    formData.append("exercise_name", searchTerm);
     formData.append("sets", sets);
     formData.append("repetitions", reps);
     formData.append("weight_per_rep", weightPerRep);
-    formData.append("date", correctFormatForDate);
+    formData.append("date", date);
 
     if (formType === "create") {
-      if (correctFormatForDate !== diaryDate) {
+      if (date !== diaryDate) {
         await fetch("/api/users/weight-logs", {
           method: "POST",
           body: formData,
@@ -83,7 +76,7 @@ function WeightLogModal({ formType = "create", log = {}, exerciseName = "", exer
         }
       }
     } else {
-      if (correctFormatForDate !== diaryDate) {
+      if (date !== diaryDate) {
         await fetch(`/api/users/weight-logs/${log.id}`, {
           method: "PUT",
           body: formData,
@@ -120,6 +113,7 @@ function WeightLogModal({ formType = "create", log = {}, exerciseName = "", exer
               margin: "0px",
             }}
             value={searchTerm}
+            disabled={exerciseName.length > 0}
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setIsExerciseSelected(false);

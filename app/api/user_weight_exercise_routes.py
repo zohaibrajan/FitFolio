@@ -34,11 +34,11 @@ def get_filtered_user_weight_exercise_versions():
     }
 
 
-@user_weight_exercise_versions_routes.route("/<int:userWeightExerciseVersionId>")
+@user_weight_exercise_versions_routes.route("/<int:userWeightExerciseId>")
 @login_required
-def get_user_weight_exercise_version(userWeightExerciseVersionId):
+def get_user_weight_exercise_version(userWeightExerciseId):
     """Get a single Weight Exercise Version"""
-    exercise = UserWeightExerciseVersion.query.get(userWeightExerciseVersionId)
+    exercise = UserWeightExerciseVersion.query.get(userWeightExerciseId)
 
     if not exercise:
         return {
@@ -50,7 +50,7 @@ def get_user_weight_exercise_version(userWeightExerciseVersionId):
     }
 
 
-@user_weight_exercise_versions_routes.route("/<int:userWeightExerciseVersionId>", methods=["PUT"], endpoint="update_user_weight_exercise_version")
+@user_weight_exercise_versions_routes.route("/<int:userWeightExerciseId>", methods=["PUT"], endpoint="update_user_weight_exercise_version")
 @login_required
 @verify_weight_exercise
 def update_user_weight_exercise_version(weight_exercise):
@@ -72,7 +72,7 @@ def update_user_weight_exercise_version(weight_exercise):
                 "errorMessage": "Sorry, Exercise Already Exists"
             }, 400
 
-        weight_exercise.exercise_name = data["exercise_name"]
+        weight_exercise.exercise_name = data["exercise_name"] + "*"
         db.session.commit()
 
         return {
@@ -85,7 +85,7 @@ def update_user_weight_exercise_version(weight_exercise):
         }, 400
 
 
-@user_weight_exercise_versions_routes.route("/<int:userWeightExerciseVersionId>", methods=["DELETE"], endpoint="delete_user_weight_exercise_version")
+@user_weight_exercise_versions_routes.route("/<int:userWeightExerciseId>", methods=["DELETE"], endpoint="delete_user_weight_exercise_version")
 @login_required
 @verify_weight_exercise
 def delete_user_weight_exercise_version(weight_exercise):
