@@ -15,6 +15,7 @@ def seed_foods():
                         calories = int(row[2]),
                         protein = int(row[3]),
                         created_by_user_id = int(row[4]),
+                        is_deleted = False
                   )
                   db.session.add(food)
                   db.session.commit()

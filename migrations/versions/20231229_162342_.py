@@ -61,6 +61,7 @@ def upgrade():
     sa.Column('calories', sa.Integer(), nullable=False),
     sa.Column('protein', sa.Integer(), nullable=False),
     sa.Column('created_by_user_id', sa.Integer(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -181,7 +182,7 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
-        
+
     # ### end Alembic commands ###
 
 
