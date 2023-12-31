@@ -27,8 +27,10 @@ function MyExercises({ exerciseType }) {
   useEffect(() => {
     if (exerciseType === "Cardio") {
       dispatch(getUsersCardioExercisesFilteredThunk());
+      setCurrentPage(1);
     } else {
       dispatch(getUsersWeightExercisesFilteredThunk());
+      setCurrentPage(1);
     }
   }, [dispatch, exerciseType]);
 
