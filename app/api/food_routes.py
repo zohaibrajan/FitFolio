@@ -18,6 +18,20 @@ def get_all_cardio_exercises():
         "foods": [food.to_dict_nutrition() for food in foods]
     }
 
+
+@food_routes.route("my-foods")
+@login_required
+def get_my_foods():
+    """Getting all Foods created by the current user"""
+    foods = Food.query.filter(
+        Food.created_by_user_id == current_user.id,
+        Food.is_deleted == False
+        ).all()
+
+    return {
+        "foods": [food.to_dict_nutrition() for food in foods]
+    }
+
 @food_routes.route("/<int:foodId>")
 @login_required
 def get_cardio_food(foodId):
