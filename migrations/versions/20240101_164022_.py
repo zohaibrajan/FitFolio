@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 61138b4127ef
+Revision ID: dbf9b5437f71
 Revises:
-Create Date: 2023-12-29 16:23:42.186770
+Create Date: 2024-01-01 16:40:22.058001
 
 """
 from alembic import op
@@ -14,7 +14,7 @@ SCHEMA = os.environ.get("SCHEMA")
 
 
 # revision identifiers, used by Alembic.
-revision = '61138b4127ef'
+revision = 'dbf9b5437f71'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -40,6 +40,7 @@ def upgrade():
     if environment == "production":
         op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
 
+
     op.create_table('cardio_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
@@ -61,7 +62,6 @@ def upgrade():
     sa.Column('calories', sa.Integer(), nullable=False),
     sa.Column('protein', sa.Integer(), nullable=False),
     sa.Column('created_by_user_id', sa.Integer(), nullable=True),
-    sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -84,6 +84,22 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE goals SET SCHEMA {SCHEMA};")
+
+
+    op.create_table('user_food_version',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created_by_user_id', sa.Integer(), nullable=True),
+    sa.Column('food_name', sa.String(length=50), nullable=False),
+    sa.Column('restaurant', sa.String(length=50), nullable=False),
+    sa.Column('calories', sa.Integer(), nullable=False),
+    sa.Column('protein', sa.Integer(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE user_food_version SET SCHEMA {SCHEMA};")
 
 
     op.create_table('weight_exercises',
@@ -113,7 +129,6 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE food_logs SET SCHEMA {SCHEMA};")
-
 
     op.create_table('user_cardio_exercise_versions',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -182,7 +197,6 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
-
     # ### end Alembic commands ###
 
 
@@ -194,6 +208,7 @@ def downgrade():
     op.drop_table('user_cardio_exercise_versions')
     op.drop_table('food_logs')
     op.drop_table('weight_exercises')
+    op.drop_table('user_food_version')
     op.drop_table('goals')
     op.drop_table('foods')
     op.drop_table('cardio_exercises')

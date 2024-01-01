@@ -9,6 +9,7 @@ from .food_logs import seed_foods_logs, undo_foods_logs
 from .goals import seed_goals, undo_goals
 from .user_cardio_exercises import seed_user_cardio_exercises, undo_user_cardio_exercises
 from .user_weight_exercises import seed_user_weight_exercises, undo_user_weight_exercises
+from .user_foods import seed_user_food_versions, undo_user_food_versions
 
 from app.models.db import db, environment, SCHEMA
 
@@ -27,6 +28,7 @@ def seed():
         # Make sure to add all your other model's undo functions below
         undo_goals()
         undo_foods_logs()
+        undo_user_food_versions()
         undo_foods()
         undo_weight_logs()
         undo_cardio_logs()
@@ -43,6 +45,7 @@ def seed():
     seed_cardio_logs()
     seed_weight_logs()
     seed_foods()
+    seed_user_food_versions()
     seed_foods_logs()
     seed_goals()
     # Add other seed functions here
@@ -53,6 +56,7 @@ def seed():
 def undo():
     undo_goals()
     undo_foods_logs()
+    undo_user_food_versions()
     undo_foods()
     undo_weight_logs()
     undo_cardio_logs()
