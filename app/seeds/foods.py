@@ -14,7 +14,9 @@ def seed_foods():
                         restaurant = row[1],
                         calories = int(row[2]),
                         protein = int(row[3]),
-                        created_by_user_id = int(row[4])
+                        created_by_user_id = int(row[4]),
+                        can_others_use = True,
+                        is_deleted = False,
                   )
                   db.session.add(food)
                   db.session.commit()
