@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import Food, db
+from app.models import Food, db, UserFoodVersion
 from app.forms import FoodForm
 
 food_routes = Blueprint("foods", __name__)
@@ -27,18 +27,36 @@ def create_food():
 
     if form.validate_on_submit():
         data = form.data
+        others_can_use = data["allow_others_to_use"]
 
-        food = Food(
-            name=data["name"],
-            restaurant=data["restaurant"],
-            calories=data["calories"],
-            protein=data["protein"],
-            created_by_user_id=current_user.id,
-            is_deleted=False
-        )
+        if not others_can_use:
+            user_version = UserFoodVersion(
+                created_by_user_id=current_user.id,
+                food_name=data["name"],
+                restaurant=data["restaurant"],
+                calories=data["calories"],
+                protein=data["protein"],
+                is_deleted=False
+            )
 
-        db.session.add(food)
-        db.session.commit()
+            db.session.add(user_version)
+            db.session.commit()
+
+            return {
+                "food": user_version.to_dict()
+            } 
+
+        else:
+            food = Food(
+                name=data["name"],
+                restaurant=data["restaurant"],
+                calories=data["calories"],
+                protein=data["protein"],
+                created_by_user_id=current_user.id
+            )
+
+            db.session.add(food)
+            db.session.commit()
 
         return {
             "food": food.to_dict_nutrition()
