@@ -12,6 +12,7 @@ import Diary from "./components/Diary";
 import Goal from "./components/Goal";
 import ExercisePage from "./components/ExercisePage";
 import PageNotFound from "./components/PageNotFound";
+import FoodPage from "./components/FoodPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +40,10 @@ function App() {
           <ProtectedRoute exact path="/my-home/exercise">
             <HomeNavBar path={"exercise"}/>
             <ExercisePage />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/my-home/food">
+            <HomeNavBar path={"food"}/>
+            <FoodPage />
           </ProtectedRoute>
           <Route path="/login" >
             <LoginFormPage />
