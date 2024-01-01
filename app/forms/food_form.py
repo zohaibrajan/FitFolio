@@ -8,4 +8,4 @@ class FoodForm(FlaskForm):
     restaurant = StringField("Restaurant", validators=[DataRequired(), Length(min=1, max=50, message="Restaurant must be shorter than 50 characters")])
     calories = IntegerField("Calories", validators=[DataRequired()]),
     protein = IntegerField("Protein", validators=[DataRequired()]),
-    allow_others_to_use = BooleanField("Allow Others to Use", validators=[DataRequired()])
+    can_others_use = BooleanField("Allow Others to Use", validators=[DataRequired()])

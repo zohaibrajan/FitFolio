@@ -10,7 +10,7 @@ food_routes = Blueprint("foods", __name__)
 @login_required
 def get_all_cardio_exercises():
     """Getting all Foods"""
-    foods = Food.query.where(Food.)
+    foods = Food.query.where(Food.can_others_use == True).all()
 
     return {
         "foods": [food.to_dict_nutrition() for food in foods]
@@ -27,36 +27,18 @@ def create_food():
 
     if form.validate_on_submit():
         data = form.data
-        others_can_use = data["allow_others_to_use"]
 
-        if not others_can_use:
-            user_version = UserFoodVersion(
-                created_by_user_id=current_user.id,
-                food_name=data["name"],
-                restaurant=data["restaurant"],
-                calories=data["calories"],
-                protein=data["protein"],
-                is_deleted=False
-            )
+        food = Food(
+            name=data["name"],
+            restaurant=data["restaurant"],
+            calories=data["calories"],
+            protein=data["protein"],
+            created_by_user_id=current_user.id,
+            can_others_use=data["can_others_use"]
+        )
 
-            db.session.add(user_version)
-            db.session.commit()
-
-            return {
-                "food": user_version.to_dict()
-            }
-
-        else:
-            food = Food(
-                name=data["name"],
-                restaurant=data["restaurant"],
-                calories=data["calories"],
-                protein=data["protein"],
-                created_by_user_id=current_user.id
-            )
-
-            db.session.add(food)
-            db.session.commit()
+        db.session.add(food)
+        db.session.commit()
 
         return {
             "food": food.to_dict_nutrition()
@@ -65,3 +47,17 @@ def create_food():
     return {
         "errors": form.errors
     }, 400
+
+
+@food_routes.route("/my-foods")
+@login_required
+def get_my_foods():
+    """Get all of a User's Foods"""
+    foods = Food.query.filter(
+        Food.created_by_user_id == current_user.id,
+        Food.is_deleted == False
+        ).all()
+
+    return {
+        "foods": [food.to_dict() for food in foods]
+    }
