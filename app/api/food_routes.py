@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import Food, db, UserFoodVersion
+from app.models import Food, db
 from app.forms import FoodForm
 
 food_routes = Blueprint("foods", __name__)
@@ -10,7 +10,7 @@ food_routes = Blueprint("foods", __name__)
 @login_required
 def get_all_cardio_exercises():
     """Getting all Foods"""
-    foods = Food.query.all()
+    foods = Food.query.where(Food.)
 
     return {
         "foods": [food.to_dict_nutrition() for food in foods]
@@ -44,7 +44,7 @@ def create_food():
 
             return {
                 "food": user_version.to_dict()
-            } 
+            }
 
         else:
             food = Food(
