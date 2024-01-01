@@ -17,6 +17,7 @@ class FoodLog(db.Model):
 
 
     user = db.relationship("User", back_populates="food_logs")
+    user_food = db.relationship("UserFoodVersion", back_populates="food_logs")
     food = db.relationship("Food", back_populates='food_logs')
 
     def to_dict(self):
