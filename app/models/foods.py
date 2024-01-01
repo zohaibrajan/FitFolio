@@ -12,7 +12,6 @@ class Food(db.Model):
     calories = db.Column(db.Integer, nullable=False)
     protein = db.Column(db.Integer, nullable=False)
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
-    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     food_logs = db.relationship("FoodLog", back_populates="food", cascade="all, delete-orphan")
     created_by = db.relationship("User", back_populates="foods")
