@@ -24,5 +24,5 @@ class UserFoodVersion(db.Model):
             "restaurant": self.restaurant,
             "calories": self.calories,
             "protein": self.protein,
-            "isDeleted": self.is_deleted,
+            "isDeleted": self.is_deleted
         }
