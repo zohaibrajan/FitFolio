@@ -1,9 +1,9 @@
 from flask_login import current_user
-from app.models import Food
+from app.models import UserFoodVersion
 
 def verify_food(func):
-    def wrapper(foodId):
-        food = Food.query.get(foodId)
+    def wrapper(userFoodVersionId):
+        food = UserFoodVersion.query.get(userFoodVersionId)
 
         if not food:
             return {

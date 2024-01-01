@@ -15,7 +15,6 @@ class Food(db.Model):
 
     food_logs = db.relationship("FoodLog", back_populates="food", cascade="all, delete-orphan")
     created_by = db.relationship("User", back_populates="foods")
-    versions = db.relationship("UserFoodVersion", back_populates="food")
 
     def to_dict(self):
         return {
