@@ -1,12 +1,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import MyFoodPage from "../MyFoods";
-import { addFoodThunk } from "../../store/foods";
+import { addFoodThunk, getUserFoodsThunk } from "../../store/foods";
 import { useDispatch } from "react-redux";
 import { createFoodLogThunk } from "../../store/foodLogs";
+import { useSelectedDate } from "../../context/SelectedDate";
+import { formattingUserInputDate } from "../../utils";
 
 
 function FoodPage() {
+    const userFoodsObj = useSelector((state) => state.foods);
+    const userFoods = Object.values(userFoodsObj);
     const [foodName, setFoodName] = useState("");
     const [restaurant, setRestaurant] = useState("");
     const [calories, setCalories] = useState(0);
@@ -15,20 +21,56 @@ function FoodPage() {
     const [servings, setServings] = useState(0);
     const [units, setUnits] = useState("oz");
     const dispatch = useDispatch();
+    const history = useHistory();
+    const date = useSelectedDate();
+    const [errors, setErrors] = useState({ name: "", restaurant: "", unit: "" })
+
+    useEffect(() => {
+        dispatch(getUserFoodsThunk())
+    }, [dispatch])
+
+
+    const checkForFood = (foodName) => {
+        const foodExists = userFoods.some((food) => food.name.toLowerCase() === foodName.trim().toLowerCase())
+        if (foodExists) {
+            setErrors({ ...errors, name: "Food already exists" })
+        }
+    }
+
+    const checkRestaurants = (restaurant) => {
+        if (restaurant.length > 50) {
+            setErrors({ ...errors, restaurant: "Restaurant name must be less than 50 characters" })
+        }
+    }
+
+    const checkUnits = (units) => {
+        if (units.length > 50) {
+            setErrors({ ...errors, unit: "Unit name must be less than 50 characters" })
+        }
+    }
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const newFood = new FormData()
+        const foodLog = new FormData()
         newFood.append("name", foodName)
         newFood.append("restaurant", restaurant)
         newFood.append("calories", calories)
         newFood.append("protein", protein)
         newFood.append("can_others_use", canOthersUse)
+        foodLog.append("name", foodName)
+        foodLog.append("servings", servings)
+        foodLog.append("date", formattingUserInputDate(date.selectedDate))
 
-
-
+        try {
+            await dispatch(addFoodThunk(newFood))
+            await dispatch(createFoodLogThunk(foodLog))
+            history.replace("/my-home/diary")
+        } catch (e) {
+            console.error(e)
+        }
     }
 
   return (
@@ -40,46 +82,70 @@ function FoodPage() {
         <div>
           <form onSubmit={handleSubmit}>
             <label>
-              Food Description
+              Food Description - Please provide a complete description. For
+              example, “Yogurt - Strawberry“ is better than “Yogurt.“
               <input
                 type="text"
                 value={foodName}
-                onChange={(e) => setFoodName(e.target.value)}
+                onBlur={(e) => checkForFood(e.target.value)}
+                required
+                onChange={(e) => {
+                  setFoodName(e.target.value);
+                  setErrors({ ...errors, name: "" });
+                }}
               />
             </label>
-            <p>
-              Please provide a complete description. For example, “Yogurt -
-              Strawberry“ is better than “Yogurt.“
-            </p>
+            {errors.name ? (
+              <div className="exercise-name-error">{errors.name}</div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
             <label>
-              Restaurant
+              Restaurant - If this food is home-made, please leave type
+              "Home-made"
               <input
                 type="text"
                 value={restaurant}
-                onChange={(e) => setRestaurant(e.target.value)}
+                required
+                onBlur={(e) => checkRestaurants(e.target.value)}
+                onChange={(e) => {
+                  setRestaurant(e.target.value);
+                  setErrors({ ...errors, restaurant: "" });
+                }}
               />
             </label>
-            <p>
-                If this food is home-made, please leave type "Home-made"
-            </p>
+            {errors.restaurant ? (
+              <div className="exercise-name-error">{errors.restaurant}</div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
             <label>
-                Serving Size
-                <input
-                    type="number"
-                    value={servings}
-                    onChange={(e) => setServings(e.target.value)}
-                />
-                <input
-                    type="text"
-                    value={units}
-                    onChange={(e) => setUnits(e.target.value)}
-                />
+              Serving Size
+              <input
+                type="number"
+                value={servings}
+                required
+                onChange={(e) => setServings(e.target.value)}
+              />
+              <input
+                type="text"
+                value={units}
+                required
+                onBlur={(e) => checkUnits(e.target.value)}
+                onChange={(e) => setUnits(e.target.value)}
+              />
             </label>
+            {errors.unit ? (
+              <div className="exercise-name-error">{errors.unit}</div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
             <label>
               Calories
               <input
                 type="number"
                 value={calories}
+                required
                 onChange={(e) => setCalories(e.target.value)}
               />
             </label>
@@ -88,6 +154,7 @@ function FoodPage() {
               <input
                 type="number"
                 value={protein}
+                required
                 onChange={(e) => setProtein(e.target.value)}
               />
             </label>

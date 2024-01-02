@@ -110,6 +110,14 @@ function ExercisePage() {
         });
       }
     }
+
+    if (exerciseName.length > 50) {
+      setCardioErrors({
+        ...cardioErrors,
+        exercise: "Must be less than 50 characters",
+      });
+    }
+
   };
 
   const checkDuration = (duration) => {
