@@ -103,7 +103,7 @@ def update_food(food):
     form = FoodForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
 
-    if food.can_others_use == False:
+    if food.can_others_use == True:
         return {
             "errorMessage": "Unauthorized"
         }, 403
@@ -115,7 +115,6 @@ def update_food(food):
         food.restaurant = data["restaurant"]
         food.calories = data["calories"]
         food.protein = data["protein"]
-        food.can_others_use = data["can_others_use"]
 
         db.session.commit()
 

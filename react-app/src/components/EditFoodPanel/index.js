@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { useSelectedDate } from "../../context/SelectedDate";
+import { updateUserFoodThunk } from "../../store/userFoods";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserFoodsThunk } from "../../store/userFoods";
+import { ca } from "date-fns/locale";
 
 
 function EditFoodPanel({
@@ -74,6 +74,22 @@ function EditFoodPanel({
       }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const formData = new FormData();
+        formData.append("name", foodName);
+        formData.append("restaurant", restaurant);
+        formData.append("calories", calories);
+        formData.append("protein", protein);
+
+        try {
+            await dispatch(updateUserFoodThunk(foodId, formData));
+            setIsPanelOpen(false);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
 
 
     return (
@@ -85,7 +101,7 @@ function EditFoodPanel({
             className="fa-solid fa-xmark close-panel"
           ></i>
         </div>
-        <form className="edit-food-form" encType="multipart/form-data">
+        <form className="edit-food-form" encType="multipart/form-data" onSubmit={handleSubmit}>
           <label className="cardio-labels">
             Food Description - Please provide a complete description. For
             example, “Yogurt - Strawberry“ is better than “Yogurt.“

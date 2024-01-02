@@ -1,6 +1,14 @@
 const USER_FOODS = "userFoods/USER_FOODS";
 const DELETE_FOOD = "userFoods/DELETE_FOOD";
 const ALL_USER_FOODS = "userFoods/ALL_USER_FOODS";
+const UPDATE_USER_FOOD = "userFoods/UPDATE_USER_FOOD";
+
+
+const updateUserFood = (food) => ({
+    type: UPDATE_USER_FOOD,
+    food,
+});
+
 
 const allUserFoods = (foods) => ({
     type: ALL_USER_FOODS,
@@ -38,6 +46,19 @@ export const getUserFoodsThunk = () => async (dispatch) => {
   }
 };
 
+export const updateUserFoodThunk = (foodId, food) => async (dispatch) => {
+    const res = await fetch(`/api/foods/${foodId}`, {
+        method: "PUT",
+        body: food,
+    });
+
+    if (res.ok) {
+        const updatedFood = await res.json();
+        dispatch(updateUserFood(updatedFood));
+        return updatedFood;
+    }
+}
+
 export const deleteUserFoodThunk = (foodId) => async (dispatch) => {
     const res = await fetch(`/api/foods/${foodId}`, {
         method: "DELETE",
@@ -47,7 +68,6 @@ export const deleteUserFoodThunk = (foodId) => async (dispatch) => {
         dispatch(deleteFood(foodId));
     }
 }
-
 
 
 const userFoodsReducer = (state = {}, action) => {
@@ -68,6 +88,8 @@ const userFoodsReducer = (state = {}, action) => {
         const newState = { ...state };
         delete newState[action.foodId];
         return newState;
+    case UPDATE_USER_FOOD:
+        return { ...state, [action.food.food.id]: action.food.food };
     default:
       return state;
   }
