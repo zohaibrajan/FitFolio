@@ -23,7 +23,7 @@ class FoodLog(db.Model):
         return {
             "id": self.id,
             "date": self.date.strftime("%Y-%m-%d"),
-            "food": self.food.to_dict_nutrition(),
+            "food": self.food.to_dict(),
             "servings": self.servings,
             "totalCaloriesConsumed": self.calories_consumed,
             "totalProteinConsumed": self.protein_consumed

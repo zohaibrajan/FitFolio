@@ -9,12 +9,12 @@ food_routes = Blueprint("foods", __name__)
 
 @food_routes.route("")
 @login_required
-def get_all_cardio_exercises():
+def get_all_foods():
     """Getting all Foods"""
     foods = Food.query.where(Food.can_others_use == True).all()
 
     return {
-        "foods": [food.to_dict for food in foods]
+        "foods": [food.to_dict() for food in foods]
     }
 
 

@@ -28,6 +28,7 @@ export const addFoodThunk = (food) => async (dispatch) => {
 
 export const getAllFoodsThunk = () => async (dispatch) => {
   const res = await fetch("/api/foods");
+  console.log(res)
 
   if (res.ok) {
     const foods = await res.json();
