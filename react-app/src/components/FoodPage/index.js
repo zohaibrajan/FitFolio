@@ -1,6 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import MyFoodPage from "../MyFoods";
+import { addFoodThunk } from "../../store/foods";
+import { useDispatch } from "react-redux";
+import { createFoodLogThunk } from "../../store/foodLogs";
 
 
 function FoodPage() {
@@ -9,6 +12,24 @@ function FoodPage() {
     const [calories, setCalories] = useState(0);
     const [protein, setProtein] = useState(0);
     const [canOthersUse, setCanOthersUse] = useState(false);
+    const [servings, setServings] = useState(0);
+    const [units, setUnits] = useState("oz");
+    const dispatch = useDispatch();
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const newFood = new FormData()
+        newFood.append("name", foodName)
+        newFood.append("restaurant", restaurant)
+        newFood.append("calories", calories)
+        newFood.append("protein", protein)
+        newFood.append("can_others_use", canOthersUse)
+
+
+
+    }
 
   return (
     <div>
@@ -17,7 +38,7 @@ function FoodPage() {
           <span>Create a new Food</span>
         </div>
         <div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <label>
               Food Description
               <input
@@ -41,6 +62,19 @@ function FoodPage() {
             <p>
                 If this food is home-made, please leave type "Home-made"
             </p>
+            <label>
+                Serving Size
+                <input
+                    type="number"
+                    value={servings}
+                    onChange={(e) => setServings(e.target.value)}
+                />
+                <input
+                    type="text"
+                    value={units}
+                    onChange={(e) => setUnits(e.target.value)}
+                />
+            </label>
             <label>
               Calories
               <input

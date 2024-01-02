@@ -11,11 +11,10 @@ food_routes = Blueprint("foods", __name__)
 @login_required
 def get_all_cardio_exercises():
     """Getting all Foods"""
-    foods = Food.query.where(Food.can_others_use == True,
-        Food.is_deleted == False).all()
+    foods = Food.query.where(Food.can_others_use == True).all()
 
     return {
-        "foods": [food.to_dict_nutrition() for food in foods]
+        "foods": [food.to_dict for food in foods]
     }
 
 
