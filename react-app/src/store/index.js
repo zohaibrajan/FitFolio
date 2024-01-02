@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
   weightLogs: weightLogReducer,
   foodLogs: foodLogReducer,
   userExercises: userExercisesReducer,
-  userExercisesFiltered: userExercisesFilteredReducer,
+  userExercisesFiltered: userExercisesFilteredReducer
 });
 
 

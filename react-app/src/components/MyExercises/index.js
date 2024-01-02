@@ -56,7 +56,7 @@ function MyExercises({ exerciseType }) {
           </div>
           <div className="my-exercise-text">
             <p>
-              Welcome to the exercise section! Here you can view all of your
+              Welcome to the exercise section! Here you can view all of your Exercises
             </p>
           </div>
 
