@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OpenModalButton from "../OpenModalButton";
 import FoodLogModal from "../FoodLogModal";
+import EditFoodPanel from "../EditFoodPanel";
 import { getUserFoodsThunk, deleteUserFoodThunk } from "../../store/userFoods";
 
 
@@ -115,6 +116,15 @@ function MyFoodPage() {
               Next
             </button>
           </div>
+        </div>
+        <div className="edit-exercise-panel-parent">
+          {isPanelOpen && (
+            <EditFoodPanel
+              selectedFood={selectedFood}
+              foodId={selectedFood.id}
+              setIsPanelOpen={setIsPanelOpen}
+            />
+          )}
         </div>
       </div>
     );

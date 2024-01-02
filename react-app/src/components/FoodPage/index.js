@@ -12,7 +12,7 @@ import { formattingUserInputDate } from "../../utils";
 
 
 function FoodPage() {
-    const userFoodsObj = useSelector((state) => state.foods);
+    const userFoodsObj = useSelector((state) => state.userFoods);
     const userFoods = Object.values(userFoodsObj);
     const [foodName, setFoodName] = useState("");
     const [restaurant, setRestaurant] = useState("");
@@ -39,7 +39,8 @@ function FoodPage() {
 
 
     const checkForFood = (foodName) => {
-        const foodExists = userFoods.some((food) => food.name.toLowerCase() === foodName.trim().toLowerCase())
+      console.log(userFoods)
+        const foodExists = userFoods.some((food) => food.name.split("*")[0].toLowerCase() === foodName.trim().toLowerCase())
         if (foodExists) {
             setErrors({ ...errors, name: "Food already exists" })
         }
