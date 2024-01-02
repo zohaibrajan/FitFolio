@@ -24,6 +24,6 @@ class Food(db.Model):
             "name": self.name,
             "restaurant": self.restaurant,
             "calories": self.calories,
-            "protein": self.protein
+            "protein": self.protein,
+            "canOthersUse": self.can_others_use
         }
-    

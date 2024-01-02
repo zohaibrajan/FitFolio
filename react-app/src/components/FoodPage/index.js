@@ -197,7 +197,7 @@ function FoodPage() {
           </div>
         </div>
       </div>
-      <MyFoodPage />
+      <MyFoodPage userFoods={userFoods}/>
     </div>
   );
 }
