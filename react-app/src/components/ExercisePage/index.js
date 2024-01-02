@@ -223,6 +223,7 @@ function ExercisePage() {
               <input
                 type="text"
                 value={exerciseName}
+                placeholder="Exercise Name eg. Running"
                 name="exercise-name"
                 onBlur={() => checkForExercise(exerciseName)}
                 onChange={(e) => {
@@ -284,6 +285,7 @@ function ExercisePage() {
                     className="cardio-input"
                     type="number"
                     value={duration}
+                    placeholder="Duration eg. 30"
                     min={0}
                     onBlur={() => checkDuration(duration)}
                     onChange={(e) => {
@@ -305,6 +307,7 @@ function ExercisePage() {
                     className="cardio-input"
                     type="number"
                     min={0}
+                    placeholder="Calories Burned eg. 300"
                     value={caloriesBurned}
                     onBlur={() => checkCaloriesBurned(caloriesBurned)}
                     onChange={(e) => {
@@ -329,6 +332,7 @@ function ExercisePage() {
                     className="cardio-input"
                     type="number"
                     value={sets}
+                    placeholder="Sets eg. 3"
                     onBlur={() => checkSets(sets)}
                     onChange={(e) => {
                       setSets(e.target.value);
@@ -347,6 +351,7 @@ function ExercisePage() {
                     className="cardio-input"
                     type="number"
                     value={reps}
+                    placeholder="Repetitions eg. 10"
                     onBlur={() => checkReps(reps)}
                     onChange={(e) => {
                       setReps(e.target.value);
@@ -364,6 +369,7 @@ function ExercisePage() {
                   <input
                     className="cardio-input"
                     type="number"
+                    placeholder="Weight Per Rep eg. 50"
                     value={weightPerRep}
                     onBlur={() => checkWeightPerRep(weightPerRep)}
                     onChange={(e) => {

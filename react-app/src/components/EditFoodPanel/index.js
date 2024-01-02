@@ -77,7 +77,7 @@ function EditFoodPanel({
     const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData();
-        formData.append("name", foodName);
+        formData.append("name", `${foodName}*`);
         formData.append("restaurant", restaurant);
         formData.append("calories", calories);
         formData.append("protein", protein);
