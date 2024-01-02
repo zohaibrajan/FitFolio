@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFoodsThunk } from "../../store/foods";
-import { getUserFoodsThunk } from "../../store/userFoods";
+import { getAllUserFoodsThunk } from "../../store/userFoods";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
@@ -16,6 +16,7 @@ import "./FoodLog.css";
 function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp = 1 }) {
   const dispatch = useDispatch();
   const foodsObj = useSelector((state) => state.foods);
+  const userFoodObj = useSelector((state) => state.userFoods);
   const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate)
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
@@ -47,14 +48,15 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
 
   useEffect(() => {
     let item = foodsObj[foodId];
-    if (!item) dispatch(getUserFoodsThunk())
-    item = foodsObj[foodId];
-    console.log(item)
+    if (!item) {
+      dispatch(getAllUserFoodsThunk())
+      item = userFoodObj[foodId];
+    }
     if (item) {
       setCaloriesConsumed(servings * item.calories);
       setProteinConsumed(servings * item.protein);
     }
-  }, [foodId, servings, foodsObj]);
+  }, [foodId, servings, foodsObj, dispatch]);
 
   const filteredFoods = foods.filter((food) =>
     food.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -124,6 +126,7 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
           <input
             type="text"
             value={searchTerm}
+            disabled={foodName.length}
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setIsFoodSelected(false);

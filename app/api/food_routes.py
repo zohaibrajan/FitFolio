@@ -51,6 +51,19 @@ def create_food():
     }, 400
 
 
+@food_routes.route("/my-foods-all")
+@login_required
+def get_my_foods_all():
+    """Get all of a User's Foods"""
+    foods = Food.query.filter(
+        Food.created_by_user_id == current_user.id
+        ).all()
+
+    return {
+        "foods": [food.to_dict() for food in foods]
+    }
+
+
 @food_routes.route("/my-foods")
 @login_required
 def get_my_foods():
@@ -120,7 +133,7 @@ def update_food(food):
 @verify_food
 def delete_food(food):
     """Delete a Food"""
-    if food.can_others_use == False:
+    if food.can_others_use == True:
         return {
             "errorMessage": "Unauthorized"
         }, 403

@@ -2,23 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OpenModalButton from "../OpenModalButton";
 import FoodLogModal from "../FoodLogModal";
-import { getUserFoodsThunk } from "../../store/userFoods";
+import { getUserFoodsThunk, deleteUserFoodThunk } from "../../store/userFoods";
 
 
 function MyFoodPage() {
-    const userFoodObj = useSelector((state) => state.foods);
+    const userFoodObj = useSelector((state) => state.userFoods);
     const userFoods = Object.values(userFoodObj);
     const [isPanelOpen, setIsPanelOpen] = useState(false);
     const [selectedFood, setSelectedFood] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const foodsPerPage = 10;
+    const endIndex = currentPage * foodsPerPage;
+    const startIndex = endIndex - foodsPerPage;
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getUserFoodsThunk())
     }, [dispatch])
 
+
     const handleDelete = (e, foodId) => {
         e.preventDefault();
-        // dispatch(deleteUserFoodThunk(foodId))
+        dispatch(deleteUserFoodThunk(foodId))
     }
 
     return (
@@ -41,7 +47,7 @@ function MyFoodPage() {
             </tr>
 
             {userFoods.length > 0 ? (
-              userFoods.map((food) => (
+              userFoods.slice(startIndex, endIndex).map((food) => (
                 <tr>
                   <td>{food.name}</td>
                   <td>
@@ -51,15 +57,18 @@ function MyFoodPage() {
                           foodName={food.name}
                           foodIdProp={food.id}
                         />
-                    }
-                    buttonText={"Add to Diary"}
+                      }
+                      buttonText={"Add to Diary"}
                     />
                   </td>
                   {!food.canOthersUse ? (
                     <>
                       <td>
                         <button onClick={(e) => handleDelete(e, food.id)}>
-                          Delete
+                          <i
+                            className="fa-solid fa-circle-minus"
+                            style={{ color: "#ff0000" }}
+                          ></i>
                         </button>
                       </td>
                       <td>
@@ -69,24 +78,43 @@ function MyFoodPage() {
                             setIsPanelOpen(true);
                           }}
                         >
-                          Edit
+                          <i className="fa-solid fa-pen-to-square" />
                         </button>
                       </td>
                     </>
                   ) : (
                     <>
-                        <td></td>
-                        <td></td>
+                      <td></td>
+                      <td></td>
                     </>
                   )}
                 </tr>
               ))
             ) : (
-              <tr>
-                <td>No Foods</td>
-              </tr>
+              <div className="exercise-card-no-exercises">
+                <h4>No Foods, add one from above </h4>
+              </div>
             )}
           </table>
+          <div className="pagination-my-exercise-button-container">
+            <button
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="previous-my-exercise-button"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="next-my-exercise-button"
+              disabled={
+                currentPage === Math.ceil(userFoods.length / foodsPerPage) ||
+                userFoods.length === 0
+              }
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     );
