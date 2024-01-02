@@ -1,11 +1,5 @@
 const ALL_FOODS = "exercises/ALL_FOODS";
 const ADD_FOOD = "exercises/ADD_FOOD";
-const USER_FOODS = "exercises/USER_FOODS";
-
-const userFoods = (foods) => ({
-  type: USER_FOODS,
-  foods,
-});
 
 const getAllFoods = (foods) => ({
   type: ALL_FOODS,
@@ -42,15 +36,6 @@ export const getAllFoodsThunk = () => async (dispatch) => {
   }
 };
 
-export const getUserFoodsThunk = () => async (dispatch) => {
-  const res = await fetch(`/api/foods/my-foods`);
-
-  if (res.ok) {
-    const foods = await res.json();
-    dispatch(userFoods(foods));
-    return foods;
-  }
-}
 
 const foodsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -62,12 +47,6 @@ const foodsReducer = (state = {}, action) => {
       return allFoods;
     case ADD_FOOD:
       return { ...state, [action.food.food.id]: action.food.food };
-    case USER_FOODS:
-      const userFoods = {};
-      action.foods.foods.forEach((food) => {
-        userFoods[food.id] = food;
-      });
-      return userFoods;
     default:
       return state;
   }

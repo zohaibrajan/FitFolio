@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFoodsThunk } from "../../store/foods";
+import { getUserFoodsThunk } from "../../store/userFoods";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { gettingTodaysDate, formattingUserInputDate } from "../../utils";
+import { useSelectedDate } from "../../context/SelectedDate";
 import {
   createFoodLogThunk,
   updateCardioLogThunk,
@@ -11,18 +13,18 @@ import {
 } from "../../store/foodLogs";
 import "./FoodLog.css";
 
-function FoodLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
+function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp = 1 }) {
   const dispatch = useDispatch();
   const foodsObj = useSelector((state) => state.foods);
+  const diaryDate = formattingUserInputDate(useSelectedDate().selectedDate)
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
-  const diaryDate = formattingUserInputDate(dateFromDiary);
   const history = useHistory();
   const foods = Object.values(foodsObj);
   const [searchTerm, setSearchTerm] = useState(
-    formType === "update" ? log.food.name : ""
+    formType === "update" ? log.food.name : foodName
   );
-  const [foodId, setFoodId] = useState(formType === "update" ? log.food.id : 1);
+  const [foodId, setFoodId] = useState(formType === "update" ? log.food.id : foodIdProp);
   const [servings, setServings] = useState(
     formType === "update" ? log.servings : 0
   );
@@ -36,7 +38,7 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     formType === "update" ? log.date : diaryDate
   );
   const [isFoodSelected, setIsFoodSelected] = useState(
-    formType === "update" ? true : false
+    formType === "update" || foodName.length ? true : false
   );
 
   useEffect(() => {
@@ -44,14 +46,17 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
   }, [dispatch]);
 
   useEffect(() => {
-    const item = foodsObj[foodId];
+    let item = foodsObj[foodId];
+    if (!item) dispatch(getUserFoodsThunk())
+    item = foodsObj[foodId];
+    console.log(item)
     if (item) {
       setCaloriesConsumed(servings * item.calories);
       setProteinConsumed(servings * item.protein);
     }
   }, [foodId, servings, foodsObj]);
 
-  const filteredFoods = foods.filter((food) => 
+  const filteredFoods = foods.filter((food) =>
     food.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

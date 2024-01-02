@@ -186,7 +186,7 @@ function Diary() {
             <div className="diary-details-title" style={{display: "flex", justifyContent: "space-between"}}>
               <span>Todays Diary</span>
               <span style={{ fontSize: "12px", fontWeight: "600" }}>
-                Exercise Marked with a *{" "}
+                Exercises and Foods marked with a *{" "}
                 are your custom exercises.
               </span>
             </div>

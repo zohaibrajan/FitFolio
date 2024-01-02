@@ -1,13 +1,20 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import OpenModalButton from "../OpenModalButton";
 import FoodLogModal from "../FoodLogModal";
+import { getUserFoodsThunk } from "../../store/userFoods";
 
 
-function MyFoodPage( { userFoods } ) {
+function MyFoodPage() {
+    const userFoodObj = useSelector((state) => state.foods);
+    const userFoods = Object.values(userFoodObj);
     const [isPanelOpen, setIsPanelOpen] = useState(false);
     const [selectedFood, setSelectedFood] = useState({});
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getUserFoodsThunk())
+    }, [dispatch])
 
     const handleDelete = (e, foodId) => {
         e.preventDefault();
@@ -41,10 +48,11 @@ function MyFoodPage( { userFoods } ) {
                     <OpenModalButton
                       modalComponent={
                         <FoodLogModal
-                          foodDescription={food.name}
-                          foodId={food.id}
+                          foodName={food.name}
+                          foodIdProp={food.id}
                         />
-                      }
+                    }
+                    buttonText={"Add to Diary"}
                     />
                   </td>
                   {!food.canOthersUse ? (

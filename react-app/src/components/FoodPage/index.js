@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import MyFoodPage from "../MyFoods";
-import { addFoodThunk, getUserFoodsThunk } from "../../store/foods";
+import { addFoodThunk } from "../../store/foods";
+import { getUserFoodsThunk } from "../../store/userFoods";
 import { useDispatch } from "react-redux";
 import { createFoodLogThunk } from "../../store/foodLogs";
 import { useSelectedDate } from "../../context/SelectedDate";
@@ -62,12 +63,12 @@ function FoodPage() {
 
         const newFood = new FormData()
         const foodLog = new FormData()
-        newFood.append("name", foodName)
+        newFood.append("name", canOthersUse ? foodName : `${foodName}*`)
         newFood.append("restaurant", restaurant)
         newFood.append("calories", calories)
         newFood.append("protein", protein)
         newFood.append("can_others_use", canOthersUse)
-        foodLog.append("name", foodName)
+        foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
         foodLog.append("servings", servings)
         foodLog.append("date", formattingUserInputDate(date.selectedDate))
 
@@ -197,7 +198,7 @@ function FoodPage() {
           </div>
         </div>
       </div>
-      <MyFoodPage userFoods={userFoods}/>
+      <MyFoodPage />
     </div>
   );
 }
