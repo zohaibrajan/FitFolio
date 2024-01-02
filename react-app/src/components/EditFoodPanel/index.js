@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { updateUserFoodThunk } from "../../store/userFoods";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserFoodsThunk } from "../../store/userFoods";
-import { ca } from "date-fns/locale";
+
 
 
 function EditFoodPanel({

@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { createFoodLogThunk } from "../../store/foodLogs";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { formattingUserInputDate } from "../../utils";
-
+import "./FoodPage.css";
 
 function FoodPage() {
     const userFoodsObj = useSelector((state) => state.userFoods);
@@ -186,7 +186,7 @@ function FoodPage() {
               <button type="submit" disabled={disabled}>Create Food</button>
             </div>
           </form>
-          <div>
+          <div className="create-food-text">
             <h3>Creating a New Food</h3>
             <p>
               If you can't find a food in our database, you can easily add it
