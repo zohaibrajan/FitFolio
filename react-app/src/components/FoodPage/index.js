@@ -12,75 +12,104 @@ import { formattingUserInputDate } from "../../utils";
 import "./FoodPage.css";
 
 function FoodPage() {
-    const userFoodsObj = useSelector((state) => state.userFoods);
-    const userFoods = Object.values(userFoodsObj);
-    const [foodName, setFoodName] = useState("");
-    const [restaurant, setRestaurant] = useState("");
-    const [calories, setCalories] = useState(0);
-    const [protein, setProtein] = useState(0);
-    const [canOthersUse, setCanOthersUse] = useState(false);
-    const [servings, setServings] = useState(0);
-    const [units, setUnits] = useState("oz");
-    const dispatch = useDispatch();
-    const history = useHistory();
-    const date = useSelectedDate();
-    const [errors, setErrors] = useState({ name: "", restaurant: "", unit: "" })
+  const userFoodsObj = useSelector((state) => state.userFoods);
+  const userFoods = Object.values(userFoodsObj);
+  const [foodName, setFoodName] = useState("");
+  const [restaurant, setRestaurant] = useState("");
+  const [calories, setCalories] = useState("");
+  const [protein, setProtein] = useState("");
+  const [canOthersUse, setCanOthersUse] = useState(false);
+  const [servings, setServings] = useState("");
+  const [units, setUnits] = useState("");
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const date = useSelectedDate();
+  const [errors, setErrors] = useState({
+    name: "",
+    restaurant: "",
+    unit: "",
+    calories: "",
+    protein: "",
+  });
 
-    useEffect(() => {
-        dispatch(getUserFoodsThunk())
-    }, [dispatch])
+  useEffect(() => {
+    dispatch(getUserFoodsThunk());
+  }, [dispatch]);
 
-    const isEmpty = (str) => str === ""
-    const hasErrors = (errors) => Object.values(errors).some((error) => error !== "")
-    const commonChecks = [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors)
+  const isEmpty = (str) => str === "";
+  const hasErrors = (errors) =>
+    Object.values(errors).some((error) => error !== "");
+  const commonChecks =
+    [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors);
 
-    const disabled = commonChecks || calories === 0 || protein === 0
+  const disabled = commonChecks || calories === 0 || protein === 0;
 
-
-
-    const checkForFood = (foodName) => {
-      console.log(userFoods)
-        const foodExists = userFoods.some((food) => food.name.split("*")[0].toLowerCase() === foodName.trim().toLowerCase())
-        if (foodExists) {
-            setErrors({ ...errors, name: "Food already exists" })
-        }
+  const checkForFood = (foodName) => {
+    const foodExists = userFoods.some(
+      (food) =>
+        food.name.split("*")[0].toLowerCase() === foodName.trim().toLowerCase()
+    );
+    if (foodExists) {
+      setErrors({ ...errors, name: "Food already exists" });
     }
+  };
 
-    const checkRestaurants = (restaurant) => {
-        if (restaurant.length > 50) {
-            setErrors({ ...errors, restaurant: "Restaurant name must be less than 50 characters" })
-        }
+  const checkRestaurants = (restaurant) => {
+    if (restaurant.length > 50) {
+      setErrors({
+        ...errors,
+        restaurant: "Restaurant name must be less than 50 characters",
+      });
     }
+  };
 
-    const checkUnits = (units) => {
-        if (units.length > 50) {
-            setErrors({ ...errors, unit: "Unit name must be less than 50 characters" })
-        }
+  const checkUnits = (units) => {
+    if (units.length > 50) {
+      setErrors({
+        ...errors,
+        unit: "Unit name must be less than 50 characters",
+      });
     }
+  };
 
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const newFood = new FormData()
-        const foodLog = new FormData()
-        newFood.append("name", canOthersUse ? foodName : `${foodName}*`)
-        newFood.append("restaurant", restaurant)
-        newFood.append("calories", calories)
-        newFood.append("protein", protein)
-        newFood.append("can_others_use", canOthersUse)
-        foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
-        foodLog.append("servings", servings)
-        foodLog.append("date", formattingUserInputDate(date.selectedDate))
-
-        try {
-            await dispatch(addFoodThunk(newFood))
-            await dispatch(createFoodLogThunk(foodLog))
-            history.replace("/my-home/diary")
-        } catch (e) {
-            console.error(e)
-        }
+  const checkCalories = (calories) => {
+    if (calories < 1) {
+      setErrors({ ...errors, calories: "Calories must be greater than 0" });
     }
+  };
+
+  const checkProtein = (protein) => {
+    if (protein < 1) {
+      setErrors({ ...errors, protein: "Protein must be greater than 0" });
+    }
+  };
+
+  const buttonStyle = disabled
+    ? "create-food-button-disabled"
+    : "create-food-button";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newFood = new FormData();
+    const foodLog = new FormData();
+    newFood.append("name", canOthersUse ? foodName : `${foodName}*`);
+    newFood.append("restaurant", restaurant);
+    newFood.append("calories", calories);
+    newFood.append("protein", protein);
+    newFood.append("can_others_use", canOthersUse);
+    foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
+    foodLog.append("servings", servings);
+    foodLog.append("date", formattingUserInputDate(date.selectedDate));
+
+    try {
+      await dispatch(addFoodThunk(newFood));
+      await dispatch(createFoodLogThunk(foodLog));
+      history.replace("/my-home/diary");
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div className="food-page-container">
@@ -95,13 +124,14 @@ function FoodPage() {
             encType="multipart/form-data"
           >
             <label className="cardio-labels">
-              Food Description - Please provide a complete description. For
-              example, “Yogurt - Strawberry“ is better than “Yogurt.“
+              Food Description - For example, “Oats with Strawberry's“ is better
+              than “Oats“
               <input
                 type="text"
                 value={foodName}
                 onBlur={(e) => checkForFood(e.target.value)}
                 required
+                placeholder="Food Description"
                 onChange={(e) => {
                   setFoodName(e.target.value);
                   setErrors({ ...errors, name: "" });
@@ -114,12 +144,12 @@ function FoodPage() {
               <div className="exercise-name-error"></div>
             )}
             <label className="cardio-labels">
-              Restaurant - If this food is home-made, please leave type
-              "Home-made"
+              Restaurant - If this food is home-made, please type "Home-made"
               <input
                 type="text"
                 value={restaurant}
                 required
+                placeholder="Restaurant"
                 onBlur={(e) => checkRestaurants(e.target.value)}
                 onChange={(e) => {
                   setRestaurant(e.target.value);
@@ -132,22 +162,28 @@ function FoodPage() {
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label>
+            <label className="serving-size-label">
               Serving Size
-              <input
-                type="number"
-                value={servings}
-                min={1}
-                required
-                onChange={(e) => setServings(e.target.value)}
-              />
-              <input
-                type="text"
-                value={units}
-                required
-                onBlur={(e) => checkUnits(e.target.value)}
-                onChange={(e) => setUnits(e.target.value)}
-              />
+              <div className="serving-size-inputs">
+                <input
+                  type="number"
+                  value={servings}
+                  id="servings"
+                  min={1}
+                  required
+                  placeholder="Servings eg. 1"
+                  onChange={(e) => setServings(e.target.value)}
+                />
+                <input
+                  type="text"
+                  value={units}
+                  id="units"
+                  placeholder="Units eg. cup"
+                  required
+                  onBlur={(e) => checkUnits(e.target.value)}
+                  onChange={(e) => setUnits(e.target.value)}
+                />
+              </div>
             </label>
             {errors.unit ? (
               <div className="exercise-name-error">{errors.unit}</div>
@@ -161,9 +197,16 @@ function FoodPage() {
                 min={1}
                 value={calories}
                 required
+                placeholder="Calories in Serving"
+                onBlur={(e) => checkCalories(e.target.value)}
                 onChange={(e) => setCalories(e.target.value)}
               />
             </label>
+            {errors.calories ? (
+              <div className="exercise-name-error">{errors.calories}</div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
             <label className="cardio-labels">
               Protein
               <input
@@ -171,10 +214,17 @@ function FoodPage() {
                 min={1}
                 value={protein}
                 required
+                placeholder="Protein in Serving"
+                onBlur={(e) => checkProtein(e.target.value)}
                 onChange={(e) => setProtein(e.target.value)}
               />
             </label>
-            <label>
+            {errors.protein ? (
+              <div className="exercise-name-error">{errors.protein}</div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
+            <label className="can-others-use-label">
               <input
                 type="checkbox"
                 checked={canOthersUse}
@@ -182,8 +232,10 @@ function FoodPage() {
               />
               Yes, other members can use this food
             </label>
-            <div>
-              <button type="submit" disabled={disabled}>Create Food</button>
+            <div className="create-food-button-container">
+              <button className={buttonStyle} type="submit" disabled={disabled}>
+                Create Food
+              </button>
             </div>
           </form>
           <div className="create-food-text">
