@@ -42,7 +42,7 @@ function FoodPage() {
   const commonChecks =
     [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors);
 
-  const disabled = commonChecks || calories === 0 || protein === 0;
+  const disabled = commonChecks || calories === "" || protein === "";
 
   const checkForFood = (foodName) => {
     const foodExists = userFoods.some(
@@ -123,9 +123,11 @@ function FoodPage() {
             className="create-food-form"
             encType="multipart/form-data"
           >
-            <label className="cardio-labels">
-              Food Description - For example, “Oats with Strawberry's“ is better
-              than “Oats“
+            <label className="food-labels">
+              Food Description{" "}
+              <span style={{ fontWeight: "400", fontSize: "12px" }}>
+                For example, “Oats with Strawberry's“ is better than “Oats“
+              </span>
               <input
                 type="text"
                 value={foodName}
@@ -143,8 +145,11 @@ function FoodPage() {
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label className="cardio-labels">
-              Restaurant - If this food is home-made, please type "Home-made"
+            <label className="food-labels">
+              Restaurant
+              <span style={{ fontWeight: "400", fontSize: "12px" }}>
+                If this food is home-made, please type "Home-made"
+              </span>
               <input
                 type="text"
                 value={restaurant}
@@ -190,7 +195,7 @@ function FoodPage() {
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label className="cardio-labels">
+            <label className="food-labels">
               Calories
               <input
                 type="number"
@@ -207,7 +212,7 @@ function FoodPage() {
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label className="cardio-labels">
+            <label className="food-labels">
               Protein
               <input
                 type="number"
