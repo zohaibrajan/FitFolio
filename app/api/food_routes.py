@@ -28,6 +28,7 @@ def create_food():
 
     if form.validate_on_submit():
         data = form.data
+        print('--------', data)
 
         food = Food(
             name=data["name"],

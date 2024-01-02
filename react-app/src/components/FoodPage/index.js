@@ -29,6 +29,13 @@ function FoodPage() {
         dispatch(getUserFoodsThunk())
     }, [dispatch])
 
+    const isEmpty = (str) => str === ""
+    const hasErrors = (errors) => Object.values(errors).some((error) => error !== "")
+    const commonChecks = [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors)
+
+    const disabled = commonChecks || calories === 0 || protein === 0
+
+
 
     const checkForFood = (foodName) => {
         const foodExists = userFoods.some((food) => food.name.toLowerCase() === foodName.trim().toLowerCase())
@@ -74,14 +81,18 @@ function FoodPage() {
     }
 
   return (
-    <div>
-      <div>
-        <div>
+    <div className="food-page-container">
+      <div className="food-page-content">
+        <div className="food-page-title">
           <span>Create a new Food</span>
         </div>
-        <div>
-          <form onSubmit={handleSubmit}>
-            <label>
+        <div className="create-food-container">
+          <form
+            onSubmit={handleSubmit}
+            className="create-food-form"
+            encType="multipart/form-data"
+          >
+            <label className="cardio-labels">
               Food Description - Please provide a complete description. For
               example, “Yogurt - Strawberry“ is better than “Yogurt.“
               <input
@@ -100,7 +111,7 @@ function FoodPage() {
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label>
+            <label className="cardio-labels">
               Restaurant - If this food is home-made, please leave type
               "Home-made"
               <input
@@ -124,6 +135,7 @@ function FoodPage() {
               <input
                 type="number"
                 value={servings}
+                min={1}
                 required
                 onChange={(e) => setServings(e.target.value)}
               />
@@ -140,19 +152,21 @@ function FoodPage() {
             ) : (
               <div className="exercise-name-error"></div>
             )}
-            <label>
+            <label className="cardio-labels">
               Calories
               <input
                 type="number"
+                min={1}
                 value={calories}
                 required
                 onChange={(e) => setCalories(e.target.value)}
               />
             </label>
-            <label>
+            <label className="cardio-labels">
               Protein
               <input
                 type="number"
+                min={1}
                 value={protein}
                 required
                 onChange={(e) => setProtein(e.target.value)}
@@ -167,7 +181,7 @@ function FoodPage() {
               Yes, other members can use this food
             </label>
             <div>
-              <button type="submit">Create Food</button>
+              <button type="submit" disabled={disabled}>Create Food</button>
             </div>
           </form>
           <div>
