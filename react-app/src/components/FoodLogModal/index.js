@@ -51,7 +51,7 @@ function FoodLogModal({ formType = "create", log = {}, dateFromDiary = "" }) {
     }
   }, [foodId, servings, foodsObj]);
 
-  const filteredFoods = foods.filter((food) =>
+  const filteredFoods = foods.filter((food) => 
     food.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

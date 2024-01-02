@@ -28,11 +28,10 @@ def create_food():
 
     if form.validate_on_submit():
         data = form.data
-        print('--------', data)
 
         food = Food(
-            name=data["name"],
-            restaurant=data["restaurant"],
+            name=data["name"].title(),
+            restaurant=data["restaurant"].title(),
             calories=data["calories"],
             protein=data["protein"],
             created_by_user_id=current_user.id,

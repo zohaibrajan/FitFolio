@@ -61,7 +61,7 @@ const foodsReducer = (state = {}, action) => {
       });
       return allFoods;
     case ADD_FOOD:
-      return { ...state, [action.food.id]: action.food };
+      return { ...state, [action.food.food.id]: action.food.food };
     case USER_FOODS:
       const userFoods = {};
       action.foods.foods.forEach((food) => {
