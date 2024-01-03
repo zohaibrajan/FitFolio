@@ -4,7 +4,8 @@
     width: 60%;
     min-width: 685px;
     max-width: 775px;
-    min-height: 310px;
+    min-height: 350px;
+    margin-bottom: 50px;
     justify-content: space-between;
 }
 
@@ -18,7 +19,7 @@
 .edit-foods-panel-parent {
     position: relative;
     width: 35%;
-    height: 308px;
+    height: 350px;
 }
 
 .food-card {

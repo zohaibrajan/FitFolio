@@ -44,6 +44,10 @@
     justify-content: center;
 }
 
+.create-food-text > p {
+    font-size: 12px;
+}
+
 .create-food-form {
     display: flex;
     font-family: "Inter", Helvetica, Arial, sans-serif;

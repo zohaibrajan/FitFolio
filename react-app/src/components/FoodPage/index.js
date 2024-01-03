@@ -30,6 +30,7 @@ function FoodPage() {
     unit: "",
     calories: "",
     protein: "",
+    servings: "",
   });
 
   useEffect(() => {
@@ -81,6 +82,12 @@ function FoodPage() {
   const checkProtein = (protein) => {
     if (protein < 1) {
       setErrors({ ...errors, protein: "Protein must be greater than 0" });
+    }
+  };
+
+  const checkServings = (servings) => {
+    if (servings < 1) {
+      setErrors({ ...errors, servings: "Servings must be greater than 0" });
     }
   };
 
@@ -177,7 +184,10 @@ function FoodPage() {
                   min={1}
                   required
                   placeholder="Servings eg. 1"
-                  onChange={(e) => setServings(e.target.value)}
+                  onBlur={(e) => checkServings(e.target.value)}
+                  onChange={(e) => {
+                    setErrors({ ...errors, servings: "" });
+                    setServings(e.target.value)}}
                 />
                 <input
                   type="text"
@@ -186,12 +196,14 @@ function FoodPage() {
                   placeholder="Units eg. cup"
                   required
                   onBlur={(e) => checkUnits(e.target.value)}
-                  onChange={(e) => setUnits(e.target.value)}
+                  onChange={(e) => {
+                    setErrors({ ...errors, unit: "" });
+                    setUnits(e.target.value)}}
                 />
               </div>
             </label>
-            {errors.unit ? (
-              <div className="exercise-name-error">{errors.unit}</div>
+            {errors.unit || errors.servings ? (
+              <div className="exercise-name-error">{errors.unit || errors.servings}</div>
             ) : (
               <div className="exercise-name-error"></div>
             )}
@@ -204,7 +216,10 @@ function FoodPage() {
                 required
                 placeholder="Calories in Serving"
                 onBlur={(e) => checkCalories(e.target.value)}
-                onChange={(e) => setCalories(e.target.value)}
+                onChange={(e) => {
+                  setErrors({ ...errors, calories: "" });
+                  setCalories(e.target.value)
+                }}
               />
             </label>
             {errors.calories ? (
@@ -221,7 +236,10 @@ function FoodPage() {
                 required
                 placeholder="Protein in Serving"
                 onBlur={(e) => checkProtein(e.target.value)}
-                onChange={(e) => setProtein(e.target.value)}
+                onChange={(e) => {
+                  setErrors({ ...errors, protein: "" });
+                  setProtein(e.target.value)
+                }}
               />
             </label>
             {errors.protein ? (
