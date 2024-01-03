@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserCardioExerciseVersion, UserWeightExerciseVersion
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime, date
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 
 user_routes = Blueprint('users', __name__)
 def calculate_bmr_for_women(weight_kg, height_cm, age_years):
@@ -426,7 +426,12 @@ def create_user_food_log():
         food_from_form = data['name']
         servings = int(data["servings"])
 
-        food = Food.query.where(Food.name.ilike(f"{food_from_form}")).first()
+        food = Food.query.filter(
+            Food.name.ilike(f"{food_from_form}"),
+            or_(
+                ~Food.name.endswith('*'),
+                and_(Food.name.endswith('*'), Food.created_by_user_id == current_user.id)
+                )).first()
 
         if not food:
             return {

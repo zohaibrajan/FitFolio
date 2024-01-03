@@ -12,6 +12,8 @@ class Food(db.Model):
     calories = db.Column(db.Integer, nullable=False)
     protein = db.Column(db.Integer, nullable=False)
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
+    can_others_use = db.Column(db.Boolean, default=False)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     food_logs = db.relationship("FoodLog", back_populates="food", cascade="all, delete-orphan")
     created_by = db.relationship("User", back_populates="foods")
@@ -23,14 +25,5 @@ class Food(db.Model):
             "restaurant": self.restaurant,
             "calories": self.calories,
             "protein": self.protein,
-            "createdByUserId": self.created_by_user_id
-        }
-
-    def to_dict_nutrition(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "restaurant": self.restaurant,
-            "calories": self.calories,
-            "protein": self.protein
+            "canOthersUse": self.can_others_use
         }

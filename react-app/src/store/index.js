@@ -10,6 +10,7 @@ import foodLogReducer from './foodLogs';
 import goalReducer from './goal';
 import userExercisesReducer from './userOwnedExercises';
 import userExercisesFilteredReducer from './userOwnedExercisesFiltered';
+import userFoodsReducer from './userFoods';
 
 const rootReducer = combineReducers({
   session,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   foodLogs: foodLogReducer,
   userExercises: userExercisesReducer,
   userExercisesFiltered: userExercisesFilteredReducer,
+  userFoods: userFoodsReducer
 });
 
 

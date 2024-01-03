@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 61138b4127ef
+Revision ID: b877cb42865e
 Revises:
-Create Date: 2023-12-29 16:23:42.186770
+Create Date: 2024-01-01 17:35:50.699297
 
 """
 from alembic import op
@@ -14,7 +14,7 @@ SCHEMA = os.environ.get("SCHEMA")
 
 
 # revision identifiers, used by Alembic.
-revision = '61138b4127ef'
+revision = 'b877cb42865e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -40,6 +40,7 @@ def upgrade():
     if environment == "production":
         op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
 
+
     op.create_table('cardio_exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('exercise_name', sa.String(length=50), nullable=False),
@@ -61,6 +62,8 @@ def upgrade():
     sa.Column('calories', sa.Integer(), nullable=False),
     sa.Column('protein', sa.Integer(), nullable=False),
     sa.Column('created_by_user_id', sa.Integer(), nullable=True),
+    sa.Column('can_others_use', sa.Boolean(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -181,7 +184,6 @@ def upgrade():
 
     if environment == "production":
         op.execute(f"ALTER TABLE weight_logs SET SCHEMA {SCHEMA};")
-        
     # ### end Alembic commands ###
 
 
