@@ -102,8 +102,8 @@ function FoodPage() {
     const foodLog = new FormData();
     newFood.append("name", canOthersUse ? foodName : `${foodName}*`);
     newFood.append("restaurant", restaurant);
-    newFood.append("calories", calories);
-    newFood.append("protein", protein);
+    newFood.append("calories", servings > 1 ? calories / servings : calories);
+    newFood.append("protein", servings > 1 ? protein / servings : protein);
     newFood.append("can_others_use", canOthersUse);
     foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
     foodLog.append("servings", servings);

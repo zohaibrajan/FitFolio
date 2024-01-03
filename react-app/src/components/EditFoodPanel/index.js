@@ -95,8 +95,8 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     const formData = new FormData();
     formData.append("name", `${foodName}*`);
     formData.append("restaurant", restaurant);
-    formData.append("calories", calories);
-    formData.append("protein", protein);
+    formData.append("calories", servings > 1 ? calories / servings : calories);
+    formData.append("protein", servings > 1 ? protein / servings : protein);
 
     try {
       await dispatch(updateUserFoodThunk(foodId, formData));
@@ -158,31 +158,42 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
         ) : (
           <div className="exercise-name-error"></div>
         )}
-        <label>
+        <label className="serving-size-label">
           Serving Size
-          <input
-            type="number"
-            value={servings}
-            min={1}
-            required
-            onChange={(e) => {
-              setIsFormModified(true);
-              setServings(e.target.value);
-            }}
-          />
-          <input
-            type="text"
-            value={units}
-            required
-            onBlur={(e) => checkUnits(e.target.value)}
-            onChange={(e) => {
-              setIsFormModified(true);
-              setUnits(e.target.value);
-            }}
-          />
+          <div className="serving-size-inputs">
+            <input
+              type="number"
+              value={servings}
+              id="servings"
+              min={1}
+              required
+              placeholder="Servings eg. 1"
+              onBlur={(e) => checkServings(e.target.value)}
+              onChange={(e) => {
+                setErrors({ ...errors, servings: "" });
+                setIsFormModified(true);
+                setServings(e.target.value);
+              }}
+            />
+            <input
+              type="text"
+              value={units}
+              id="units"
+              placeholder="Units eg. cup"
+              required
+              onBlur={(e) => checkUnits(e.target.value)}
+              onChange={(e) => {
+                setErrors({ ...errors, unit: "" });
+                setIsFormModified(true);
+                setUnits(e.target.value);
+              }}
+            />
+          </div>
         </label>
-        {errors.unit ? (
-          <div className="exercise-name-error">{errors.unit}</div>
+        {errors.unit || errors.servings ? (
+          <div className="exercise-name-error">
+            {errors.unit || errors.servings}
+          </div>
         ) : (
           <div className="exercise-name-error"></div>
         )}
@@ -193,7 +204,9 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             min={1}
             value={calories}
             required
+            onBlur={(e) => checkCalories(e.target.value)}
             onChange={(e) => {
+              setErrors({ ...errors, calories: "" });
               setIsFormModified(true);
               setCalories(e.target.value);
             }}
@@ -211,7 +224,9 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             min={1}
             value={protein}
             required
+            onBlur={(e) => checkProtein(e.target.value)}
             onChange={(e) => {
+              setErrors({ ...errors, protein: "" });
               setProtein(e.target.value);
               setIsFormModified(true);
             }}
@@ -222,8 +237,12 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
         ) : (
           <div className="exercise-name-error"></div>
         )}
-        <div>
-          <button type="submit" disabled={disabled || !isFormModified}>
+        <div className="edit-food-panel-submit-button-container">
+          <button
+            type="submit"
+            disabled={disabled || !isFormModified}
+            className="edit-food-panel-submit-button"
+          >
             Update Food
           </button>
         </div>

@@ -66,7 +66,16 @@ function MyFoodPage() {
                   {!food.canOthersUse ? (
                     <>
                       <td>
-                        <button onClick={(e) => handleDelete(e, food.id)}>
+                        <button
+                          onClick={(e) => handleDelete(e, food.id)}
+                          style={{
+                            padding: "0",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            cursor: "pointer",
+                          }}
+                          title="Delete"
+                        >
                           <i
                             className="fa-solid fa-circle-minus"
                             style={{ color: "#ff0000" }}
@@ -79,6 +88,13 @@ function MyFoodPage() {
                             setSelectedFood(food);
                             setIsPanelOpen(true);
                           }}
+                          style={{
+                            padding: "0",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            cursor: "pointer",
+                          }}
+                          title="Edit"
                         >
                           <i className="fa-solid fa-pen-to-square" />
                         </button>
