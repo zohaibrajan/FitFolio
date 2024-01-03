@@ -4,6 +4,7 @@ import OpenModalButton from "../OpenModalButton";
 import FoodLogModal from "../FoodLogModal";
 import EditFoodPanel from "../EditFoodPanel";
 import { getUserFoodsThunk, deleteUserFoodThunk } from "../../store/userFoods";
+import "./MyFoods.css";
 
 
 function MyFoodPage() {
@@ -29,17 +30,17 @@ function MyFoodPage() {
     }
 
     return (
-      <div>
-        <div>
-          <div>
+      <div className="food-container">
+        <div className="all-food-cards">
+          <div className="my-foods-title-container">
             <span>My Foods</span>
           </div>
-          <div>
+          <div className="my-food-text">
             <p>
               Welcome to the food section! Here you can view all of your Foods
             </p>
           </div>
-          <table>
+          <table className="my-food-table">
             <tr>
               <th>Food Description</th>
               <th></th>
@@ -92,22 +93,22 @@ function MyFoodPage() {
                 </tr>
               ))
             ) : (
-              <div className="exercise-card-no-exercises">
+              <div className="food-card-no-foods">
                 <h4>No Foods, add one from above </h4>
               </div>
             )}
           </table>
-          <div className="pagination-my-exercise-button-container">
+          <div className="pagination-my-foods-button-container">
             <button
               onClick={() => setCurrentPage(currentPage - 1)}
-              className="previous-my-exercise-button"
+              className="previous-my-foods-button"
               disabled={currentPage === 1}
             >
               Previous
             </button>
             <button
               onClick={() => setCurrentPage(currentPage + 1)}
-              className="next-my-exercise-button"
+              className="next-my-foods-button"
               disabled={
                 currentPage === Math.ceil(userFoods.length / foodsPerPage) ||
                 userFoods.length === 0
@@ -117,7 +118,7 @@ function MyFoodPage() {
             </button>
           </div>
         </div>
-        <div className="edit-exercise-panel-parent">
+        <div className="edit-foods-panel-parent">
           {isPanelOpen && (
             <EditFoodPanel
               selectedFood={selectedFood}

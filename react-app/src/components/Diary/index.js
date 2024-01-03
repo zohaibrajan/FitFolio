@@ -187,7 +187,7 @@ function Diary() {
               <span>Todays Diary</span>
               <span style={{ fontSize: "12px", fontWeight: "600" }}>
                 Exercises and Foods marked with a *{" "}
-                are your custom exercises.
+                are your custom.
               </span>
             </div>
             <div className="users-log-container">

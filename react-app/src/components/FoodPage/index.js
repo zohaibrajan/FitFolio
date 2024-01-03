@@ -237,6 +237,13 @@ function FoodPage() {
               />
               Yes, other members can use this food
             </label>
+            {canOthersUse ? (
+              <div className="exercise-name-error">
+              {" "} You will not be able to delete or edit this item once created
+              </div>
+            ) : (
+              <div className="exercise-name-error"></div>
+            )}
             <div className="create-food-button-container">
               <button className={buttonStyle} type="submit" disabled={disabled}>
                 Create Food
