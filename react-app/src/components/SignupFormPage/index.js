@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
+import { useHistory } from "react-router-dom";
 import { createGoalThunk } from "../../store/goal";
 import { TailSpin } from "react-loader-spinner";
 import "./SignupForm.css";
@@ -10,6 +11,7 @@ function SignupFormPage() {
   let today = new Date().getTime();
   today = new Date(today);
   const year = today.getFullYear();
+  const history = useHistory();
   const month =
     today.getMonth() >= 10 ? today.getMonth() + 1 : `0${today.getMonth() + 1}`;
   const day = today.getDate();
@@ -57,7 +59,11 @@ function SignupFormPage() {
     confirmPassword === "";
   const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
 
-  if (sessionUser) return <Redirect to="/my-home/diary" />;
+
+
+  if (sessionUser) {
+    return <Redirect to="/my-home/diary" />;
+  }
 
   const handleGoalClick = (clickedGoal) => {
     setGoal(clickedGoal);
@@ -354,10 +360,10 @@ function SignupFormPage() {
       if (data) {
         setErrors(data);
         setIsLoading(false);
+      } else {
+        await dispatch(createGoalThunk(formDataGoal));
+        setIsLoading(false);
       }
-      const goal = await dispatch(createGoalThunk(formDataGoal));
-      console.log(goal);
-      setIsLoading(false);
     } else {
       setErrors({
         ...errors,
