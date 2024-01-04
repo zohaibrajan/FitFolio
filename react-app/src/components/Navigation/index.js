@@ -58,6 +58,35 @@ function Navigation({ isLoaded }) {
               Sign Up
             </NavLink>
           </li>
+          <hr
+            aria-orientation="vertical"
+            style={{ fontSize: "0px", opacity: "0.4" }}
+          />
+          <span
+            className="follow-us"
+          >
+            Connect:
+          </span>
+          <a
+            target="_blank"
+            href="https://github.com/zohaibrajan"
+            rel="noreferrer"
+          >
+            <i
+              className="fa-brands fa-square-github"
+              style={{ color: "#000000", fontSize: "18px", cursor: "pointer" }}
+            ></i>
+          </a>
+          <a
+            target="_blank"
+            href="https://www.linkedin.com/in/zohaib-rajan-718198216/"
+            rel="noreferrer"
+          >
+            <i
+              className="fa-brands fa-linkedin"
+              style={{ color: "#0077b5", fontSize: "18px", cursor: "pointer" }}
+            ></i>
+          </a>
         </div>
       ) : (
         <div className="logged-in-nav-bar">
@@ -73,7 +102,7 @@ function Navigation({ isLoaded }) {
             aria-orientation="vertical"
             style={{ fontSize: "0px", opacity: "0.4" }}
           />
-          <span>Follow Us:</span>
+          <span>Connect:</span>
           <a
             target="_blank"
             href="https://github.com/zohaibrajan"

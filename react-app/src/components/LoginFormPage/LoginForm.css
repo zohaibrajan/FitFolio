@@ -82,3 +82,10 @@
 .demo-login-button:hover {
     text-decoration: underline;
 }
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}

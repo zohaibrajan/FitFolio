@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
 import { createGoalThunk } from "../../store/goal";
+import { TailSpin } from "react-loader-spinner";
 import "./SignupForm.css";
 
 function SignupFormPage() {
@@ -30,6 +31,7 @@ function SignupFormPage() {
   const [goalErrors, setGoalErrors] = useState("");
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [date, setDate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const disabled =
     goalErrors.length || weeklyGoal === "" || targetWeight === "";
   const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
@@ -234,11 +236,13 @@ function SignupFormPage() {
     formDataGoal.append("target_weight", targetWeight);
 
     if (password === confirmPassword) {
+      setIsLoading(true);
       const data = await dispatch(signUp(formDataUser));
       if (data) {
         setErrors(data);
       } else {
         await dispatch(createGoalThunk(formDataGoal));
+        setIsLoading(false);
       }
     } else {
       setErrors({
@@ -250,6 +254,20 @@ function SignupFormPage() {
 
   return (
     <>
+      {isLoading ? (
+        <div className="loading-spinner">
+          <TailSpin
+            visible={true}
+            height="80"
+            width="80"
+            color="rgb(0, 102, 238)"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        </div>
+      ) : (
       <div className="signup-form-parent">
         <div className="signup-form-container">
           <h1 style={{ marginBottom: "25px" }}>Lets Create An Account</h1>
@@ -629,6 +647,7 @@ function SignupFormPage() {
           </form>
         </div>
       </div>
+      )}
     </>
   );
 }
