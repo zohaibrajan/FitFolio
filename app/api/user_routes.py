@@ -609,6 +609,7 @@ def creating_user_goal():
         )
 
         db.session.add(new_goal)
+        db.session.flush()
         db.session.commit()
 
         return new_goal.to_dict()

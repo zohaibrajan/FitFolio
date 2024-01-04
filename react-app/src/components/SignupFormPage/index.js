@@ -354,10 +354,10 @@ function SignupFormPage() {
       if (data) {
         setErrors(data);
         setIsLoading(false);
-      } else {
-        await dispatch(createGoalThunk(formDataGoal));
-        setIsLoading(false);
       }
+      const goal = await dispatch(createGoalThunk(formDataGoal));
+      console.log(goal);
+      setIsLoading(false);
     } else {
       setErrors({
         ...errors,

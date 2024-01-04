@@ -44,7 +44,6 @@ export const createGoalThunk = (goal) => async (dispatch) => {
     return newGoal;
   } else {
     const errors = await res.json();
-    console.log("something is breaking", errors);
     return errors;
   }
 };
