@@ -222,3 +222,10 @@
     background-color: rgb(140, 140, 140);
     color: white;
 }
+
+
+.signup-form-errors {
+    min-height: 10px;
+    margin-bottom: 12px;
+    max-height: 10px;
+}
