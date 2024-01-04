@@ -123,6 +123,21 @@ function SignupFormPage() {
         </div>
       );
     }
+    if (goalErrors.length) {
+      return (
+        <div className="checking-if-goal" style={{ height: "50px" }}>
+          <span
+            style={{
+              fontWeight: "600",
+              fontSize: "15px",
+              color: "rgb(0, 102, 238)",
+            }}
+          >
+           Please correct the errors above
+          </span>
+        </div>
+      );
+    }
     if (goal === "Maintain Weight") {
       return (
         <div className="checking-if-goal" style={{ height: "50px" }}>
