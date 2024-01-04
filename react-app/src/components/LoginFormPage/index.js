@@ -12,7 +12,9 @@ function LoginFormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({email: "", password: ""});
+
+  console.log(errors)
 
   if (sessionUser) return <Redirect to="/my-home/diary" />;
 
@@ -59,7 +61,9 @@ function LoginFormPage() {
                   className="login-form-inputs"
                   type="text"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setErrors({...errors, email: ""})
+                    setEmail(e.target.value)}}
                   required
                 />
               </label>
@@ -91,7 +95,9 @@ function LoginFormPage() {
                   type="password"
                   className="login-form-inputs"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setErrors({...errors, password: ""})
+                    setPassword(e.target.value)}}
                   required
                 />
               </label>

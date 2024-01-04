@@ -30,6 +30,7 @@ function SignupFormPage() {
   const [goalErrors, setGoalErrors] = useState("");
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [date, setDate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const disabled =
     goalErrors.length || weeklyGoal === "" || targetWeight === "";
   const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
