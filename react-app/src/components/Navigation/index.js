@@ -65,7 +65,7 @@ function Navigation({ isLoaded }) {
           <span
             className="follow-us"
           >
-            Follow Us:
+            Connect:
           </span>
           <a
             target="_blank"
@@ -102,7 +102,7 @@ function Navigation({ isLoaded }) {
             aria-orientation="vertical"
             style={{ fontSize: "0px", opacity: "0.4" }}
           />
-          <span>Follow Us:</span>
+          <span>Connect:</span>
           <a
             target="_blank"
             href="https://github.com/zohaibrajan"
