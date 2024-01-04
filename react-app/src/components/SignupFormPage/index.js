@@ -21,6 +21,10 @@ function SignupFormPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [heightError, setHeightError] = useState({
+    feet: "",
+    inches: "",
+  });
   const [errors, setErrors] = useState({
     gender: "",
     username: "",
@@ -45,6 +49,8 @@ function SignupFormPage() {
     targetWeight === "" ||
     gender === "" ||
     Object.values(errors).some((error) => error.length) ||
+    heightError.feet ||
+    heightError.inches ||
     username === "" ||
     email === "" ||
     password === "" ||
@@ -72,11 +78,15 @@ function SignupFormPage() {
     setCurrentWeight(newCurrentWeight);
     setTargetWeight("");
     setGoalErrors("");
+
+      if (goal === "Maintain Weight") {
+        setTargetWeight(e.target.value);
+      }
+
   };
 
   const handleTargetWeightChange = (e) => {
     const newTargetWeight = e.target.value;
-    // setTargetWeight(newTargetWeight);
 
     if (
       (goal === "Lose Weight" &&
@@ -90,9 +100,10 @@ function SignupFormPage() {
         parseFloat(newTargetWeight) <= parseFloat(currentWeight))
     ) {
       setGoalErrors(`Invalid target weight for ${goal} goal.`);
+    } else if (newTargetWeight < 40) {
+      setGoalErrors("Invalid target weight. Must be at least 40 lb.");
     } else {
       setGoalErrors("");
-      // setTargetWeight(newTargetWeight);
     }
   };
 
@@ -271,6 +282,33 @@ function SignupFormPage() {
     }
   };
 
+  const checkHeightFt = (heightFt) => {
+    if (heightFt < 3 || heightFt > 7) {
+      setHeightError({
+        ...heightError,
+        feet: "Height must be between 3 and 7 feet",
+      });
+    }
+  };
+
+  const checkHeightIn = (heightIn) => {
+    if (heightIn < 0 || heightIn > 11) {
+      setHeightError({
+        ...heightError,
+        inches: "Height must be between 0 and 11 inches",
+      });
+    }
+  };
+
+  const checkCurrentWeight = (currentWeight) => {
+    if (currentWeight < 50 || currentWeight > 900) {
+      setErrors({
+        ...errors,
+        current_weight_lbs: "Invalid weight. Must be between 50 and 900 lb",
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const changeToDate = new Date(date);
@@ -407,7 +445,6 @@ function SignupFormPage() {
                   display: "flex",
                   justifyContent: "center",
                   minHeight: "10px",
-                  marginBottom: "12px",
                   maxHeight: "10px",
                 }}
               >
@@ -454,9 +491,11 @@ function SignupFormPage() {
                       type="number"
                       className="height-inputs"
                       value={heightFt}
-                      onChange={(e) => setHeightFt(e.target.value)}
-                      max={7}
-                      min={3}
+                      onBlur={(e) => checkHeightFt(e.target.value)}
+                      onChange={(e) => {
+                        setHeightError({ ...heightError, feet: "" });
+                        setHeightFt(e.target.value);
+                      }}
                       required
                     ></input>
                   </label>
@@ -466,40 +505,31 @@ function SignupFormPage() {
                       type="number"
                       className="height-inputs"
                       value={heightIn}
-                      onChange={(e) => setHeightIn(e.target.value)}
-                      max={11}
-                      min={0}
+                      onBlur={(e) => checkHeightIn(e.target.value)}
+                      onChange={(e) => {
+                        setHeightError({ ...heightError, inches: "" });
+                        setHeightIn(e.target.value);
+                      }}
                       required
                     ></input>
                   </label>
                 </div>
               </div>
-              {!goal ? (
-                <div
-                  className="checking-if-goal"
-                  style={{ height: "10px", alignItems: "flex-end" }}
-                >
-                  <span
+              {heightError.feet || heightError.inches ? (
+                <div className="height-errors">
+                  <p
                     style={{
-                      fontWeight: "600",
-                      fontSize: "12px",
-                      color: "transparent",
+                      color: "red",
+                      fontSize: "10px",
+                      fontWeight: "400",
                     }}
                   >
-                    Please select a goal before continuing
-                  </span>
+                    Height is invalid
+                  </p>
                 </div>
               ) : (
-                <div className="checking-if-goal" style={{ height: "10px" }}>
-                  <span
-                    style={{
-                      fontWeight: "600",
-                      fontSize: "12px",
-                      color: "transparent",
-                    }}
-                  >
-                    Please select a goal before continuing
-                  </span>
+                <div className="height-errors">
+                  <p style={{ color: "red" }}></p>
                 </div>
               )}
               <div className="user-weight-inputs-container">
@@ -510,28 +540,29 @@ function SignupFormPage() {
                     className="weight-inputs"
                     style={{ width: "68.5%" }}
                     value={currentWeight}
-                    onChange={handleCurrentWeightChange}
-                    max={900}
-                    min={50}
+                    onBlur={(e) => checkCurrentWeight(e.target.value)}
+                    onChange={(e) => {
+                      setErrors({ ...errors, current_weight_lbs: "" });
+                      handleCurrentWeightChange(e);
+                    }}
                     disabled={goal === ""}
                   ></input>
                 </label>
-                <div className="signup-form-errors">
-                  {errors.current_weight_lbs ? (
+                {errors.current_weight_lbs ? (
+                  <div className="goal-errors">
                     <span
                       style={{
-                        fontSize: "10px",
+                        fontSize: "12px",
                         color: "red",
                       }}
                     >
                       {errors.current_weight_lbs}
                     </span>
-                  ) : (
-                    <span
-                      style={{ fontSize: "8px", color: "transparent" }}
-                    ></span>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="goal-errors">
+                  </div>
+                )}
                 <label
                   className="goal-form-labels"
                   style={{ marginTop: "5px" }}
@@ -542,8 +573,9 @@ function SignupFormPage() {
                     className="weight-inputs"
                     value={targetWeight}
                     onChange={(e) => {
-                      setGoalErrors("")
-                      setTargetWeight(e.target.value)}}
+                      setGoalErrors("");
+                      setTargetWeight(e.target.value);
+                    }}
                     onBlur={handleTargetWeightChange}
                     disabled={!currentWeight}
                     min={40}
@@ -555,7 +587,7 @@ function SignupFormPage() {
                       style={{
                         color: "red",
                         fontSize: "12px",
-                        fontWeight: "600",
+                        fontWeight: "400",
                       }}
                     >
                       {goalErrors}
@@ -563,7 +595,6 @@ function SignupFormPage() {
                   </div>
                 ) : (
                   <div className="goal-errors">
-                    <p style={{ color: "red" }}></p>
                   </div>
                 )}
               </div>
@@ -616,7 +647,8 @@ function SignupFormPage() {
                     onBlur={(e) => checkEmail(e.target.value)}
                     onChange={(e) => {
                       setErrors({ ...errors, email: "" });
-                      setEmail(e.target.value)}}
+                      setEmail(e.target.value);
+                    }}
                   />
                 </label>
                 <div className="signup-form-errors">
@@ -645,8 +677,9 @@ function SignupFormPage() {
                     value={password}
                     onBlur={(e) => checkPassword(e.target.value)}
                     onChange={(e) => {
-                      setErrors({...errors, password: ""})
-                      setPassword(e.target.value)}}
+                      setErrors({ ...errors, password: "" });
+                      setPassword(e.target.value);
+                    }}
                   />
                 </label>
                 <div className="signup-form-errors">
@@ -672,7 +705,10 @@ function SignupFormPage() {
                     className="user-info-inputs"
                     disabled={goal === ""}
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) => {
+                      setErrors({ ...errors, confirmPassword: "" });
+                      setConfirmPassword(e.target.value);
+                    }}
                   />
                 </label>
                 <div className="signup-form-errors">
