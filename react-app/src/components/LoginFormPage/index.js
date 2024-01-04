@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { login } from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
-import { useModal } from "../../context/Modal";
 import { Redirect } from "react-router-dom";
 import { TailSpin } from "react-loader-spinner"
 import "./LoginForm.css";
