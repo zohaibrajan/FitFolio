@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
 import { useHistory } from "react-router-dom";
 import { createGoalThunk } from "../../store/goal";
 import { TailSpin } from "react-loader-spinner";
+import { getUsersGoalThunk } from "../../store/goal";
 import "./SignupForm.css";
 
 function SignupFormPage() {
@@ -18,7 +19,7 @@ function SignupFormPage() {
   const formattedDate =
     day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
   const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
+  const userGoal = useSelector((state) => state.goal);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -59,9 +60,12 @@ function SignupFormPage() {
     confirmPassword === "";
   const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
 
+  useEffect(() => {
+    setIsLoading(true);
+    dispatch(getUsersGoalThunk());
+  }, [dispatch]);
 
-
-  if (sessionUser) {
+  if (userGoal.caloriesPerDay) {
     return <Redirect to="/my-home/diary" />;
   }
 
@@ -85,10 +89,9 @@ function SignupFormPage() {
     setTargetWeight("");
     setGoalErrors("");
 
-      if (goal === "Maintain Weight") {
-        setTargetWeight(e.target.value);
-      }
-
+    if (goal === "Maintain Weight") {
+      setTargetWeight(e.target.value);
+    }
   };
 
   const handleTargetWeightChange = (e) => {
@@ -139,7 +142,7 @@ function SignupFormPage() {
               color: "rgb(0, 102, 238)",
             }}
           >
-           Please correct the errors above
+            Please correct the errors above
           </span>
         </div>
       );
@@ -363,6 +366,7 @@ function SignupFormPage() {
       } else {
         await dispatch(createGoalThunk(formDataGoal));
         setIsLoading(false);
+        history.replace("/my-home/diary");
       }
     } else {
       setErrors({
@@ -581,8 +585,7 @@ function SignupFormPage() {
                     </span>
                   </div>
                 ) : (
-                  <div className="goal-errors">
-                  </div>
+                  <div className="goal-errors"></div>
                 )}
                 <label
                   className="goal-form-labels"
@@ -615,8 +618,7 @@ function SignupFormPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="goal-errors">
-                  </div>
+                  <div className="goal-errors"></div>
                 )}
               </div>
               <label className="weekly-goal-container">
