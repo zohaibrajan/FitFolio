@@ -49,13 +49,14 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
   useEffect(() => {
     let item = foodsObj[foodId];
     if (!item) {
-      dispatch(getAllUserFoodsThunk())
+      dispatch(getAllUserFoodsThunk());
       item = userFoodObj[foodId];
     }
     if (item) {
       setCaloriesConsumed(servings * item.calories);
       setProteinConsumed(servings * item.protein);
     }
+    // eslint-disable-next-line
   }, [foodId, servings, foodsObj, dispatch]);
 
   const filteredFoods = foods.filter((food) =>
