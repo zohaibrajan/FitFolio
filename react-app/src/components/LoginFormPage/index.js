@@ -14,8 +14,6 @@ function LoginFormPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({email: "", password: ""});
 
-  console.log(errors)
-
   if (sessionUser) return <Redirect to="/my-home/diary" />;
 
   const handleSubmit = async (e) => {
@@ -34,6 +32,26 @@ function LoginFormPage() {
     await dispatch(login("demo@aa.io", "password"))
     setIsLoading(false);
   };
+
+  const checkEmail = (email) => {
+    if (email.length > 50) {
+      setErrors({...errors, email: "Email address must be less than 50 characters."})
+    }
+
+    const emailRegex = new RegExp(
+      "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
+    );
+    const isValid = emailRegex.test(email);
+    if (!isValid) {
+      setErrors({...errors, email: "Please enter a valid email address."})
+    }
+  }
+
+  const checkPassword = (password) => {
+    if (password.length > 50) {
+      setErrors({...errors, password: "Password must be less than 50 characters."})
+    }
+  }
 
   return (
     <>
@@ -61,6 +79,7 @@ function LoginFormPage() {
                   className="login-form-inputs"
                   type="text"
                   value={email}
+                  onBlur={() => checkEmail(email)}
                   onChange={(e) => {
                     setErrors({...errors, email: ""})
                     setEmail(e.target.value)}}
@@ -95,6 +114,7 @@ function LoginFormPage() {
                   type="password"
                   className="login-form-inputs"
                   value={password}
+                  onBlur={() => checkPassword(password)}
                   onChange={(e) => {
                     setErrors({...errors, password: ""})
                     setPassword(e.target.value)}}
@@ -125,7 +145,7 @@ function LoginFormPage() {
               </div>
               <div className="login-submit-button-container">
                 <button
-                  disabled={email.length < 1 || password.length < 1}
+                  disabled={email.length < 1 || password.length < 1 || errors.email || errors.password}
                   className="login-submit-button"
                   type="submit"
                 >
