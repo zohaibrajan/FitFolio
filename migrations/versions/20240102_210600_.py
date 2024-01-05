@@ -63,6 +63,7 @@ def upgrade():
     sa.Column('created_by_user_id', sa.Integer(), nullable=True),
     sa.Column('can_others_use', sa.Boolean(), nullable=True),
     sa.Column('is_deleted', sa.Boolean(), nullable=True),
+    sa.Column('unit_of_serving', sa.String(length=50), nullable=False),
     sa.ForeignKeyConstraint(['created_by_user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

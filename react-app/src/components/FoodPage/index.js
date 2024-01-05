@@ -105,6 +105,7 @@ function FoodPage() {
     newFood.append("calories", servings > 1 ? calories / servings : calories);
     newFood.append("protein", servings > 1 ? protein / servings : protein);
     newFood.append("can_others_use", canOthersUse);
+    newFood.append("unit_of_servings", units); 
     foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
     foodLog.append("servings", servings);
     foodLog.append("date", formattingUserInputDate(date.selectedDate));

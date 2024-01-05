@@ -14,6 +14,7 @@ class Food(db.Model):
     created_by_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
     can_others_use = db.Column(db.Boolean, default=False)
     is_deleted = db.Column(db.Boolean, default=False)
+    unit_of_serving = db.Column(db.String(50), nullable=False)
 
     food_logs = db.relationship("FoodLog", back_populates="food", cascade="all, delete-orphan")
     created_by = db.relationship("User", back_populates="foods")
@@ -25,5 +26,6 @@ class Food(db.Model):
             "restaurant": self.restaurant,
             "calories": self.calories,
             "protein": self.protein,
-            "canOthersUse": self.can_others_use
+            "canOthersUse": self.can_others_use,
+            "unitOfServing": self.unit_of_serving,
         }

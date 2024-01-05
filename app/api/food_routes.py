@@ -36,7 +36,8 @@ def create_food():
             protein=data["protein"],
             created_by_user_id=current_user.id,
             can_others_use=data["can_others_use"],
-            is_deleted=False
+            is_deleted=False,
+            unit_of_serving=data["unit_of_serving"].title()
         )
 
         db.session.add(food)
