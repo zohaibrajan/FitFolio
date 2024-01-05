@@ -36,6 +36,7 @@ function SignupFormPage() {
     password: "",
     confirmPassword: "",
     current_weight_lbs: "",
+    dob: "",
   });
   const [goal, setGoal] = useState("");
   const [gender, setGender] = useState("");
@@ -61,14 +62,6 @@ function SignupFormPage() {
     confirmPassword === "";
   const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
 
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   dispatch(getUsersGoalThunk());
-  // }, [dispatch]);
-
-  // if (userGoal.caloriesPerDay) {
-  //   return <Redirect to="/my-home/diary" />;
-  // }
 
   useEffect(() => {
     if (sessionUser) {
@@ -272,6 +265,15 @@ function SignupFormPage() {
       );
     }
   };
+
+  const checkDate = (date) => {
+    console.log(date);
+    console.log('-', formattedDate);
+    if (date === formattedDate) {
+      setErrors({ ...errors, dob: "Please enter a valid date" });
+    }
+  };
+
 
   const checkUsername = (username) => {
     if (username.length < 6) {
@@ -515,10 +517,27 @@ function SignupFormPage() {
                   value={date}
                   pattern="\d{4}-\d{2}-\d{2}"
                   max={formattedDate}
-                  onChange={(e) => setDate(e.target.value)}
+                  onBlur={(e) => checkDate(e.target.value)}
+                  onChange={(e) => {
+                    setErrors({ ...errors, dob: "" });
+                    setDate(e.target.value)}}
                   required
                 ></input>
               </label>
+              {errors.dob ? (
+                <div className="goal-errors" style={{ marginTop: "5px" }}>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "red",
+                    }}
+                  >
+                    {errors.dob}
+                  </span>
+                </div>
+              ) : (
+                <div className="goal-errors" style={{ marginTop: "5px" }}></div>
+              )}
               <div className="height-labels-container">
                 <span>How tall are you?</span>
                 <div className="height-choices-in-signup-form">
