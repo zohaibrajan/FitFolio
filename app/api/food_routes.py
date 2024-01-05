@@ -28,6 +28,11 @@ def create_food():
 
     if form.validate_on_submit():
         data = form.data
+        unit = data["unit_of_serving"]
+
+        if unit.endswith("s"):
+            unit = unit[:-1]
+
 
         food = Food(
             name=data["name"].title(),
@@ -37,7 +42,7 @@ def create_food():
             created_by_user_id=current_user.id,
             can_others_use=data["can_others_use"],
             is_deleted=False,
-            unit_of_serving=data["unit_of_serving"].title()
+            unit_of_serving=unit.title()
         )
 
         db.session.add(food)
@@ -111,12 +116,17 @@ def update_food(food):
 
     if form.validate_on_submit():
         data = form.data
+        unit = data["unit_of_serving"]
 
-        food.name = data["name"]
-        food.restaurant = data["restaurant"]
+        if unit.endswith("s"):
+            unit = unit[:-1]
+
+
+        food.name = data["name"].title()
+        food.restaurant = data["restaurant"].title()
         food.calories = data["calories"]
         food.protein = data["protein"]
-        food.unit_of_serving = data["unit_of_serving"]
+        food.unit_of_serving = unit.title()
 
         db.session.commit()
 
