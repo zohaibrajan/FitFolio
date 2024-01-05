@@ -17,6 +17,7 @@ def seed_foods():
                         created_by_user_id = int(row[4]),
                         can_others_use = True,
                         is_deleted = False,
+                        unit_of_serving = row[5]
                   )
                   db.session.add(food)
                   db.session.commit()

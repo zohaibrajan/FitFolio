@@ -21,6 +21,9 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
   const { closeModal } = useModal();
   const today = gettingTodaysDate();
   const history = useHistory();
+  const [servingUnit, setServingUnit] = useState(
+    formType === "update" ? log.food.unitOfServing : ""
+  );
   const foods = Object.values(foodsObj);
   const [searchTerm, setSearchTerm] = useState(
     formType === "update" ? log.food.name : foodName
@@ -55,6 +58,7 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
     if (item) {
       setCaloriesConsumed(servings * item.calories);
       setProteinConsumed(servings * item.protein);
+      setServingUnit(item.unitOfServing)
     }
     // eslint-disable-next-line
   }, [foodId, servings, foodsObj, dispatch]);
@@ -159,6 +163,9 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
             value={servings}
             onChange={(e) => setServings(e.target.value)}
           />
+          {isFoodSelected && (
+              <span style={{fontSize: "10px"}}>{servingUnit}</span>
+          ) }
         </label>
         <label className="cardio-log-labels">
           Date:

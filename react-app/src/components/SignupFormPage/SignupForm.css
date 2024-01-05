@@ -222,3 +222,20 @@
     background-color: rgb(140, 140, 140);
     color: white;
 }
+
+
+.signup-form-errors {
+    min-height: 10px;
+    margin-bottom: 12px;
+    max-height: 10px;
+}
+
+
+.height-errors {
+    display: flex;
+    justify-content: center;
+    min-height: 10px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    max-height: 10px;
+}

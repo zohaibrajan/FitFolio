@@ -11,7 +11,7 @@ const removeUser = () => ({
 	type: REMOVE_USER,
 });
 
-const initialState = { user: null };
+
 
 export const authenticate = () => async (dispatch) => {
 	const response = await fetch("/api/auth/", {
@@ -87,7 +87,7 @@ export const signUp = (signUpForm) => async (dispatch) => {
 	}
 };
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = { user: null }, action) {
 	switch (action.type) {
 		case SET_USER:
 			return { user: action.payload };

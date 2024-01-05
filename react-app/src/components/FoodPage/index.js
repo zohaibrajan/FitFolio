@@ -53,22 +53,29 @@ function FoodPage() {
     if (foodExists) {
       setErrors({ ...errors, name: "Food already exists" });
     }
+
+    if (foodName.length > 50 || foodName.length < 4) {
+      setErrors({
+        ...errors,
+        name: "Food name invalid",
+      });
+    }
   };
 
   const checkRestaurants = (restaurant) => {
-    if (restaurant.length > 50) {
+    if (restaurant.length > 50 || restaurant.length < 4) {
       setErrors({
         ...errors,
-        restaurant: "Restaurant name must be less than 50 characters",
+        restaurant: "Restaurant name invalid",
       });
     }
   };
 
   const checkUnits = (units) => {
-    if (units.length > 50) {
+    if (units.length > 15 || units.length < 2) {
       setErrors({
         ...errors,
-        unit: "Unit name must be less than 50 characters",
+        unit: "Unit name invalid",
       });
     }
   };
@@ -102,9 +109,10 @@ function FoodPage() {
     const foodLog = new FormData();
     newFood.append("name", canOthersUse ? foodName : `${foodName}*`);
     newFood.append("restaurant", restaurant);
-    newFood.append("calories", servings > 1 ? calories / servings : calories);
-    newFood.append("protein", servings > 1 ? protein / servings : protein);
+    newFood.append("calories", servings > 1 ? Math.ceil(calories / servings) : calories);
+    newFood.append("protein", servings > 1 ? Math.ceil(protein / servings) : protein);
     newFood.append("can_others_use", canOthersUse);
+    newFood.append("unit_of_serving", units);
     foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
     foodLog.append("servings", servings);
     foodLog.append("date", formattingUserInputDate(date.selectedDate));
