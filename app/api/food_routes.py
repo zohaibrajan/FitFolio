@@ -116,6 +116,7 @@ def update_food(food):
         food.restaurant = data["restaurant"]
         food.calories = data["calories"]
         food.protein = data["protein"]
+        food.unit_of_serving = data["unit_of_serving"]
 
         db.session.commit()
 

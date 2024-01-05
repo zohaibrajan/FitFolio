@@ -104,8 +104,8 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     const formData = new FormData();
     formData.append("name", `${foodName}*`);
     formData.append("restaurant", restaurant);
-    formData.append("calories", servings > 1 ? calories / servings : calories);
-    formData.append("protein", servings > 1 ? protein / servings : protein);
+    formData.append("calories", servings > 1 ? Math.ceil(calories / servings) : calories);
+    formData.append("protein", servings > 1 ? Math.ceil(protein / servings) : protein);
     formData.append("unit_of_serving", units);
 
     try {

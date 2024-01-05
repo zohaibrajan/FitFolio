@@ -109,10 +109,10 @@ function FoodPage() {
     const foodLog = new FormData();
     newFood.append("name", canOthersUse ? foodName : `${foodName}*`);
     newFood.append("restaurant", restaurant);
-    newFood.append("calories", servings > 1 ? calories / servings : calories);
-    newFood.append("protein", servings > 1 ? protein / servings : protein);
+    newFood.append("calories", servings > 1 ? Math.ceil(calories / servings) : calories);
+    newFood.append("protein", servings > 1 ? Math.ceil(protein / servings) : protein);
     newFood.append("can_others_use", canOthersUse);
-    newFood.append("unit_of_servings", units);
+    newFood.append("unit_of_serving", units);
     foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
     foodLog.append("servings", servings);
     foodLog.append("date", formattingUserInputDate(date.selectedDate));
