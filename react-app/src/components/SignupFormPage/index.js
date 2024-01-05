@@ -19,6 +19,7 @@ function SignupFormPage() {
   const formattedDate =
     day >= 10 ? `${year}-${month}-${day}` : `${year}-${month}-0${day}`;
   const dispatch = useDispatch();
+  const sessionUser = useSelector((state) => state.session.user);
   const userGoal = useSelector((state) => state.goal);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -60,12 +61,23 @@ function SignupFormPage() {
     confirmPassword === "";
   const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
 
-  useEffect(() => {
-    setIsLoading(true);
-    dispatch(getUsersGoalThunk());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   dispatch(getUsersGoalThunk());
+  // }, [dispatch]);
 
-  if (userGoal.caloriesPerDay) {
+  // if (userGoal.caloriesPerDay) {
+  //   return <Redirect to="/my-home/diary" />;
+  // }
+
+  useEffect(() => {
+    if (sessionUser) {
+      setIsLoading(true);
+      dispatch(getUsersGoalThunk());
+    }
+  }, [dispatch, sessionUser]);
+
+  if (sessionUser && userGoal.caloriesPerDay) {
     return <Redirect to="/my-home/diary" />;
   }
 
