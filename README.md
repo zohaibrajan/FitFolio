@@ -88,6 +88,9 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 ### Exercise Page
 ![](./images/exercisepage.gif)
 
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
 
 ### Let's Connect
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/zohaib-rajan-718198216/)
