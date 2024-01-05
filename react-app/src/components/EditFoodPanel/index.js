@@ -34,6 +34,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     setRestaurant(selectedFood.restaurant);
     setCalories(selectedFood.calories);
     setProtein(selectedFood.protein);
+    setUnits(selectedFood.unitOfServing);
   }, [selectedFood]);
 
   const isEmpty = (str) => str === "";
@@ -52,22 +53,30 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     if (foodExists) {
       setErrors({ ...errors, name: "Food already exists" });
     }
+
+
+    if (foodName.length > 50 || foodName.length < 4) {
+      setErrors({
+        ...errors,
+        name: "Food name invalid",
+      });
+    }
   };
 
   const checkRestaurants = (restaurant) => {
-    if (restaurant.length > 50) {
+    if (restaurant.length > 50 || restaurant.length < 4) {
       setErrors({
         ...errors,
-        restaurant: "Restaurant name must be less than 50 characters",
+        restaurant: "Restaurant name invalid",
       });
     }
   };
 
   const checkUnits = (units) => {
-    if (units.length > 50) {
+    if (units.length > 50 || units.length < 1) {
       setErrors({
         ...errors,
-        unit: "Unit name must be less than 50 characters",
+        unit: "Unit name invalid",
       });
     }
   };
@@ -85,10 +94,10 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
   };
 
   const checkServings = (servings) => {
-      if (servings < 1) {
-        setErrors({ ...errors, servings: "Servings must be greater than 0" });
-      }
-    };
+    if (servings < 1) {
+      setErrors({ ...errors, servings: "Servings must be greater than 0" });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,6 +106,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     formData.append("restaurant", restaurant);
     formData.append("calories", servings > 1 ? calories / servings : calories);
     formData.append("protein", servings > 1 ? protein / servings : protein);
+    formData.append("unit_of_serving", units);
 
     try {
       await dispatch(updateUserFoodThunk(foodId, formData));
