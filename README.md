@@ -10,6 +10,22 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 3. Navigate to the nutrition tracking section to log your daily calorie intake.
 4. Navigate to the exercise logging section to log your cardio and weight training sessions.
 
+
+## Installation Instruction
+1. Clone the repository: `git clone https://github.com/zohaibrajan/FitFolio.git`
+2. Set up .env file, see .env.example for assistance
+3. Install Dependencies: `pip install -r requirements.txt`
+4. Set up virtual environment: `pipenv shell`
+5. Database Setup, run the following commands
+    - `flask db upgrade`
+    - `flask seed all`
+    - `flask run`
+6. Open a New Terminal, navigate to the react-app folder: `cd react-app-folder`
+7. Install Dependencies: `npm install`
+8. Run application: `npm start`
+9. Visit http://localhost:3000 in your browser to see the React application running.
+
+
 ## Features
 
 * Personalized nutrition tracking: Keep track of your daily calorie intake and monitor your diet.
@@ -25,7 +41,7 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 ##### Database, Deployment and Hosting
  ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
  ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
- ![Docker](https://camo.githubusercontent.com/f6e929cfc4dad2aea20e8f6574a20cfe4749cac8c919b166a4eb4abfd01ec0fd/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d446f636b65722d2532333234393645443f7374796c653d666f722d7468652d6261646765266c6f676f3d646f636b6572266c6f676f436f6c6f723d7768697465)
+ ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 
 ## Index
