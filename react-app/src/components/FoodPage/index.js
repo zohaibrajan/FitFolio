@@ -72,7 +72,7 @@ function FoodPage() {
   };
 
   const checkUnits = (units) => {
-    if (units.length > 50 || units.length < 2) {
+    if (units.length > 15 || units.length < 2) {
       setErrors({
         ...errors,
         unit: "Unit name invalid",

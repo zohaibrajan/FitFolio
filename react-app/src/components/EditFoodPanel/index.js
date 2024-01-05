@@ -73,7 +73,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
   };
 
   const checkUnits = (units) => {
-    if (units.length > 50 || units.length < 1) {
+    if (units.length > 15 || units.length < 1) {
       setErrors({
         ...errors,
         unit: "Unit name invalid",

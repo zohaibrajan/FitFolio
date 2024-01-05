@@ -164,9 +164,7 @@ function FoodLogModal({ formType = "create", log = {}, foodName = "", foodIdProp
             onChange={(e) => setServings(e.target.value)}
           />
           {isFoodSelected && (
-            <div>
-              <span>{servingUnit}</span>
-            </div>
+              <span style={{fontSize: "10px"}}>{servingUnit}</span>
           ) }
         </label>
         <label className="cardio-log-labels">
