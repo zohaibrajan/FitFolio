@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
-import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
 import { createCardioExerciseThunk } from "../../store/cardioExercises";
 import { createWeightExerciseThunk } from "../../store/weightExercises";
@@ -64,7 +63,6 @@ function ExercisePage() {
   useEffect(() => {
     if (exerciseType === "cardio") {
       dispatch(getAllCardioExercisesThunk());
-      dispatch(getUsersCardioExercisesThunk());
     } else {
       dispatch(getAllWeightExercisesThunk());
     }
