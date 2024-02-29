@@ -12,8 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import "./MyExercises.css";
 import EditExercisePanel from "../EditExercisePanel";
 
-function MyExercises({ exerciseType }) {
-  exerciseType = exerciseType.charAt(0).toUpperCase() + exerciseType.slice(1);
+function MyExercises() {
+  // exerciseType = exerciseType.charAt(0).toUpperCase() + exerciseType.slice(1);
+  const [exerciseType, setExerciseType] = useState("Cardio"); // ["Cardio", "Strength"]
   const dispatch = useDispatch();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState({});
@@ -52,11 +53,26 @@ function MyExercises({ exerciseType }) {
       <div className="exercise-container">
         <div className="all-exercise-cards">
           <div className="my-exercise-title-container">
-            <span>My {exerciseType} Exercises</span>
+            <span>
+              My
+              <select
+                onChange={(e) => setExerciseType(e.target.value)}
+                className="exercise-type-select"
+              >
+                <option value="Cardio">
+                  Cardio
+                </option>
+                <option value="Strength">
+                  Strength
+                </option>
+              </select>
+              Exercises
+            </span>
           </div>
           <div className="my-exercise-text">
             <p>
-              Welcome to the exercise section! Here you can view all of your Exercises
+              Welcome to the exercise section! Here you can view all of your
+              Exercises
             </p>
           </div>
 
@@ -139,7 +155,8 @@ function MyExercises({ exerciseType }) {
               className="next-my-exercise-button"
               disabled={
                 currentPage ===
-                Math.ceil(userExercises.length / exercisesPerPage) || userExercises.length === 0
+                  Math.ceil(userExercises.length / exercisesPerPage) ||
+                userExercises.length === 0
               }
             >
               Next
