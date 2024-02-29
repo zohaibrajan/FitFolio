@@ -579,10 +579,10 @@ def creating_user_goal():
         calories_per_day = None
 
         if gender == "Female":
-            maintenance_calories = calculate_bmr_for_women(starting_weight_kg, height, age)
+            maintenance_calories = calculate_bmr_for_women(starting_weight_kg, height, age) + 600
 
         if gender == "Male":
-            maintenance_calories = calculate_bmr_for_men(starting_weight_kg, height, age)
+            maintenance_calories = calculate_bmr_for_men(starting_weight_kg, height, age) + 600
 
         if goal == "Maintain Weight":
             calories_per_day = maintenance_calories
