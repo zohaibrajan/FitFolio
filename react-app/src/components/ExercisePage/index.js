@@ -219,6 +219,7 @@ function ExercisePage() {
             >
               Exercise Name
               <input
+                className="exercise-inputs"
                 type="text"
                 value={exerciseName}
                 placeholder="Exercise Name eg. Running"
@@ -261,12 +262,12 @@ function ExercisePage() {
             {exerciseType === "cardio" ? (
               <>
                 <label
-                  className="cardio-labels"
+                  className="exercise-labels"
                   style={{ marginBottom: "5px" }}
                 >
                   Intensity?
                   <select
-                    className="cardio-input"
+                    className="exercise-inputs"
                     name="intensity"
                     value={intensity}
                     onChange={(e) => setIntensity(e.target.value)}
@@ -276,11 +277,11 @@ function ExercisePage() {
                     <option value="High">High</option>
                   </select>
                 </label>
-                <div className="exercise-name-error"></div>
-                <label className="cardio-labels">
+                <span style={{ height: "5px" }}></span>
+                <label className="exercise-labels">
                   How Long? (Minutes)
                   <input
-                    className="cardio-input"
+                    className="exercise-inputs"
                     type="number"
                     value={duration}
                     placeholder="Duration eg. 30"
@@ -299,10 +300,10 @@ function ExercisePage() {
                 ) : (
                   <div className="exercise-name-error"></div>
                 )}
-                <label className="cardio-labels">
+                <label className="exercise-labels">
                   Calories Burned
                   <input
-                    className="cardio-input"
+                    className="exercise-inputs"
                     type="number"
                     min={0}
                     placeholder="Calories Burned eg. 300"
@@ -324,10 +325,10 @@ function ExercisePage() {
               </>
             ) : (
               <>
-                <label className="cardio-labels">
+                <label className="exercise-labels">
                   Sets
                   <input
-                    className="cardio-input"
+                    className="exercise-inputs"
                     type="number"
                     value={sets}
                     placeholder="Sets eg. 3"
@@ -343,10 +344,10 @@ function ExercisePage() {
                 ) : (
                   <div className="exercise-name-error"></div>
                 )}
-                <label className="cardio-labels">
+                <label className="exercise-labels">
                   Repetitions:
                   <input
-                    className="cardio-input"
+                    className="exercise-inputs"
                     type="number"
                     value={reps}
                     placeholder="Repetitions eg. 10"
@@ -362,10 +363,10 @@ function ExercisePage() {
                 ) : (
                   <div className="exercise-name-error"></div>
                 )}
-                <label className="cardio-labels">
+                <label className="exercise-labels">
                   Weight Per Repetition:
                   <input
-                    className="cardio-input"
+                    className="exercise-inputs"
                     type="number"
                     placeholder="Weight Per Rep eg. 50"
                     value={weightPerRep}
