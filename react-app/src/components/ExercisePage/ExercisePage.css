@@ -96,20 +96,9 @@
     cursor: pointer;
 }
 
-.create-exercise-button:disabled {
-    display: flex;
-    border-radius: 3px;
-    justify-content: center;
-    font-family: "Inter", Helvetica, Arial, sans-serif;
-    align-items: center;
+.create-exercise-button:disabled, .create-exercise-button:disabled:hover {
     background-color: #8c8c8c;
     border: 1px solid #8c8c8c;
-    color: white;
-    padding: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    width: 100px;
-    height: 30px;
     cursor: not-allowed;
 }
 

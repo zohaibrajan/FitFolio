@@ -52,7 +52,11 @@ function MyExercises({ exerciseType }) {
       <div className="exercise-container">
         <div className="all-exercise-cards">
           <div className="my-exercise-title-container">
-            <span>My {exerciseType} Exercises</span>
+            <span>My
+              <input type="select">
+              </input>
+            Exercises
+            </span>
           </div>
           <div className="my-exercise-text">
             <p>
