@@ -56,10 +56,6 @@ function ExercisePage() {
   const disabled =
     commonChecks || (exerciseType === "cardio" ? cardioChecks : weightChecks);
 
-  const buttonStyle = disabled
-    ? "create-exercise-button-disabled"
-    : "create-exercise-button";
-
   useEffect(() => {
     if (exerciseType === "cardio") {
       dispatch(getAllCardioExercisesThunk());
@@ -172,7 +168,6 @@ function ExercisePage() {
         await dispatch(createCardioLogThunk(cardioLog));
         history.replace("/my-home/diary");
       } catch (e) {
-        // const cardioErrors = await e.json();
         console.error(e);
       }
     } else {
@@ -190,7 +185,6 @@ function ExercisePage() {
         await dispatch(createWeightLogThunk(strengthLog));
         history.replace("/my-home/diary");
       } catch (e) {
-        // const strengthErrors = await e.json();
         console.error(e);
       }
     }
@@ -387,7 +381,11 @@ function ExercisePage() {
               </>
             )}
             <div className="create-exercise-button-container">
-              <button type="submit" className={buttonStyle} disabled={disabled}>
+              <button
+                type="submit"
+                className="create-exercise-button"
+                disabled={disabled}
+              >
                 Add Exercise
               </button>
             </div>

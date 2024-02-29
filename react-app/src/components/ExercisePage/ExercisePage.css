@@ -96,7 +96,7 @@
     cursor: pointer;
 }
 
-.create-exercise-button-disabled {
+.create-exercise-button:disabled {
     display: flex;
     border-radius: 3px;
     justify-content: center;
