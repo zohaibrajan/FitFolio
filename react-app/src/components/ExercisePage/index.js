@@ -271,7 +271,7 @@ function ExercisePage() {
                     <option value="High">High</option>
                   </select>
                 </label>
-                <span style={{ height: "5px" }}></span>
+                <span style={{ height: "10px" }}></span>
                 <label className="exercise-labels">
                   How Long? (Minutes)
                   <input
