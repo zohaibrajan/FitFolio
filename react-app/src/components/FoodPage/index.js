@@ -163,7 +163,7 @@ function FoodPage() {
             <label className="food-labels">
               Restaurant
               <span style={{ fontWeight: "400", fontSize: "12px" }}>
-                If this food is home-made, please type "Home-made"
+                If this item is home-made, please type "Home-made"
               </span>
               <input
                 type="text"
