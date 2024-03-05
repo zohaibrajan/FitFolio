@@ -3,7 +3,7 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
-import { useRemoveCardioLog } from "../../utils";
+import { useRemoveCardioLog, useRemoveStrengthLog } from "../../utils";
 import { formattingUserInputDate } from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
@@ -11,8 +11,6 @@ import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
 import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
 import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCardioLogThunk } from "../../store/cardioLogs";
-import { deleteWeightLogThunk } from "../../store/weightLogs";
 import { deleteFoodLogThunk } from "../../store/foodLogs";
 import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import DatePicker from "react-datepicker";
@@ -23,6 +21,8 @@ import "./Diary.css";
 function Diary() {
   const dispatch = useDispatch();
   const today = new Date();
+  const removeCardioLog = useRemoveCardioLog();
+  const removeWeightLog = useRemoveStrengthLog();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const weightLogsObj = useSelector((state) => state.weightLogs);
@@ -64,20 +64,6 @@ function Diary() {
     }
     setCaloriesConsumed(caloriesC);
   }, [cardioLogs, foodLogs]);
-
-  // const removeCardioLog = (e, cardioLogId) => {
-  //   e.preventDefault();
-  //   dispatch(deleteCardioLogThunk(cardioLogId));
-  // };
-
-  const removeCardioLog = useRemoveCardioLog();
-
-
-
-  const removeWeightLog = (e, weightLodId) => {
-    e.preventDefault();
-    dispatch(deleteWeightLogThunk(weightLodId));
-  };
 
   const removeFoodLog = (e, foodLogId) => {
     e.preventDefault();
