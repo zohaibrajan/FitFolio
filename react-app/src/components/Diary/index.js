@@ -94,10 +94,6 @@ function Diary() {
     (selectedDate.getFullYear() === today.getFullYear() &&
       selectedDate.getMonth() === today.getMonth() &&
       selectedDate.getDate() >= today.getDate());
-  const nextDayButtonStyle = isTodayOrFuture
-    ? "next-date-button-disabled"
-    : "next-date-button";
-
 
   return (
     <>
@@ -147,7 +143,7 @@ function Diary() {
                   }}
                 />
                 <button
-                  className={nextDayButtonStyle}
+                  className="next-date-button"
                   onClick={incrementDate}
                   disabled={isTodayOrFuture}
                 >
@@ -183,11 +179,13 @@ function Diary() {
           </div>
 
           <div className="all-diary-logs">
-            <div className="diary-details-title" style={{display: "flex", justifyContent: "space-between"}}>
+            <div
+              className="diary-details-title"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <span>Todays Diary</span>
               <span style={{ fontSize: "12px", fontWeight: "600" }}>
-                Exercises and Foods marked with a *{" "}
-                are your custom.
+                Exercises and Foods marked with a * are your custom.
               </span>
             </div>
             <div className="users-log-container">
