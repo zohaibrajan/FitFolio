@@ -3,6 +3,7 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
+import { useRemoveCardioLog } from "../../utils";
 import { formattingUserInputDate } from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
@@ -64,10 +65,14 @@ function Diary() {
     setCaloriesConsumed(caloriesC);
   }, [cardioLogs, foodLogs]);
 
-  const removeCardioLog = (e, cardioLogId) => {
-    e.preventDefault();
-    dispatch(deleteCardioLogThunk(cardioLogId));
-  };
+  // const removeCardioLog = (e, cardioLogId) => {
+  //   e.preventDefault();
+  //   dispatch(deleteCardioLogThunk(cardioLogId));
+  // };
+
+  const removeCardioLog = useRemoveCardioLog();
+
+
 
   const removeWeightLog = (e, weightLodId) => {
     e.preventDefault();
