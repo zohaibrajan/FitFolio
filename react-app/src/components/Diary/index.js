@@ -3,15 +3,19 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
-import { useRemoveCardioLog, useRemoveStrengthLog } from "../../utils";
-import { formattingUserInputDate } from "../../utils";
+import {
+  useRemoveCardioLog,
+  useRemoveStrengthLog,
+  useRemoveFoodLog,
+  isTodayOrFuture,
+  formattingUserInputDate,
+} from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
 import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
 import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
 import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteFoodLogThunk } from "../../store/foodLogs";
 import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import DatePicker from "react-datepicker";
 import { addDays, subDays } from "date-fns";
@@ -23,6 +27,7 @@ function Diary() {
   const today = new Date();
   const removeCardioLog = useRemoveCardioLog();
   const removeWeightLog = useRemoveStrengthLog();
+  const removeFoodLog = useRemoveFoodLog();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const weightLogsObj = useSelector((state) => state.weightLogs);
@@ -65,11 +70,6 @@ function Diary() {
     setCaloriesConsumed(caloriesC);
   }, [cardioLogs, foodLogs]);
 
-  const removeFoodLog = (e, foodLogId) => {
-    e.preventDefault();
-    dispatch(deleteFoodLogThunk(foodLogId));
-  };
-
   const incrementDate = () => {
     setSelectedDate(addDays(selectedDate, 1));
   };
@@ -77,14 +77,6 @@ function Diary() {
   const decrementDate = () => {
     setSelectedDate(subDays(selectedDate, 1));
   };
-
-  const isTodayOrFuture =
-    selectedDate.getFullYear() > today.getFullYear() ||
-    (selectedDate.getFullYear() === today.getFullYear() &&
-      selectedDate.getMonth() > today.getMonth()) ||
-    (selectedDate.getFullYear() === today.getFullYear() &&
-      selectedDate.getMonth() === today.getMonth() &&
-      selectedDate.getDate() >= today.getDate());
 
   return (
     <>
@@ -136,7 +128,7 @@ function Diary() {
                 <button
                   className="next-date-button"
                   onClick={incrementDate}
-                  disabled={isTodayOrFuture}
+                  disabled={isTodayOrFuture(selectedDate)}
                 >
                   <i
                     className="fa-solid fa-angle-right"
@@ -362,32 +354,6 @@ function Diary() {
                   </table>
                 </div>
               </div>
-              {/* <div className="users-logs">
-                <h4>Foods: </h4>
-                {!foodLogs.length ? (
-                  <div>No Food Logs</div>
-                ) : (
-                  foodLogs.map((log) => (
-                    <div key={log.id}>
-                      <span>{log.food.name}</span>
-                      <span>{log.totalCaloriesConsumed}</span>:
-                      <span>{log.totalProteinConsumed}</span>:
-                      <button onClick={(e) => removeFoodLog(e, log.id)}>
-                        <i
-                          className="fa-solid fa-circle-minus"
-                          style={{ color: "#ff0000" }}
-                        ></i>
-                      </button>
-                      <OpenModalButton
-                        buttonText={"Edit Food Item"}
-                        modalComponent={
-                          <FoodLogModal formType="update" log={log} />
-                        }
-                      />
-                    </div>
-                  ))
-                )}
-              </div> */}
             </div>
           </div>
         </div>
