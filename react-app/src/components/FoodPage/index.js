@@ -98,9 +98,6 @@ function FoodPage() {
     }
   };
 
-  const buttonStyle = disabled
-    ? "create-food-button-disabled"
-    : "create-food-button";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -195,7 +192,8 @@ function FoodPage() {
                   onBlur={(e) => checkServings(e.target.value)}
                   onChange={(e) => {
                     setErrors({ ...errors, servings: "" });
-                    setServings(e.target.value)}}
+                    setServings(e.target.value);
+                  }}
                 />
                 <input
                   type="text"
@@ -206,12 +204,15 @@ function FoodPage() {
                   onBlur={(e) => checkUnits(e.target.value)}
                   onChange={(e) => {
                     setErrors({ ...errors, unit: "" });
-                    setUnits(e.target.value)}}
+                    setUnits(e.target.value);
+                  }}
                 />
               </div>
             </label>
             {errors.unit || errors.servings ? (
-              <div className="exercise-name-error">{errors.unit || errors.servings}</div>
+              <div className="exercise-name-error">
+                {errors.unit || errors.servings}
+              </div>
             ) : (
               <div className="exercise-name-error"></div>
             )}
@@ -226,7 +227,7 @@ function FoodPage() {
                 onBlur={(e) => checkCalories(e.target.value)}
                 onChange={(e) => {
                   setErrors({ ...errors, calories: "" });
-                  setCalories(e.target.value)
+                  setCalories(e.target.value);
                 }}
               />
             </label>
@@ -246,7 +247,7 @@ function FoodPage() {
                 onBlur={(e) => checkProtein(e.target.value)}
                 onChange={(e) => {
                   setErrors({ ...errors, protein: "" });
-                  setProtein(e.target.value)
+                  setProtein(e.target.value);
                 }}
               />
             </label>
@@ -265,13 +266,18 @@ function FoodPage() {
             </label>
             {canOthersUse ? (
               <div className="exercise-name-error">
-              {" "} You will not be able to delete or edit this item once created
+                {" "}
+                You will not be able to delete or edit this item once created
               </div>
             ) : (
               <div className="exercise-name-error"></div>
             )}
             <div className="create-food-button-container">
-              <button className={buttonStyle} type="submit" disabled={disabled}>
+              <button
+                className="create-food-button"
+                type="submit"
+                disabled={disabled}
+              >
                 Create Food
               </button>
             </div>

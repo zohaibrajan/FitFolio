@@ -108,7 +108,7 @@
     cursor: pointer;
 }
 
-.create-food-button-disabled {
+.create-food-button:disabled, .create-food-button:disabled:hover {
     display: flex;
     border-radius: 3px;
     justify-content: center;
