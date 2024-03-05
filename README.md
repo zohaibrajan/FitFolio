@@ -1,7 +1,6 @@
 # FitFolio
 
-Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yourself in a curated community where fitness enthusiasts converge to acquire and exchange empowering choices. From personalized nutrition tracking to seamless exercise logging, FitFolio offers a tailored experience for all health goals. Join us on this exhilarating adventure into the heart of wellness, where every mindful choice contributes to a tapestry of personal triumphs. Celebrate your journey at FitFolio, fostering a supportive community that cheers for every step, lift, and achievement. Indulge your passion for well-being, and let every rep and achievement tell your unique story of vitality!
-
+A fitness tracking app developed with React, Redux, JavaScript, Python, PostgreSQL, and Flask. Designed for simplicity, FitFolio offers seamless progress tracking and an intuitive fitness monitoring experience. Elevate your fitness journey with the streamlined features of FitFolio.
 
 ## How to Use
 
@@ -82,15 +81,17 @@ Hello from FitFolio, your vibrant hub for a healthier lifestyle! Immerse yoursel
 ### Home Page / Diary
 ![](./images/homepage.gif)
 
-### Goal Page
+<!-- ### Goal Page
 ![](./images/goal.gif)
 
 ### Exercise Page
-![](./images/exercisepage.gif)
+![](./images/exercisepage.gif) -->
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 
 ### Let's Connect
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/zohaib-rajan-718198216/)
+<a href="https://www.linkedin.com/in/zohaib-rajan-718198216/" target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+</a>
