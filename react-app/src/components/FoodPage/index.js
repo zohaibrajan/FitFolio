@@ -8,7 +8,14 @@ import { getUserFoodsThunk } from "../../store/userFoods";
 import { useDispatch } from "react-redux";
 import { createFoodLogThunk } from "../../store/foodLogs";
 import { useSelectedDate } from "../../context/SelectedDate";
-import { formattingUserInputDate } from "../../utils";
+import {
+  formattingUserInputDate,
+  checkRestaurants,
+  checkUnits,
+  checkCalories,
+  checkServings,
+  checkProtein,
+} from "../../utils";
 import "./FoodPage.css";
 
 function FoodPage() {
@@ -62,43 +69,6 @@ function FoodPage() {
     }
   };
 
-  const checkRestaurants = (restaurant) => {
-    if (restaurant.length > 50 || restaurant.length < 4) {
-      setErrors({
-        ...errors,
-        restaurant: "Restaurant name invalid",
-      });
-    }
-  };
-
-  const checkUnits = (units) => {
-    if (units.length > 15 || units.length < 2) {
-      setErrors({
-        ...errors,
-        unit: "Unit name invalid",
-      });
-    }
-  };
-
-  const checkCalories = (calories) => {
-    if (calories < 1) {
-      setErrors({ ...errors, calories: "Calories must be greater than 0" });
-    }
-  };
-
-  const checkProtein = (protein) => {
-    if (protein < 1) {
-      setErrors({ ...errors, protein: "Protein must be greater than 0" });
-    }
-  };
-
-  const checkServings = (servings) => {
-    if (servings < 1) {
-      setErrors({ ...errors, servings: "Servings must be greater than 0" });
-    }
-  };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -106,8 +76,14 @@ function FoodPage() {
     const foodLog = new FormData();
     newFood.append("name", canOthersUse ? foodName : `${foodName}*`);
     newFood.append("restaurant", restaurant);
-    newFood.append("calories", servings > 1 ? Math.ceil(calories / servings) : calories);
-    newFood.append("protein", servings > 1 ? Math.ceil(protein / servings) : protein);
+    newFood.append(
+      "calories",
+      servings > 1 ? Math.ceil(calories / servings) : calories
+    );
+    newFood.append(
+      "protein",
+      servings > 1 ? Math.ceil(protein / servings) : protein
+    );
     newFood.append("can_others_use", canOthersUse);
     newFood.append("unit_of_serving", units);
     foodLog.append("name", canOthersUse ? foodName : `${foodName}*`);
@@ -167,7 +143,9 @@ function FoodPage() {
                 value={restaurant}
                 required
                 placeholder="Restaurant"
-                onBlur={(e) => checkRestaurants(e.target.value)}
+                onBlur={(e) =>
+                  checkRestaurants(e.target.value, errors, setErrors)
+                }
                 onChange={(e) => {
                   setRestaurant(e.target.value);
                   setErrors({ ...errors, restaurant: "" });
@@ -189,7 +167,9 @@ function FoodPage() {
                   min={1}
                   required
                   placeholder="Servings eg. 1"
-                  onBlur={(e) => checkServings(e.target.value)}
+                  onBlur={(e) =>
+                    checkServings(e.target.value, errors, setErrors)
+                  }
                   onChange={(e) => {
                     setErrors({ ...errors, servings: "" });
                     setServings(e.target.value);
@@ -201,7 +181,7 @@ function FoodPage() {
                   id="units"
                   placeholder="Units eg. cup"
                   required
-                  onBlur={(e) => checkUnits(e.target.value)}
+                  onBlur={(e) => checkUnits(e.target.value, errors, setErrors)}
                   onChange={(e) => {
                     setErrors({ ...errors, unit: "" });
                     setUnits(e.target.value);
@@ -224,7 +204,7 @@ function FoodPage() {
                 value={calories}
                 required
                 placeholder="Calories in Serving"
-                onBlur={(e) => checkCalories(e.target.value)}
+                onBlur={(e) => checkCalories(e.target.value, errors, setErrors)}
                 onChange={(e) => {
                   setErrors({ ...errors, calories: "" });
                   setCalories(e.target.value);
@@ -244,7 +224,7 @@ function FoodPage() {
                 value={protein}
                 required
                 placeholder="Protein in Serving"
-                onBlur={(e) => checkProtein(e.target.value)}
+                onBlur={(e) => checkProtein(e.target.value, errors, setErrors)}
                 onChange={(e) => {
                   setErrors({ ...errors, protein: "" });
                   setProtein(e.target.value);

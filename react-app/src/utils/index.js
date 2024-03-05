@@ -1,5 +1,8 @@
 //Desc: This file contains all the utility functions used in the application
 
+export * from "./createFoodHelpers";
+
+
 export const gettingTodaysDate = () => {
     let today = new Date().getTime();
     today = new Date(today);
