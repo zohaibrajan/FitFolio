@@ -32,7 +32,7 @@
     width: 25px;
 }
 
-.next-date-button-disabled {
+.next-date-button:disabled, .next-date-button:disabled:hover {
     height: 30px;
     cursor: not-allowed;
     border-radius: 0 5px 5px 0;

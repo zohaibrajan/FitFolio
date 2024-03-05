@@ -3,16 +3,19 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
-import { formattingUserInputDate } from "../../utils";
+import {
+  useRemoveCardioLog,
+  useRemoveStrengthLog,
+  useRemoveFoodLog,
+  isTodayOrFuture,
+  formattingUserInputDate,
+} from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
 import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
 import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
 import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCardioLogThunk } from "../../store/cardioLogs";
-import { deleteWeightLogThunk } from "../../store/weightLogs";
-import { deleteFoodLogThunk } from "../../store/foodLogs";
 import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import DatePicker from "react-datepicker";
 import { addDays, subDays } from "date-fns";
@@ -22,6 +25,9 @@ import "./Diary.css";
 function Diary() {
   const dispatch = useDispatch();
   const today = new Date();
+  const removeCardioLog = useRemoveCardioLog();
+  const removeWeightLog = useRemoveStrengthLog();
+  const removeFoodLog = useRemoveFoodLog();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const weightLogsObj = useSelector((state) => state.weightLogs);
@@ -64,21 +70,6 @@ function Diary() {
     setCaloriesConsumed(caloriesC);
   }, [cardioLogs, foodLogs]);
 
-  const removeCardioLog = (e, cardioLogId) => {
-    e.preventDefault();
-    dispatch(deleteCardioLogThunk(cardioLogId));
-  };
-
-  const removeWeightLog = (e, weightLodId) => {
-    e.preventDefault();
-    dispatch(deleteWeightLogThunk(weightLodId));
-  };
-
-  const removeFoodLog = (e, foodLogId) => {
-    e.preventDefault();
-    dispatch(deleteFoodLogThunk(foodLogId));
-  };
-
   const incrementDate = () => {
     setSelectedDate(addDays(selectedDate, 1));
   };
@@ -86,18 +77,6 @@ function Diary() {
   const decrementDate = () => {
     setSelectedDate(subDays(selectedDate, 1));
   };
-
-  const isTodayOrFuture =
-    selectedDate.getFullYear() > today.getFullYear() ||
-    (selectedDate.getFullYear() === today.getFullYear() &&
-      selectedDate.getMonth() > today.getMonth()) ||
-    (selectedDate.getFullYear() === today.getFullYear() &&
-      selectedDate.getMonth() === today.getMonth() &&
-      selectedDate.getDate() >= today.getDate());
-  const nextDayButtonStyle = isTodayOrFuture
-    ? "next-date-button-disabled"
-    : "next-date-button";
-
 
   return (
     <>
@@ -147,9 +126,9 @@ function Diary() {
                   }}
                 />
                 <button
-                  className={nextDayButtonStyle}
+                  className="next-date-button"
                   onClick={incrementDate}
-                  disabled={isTodayOrFuture}
+                  disabled={isTodayOrFuture(selectedDate)}
                 >
                   <i
                     className="fa-solid fa-angle-right"
@@ -183,11 +162,13 @@ function Diary() {
           </div>
 
           <div className="all-diary-logs">
-            <div className="diary-details-title" style={{display: "flex", justifyContent: "space-between"}}>
+            <div
+              className="diary-details-title"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <span>Todays Diary</span>
               <span style={{ fontSize: "12px", fontWeight: "600" }}>
-                Exercises and Foods marked with a *{" "}
-                are your custom.
+                Exercises and Foods marked with a * are your custom.
               </span>
             </div>
             <div className="users-log-container">
@@ -373,32 +354,6 @@ function Diary() {
                   </table>
                 </div>
               </div>
-              {/* <div className="users-logs">
-                <h4>Foods: </h4>
-                {!foodLogs.length ? (
-                  <div>No Food Logs</div>
-                ) : (
-                  foodLogs.map((log) => (
-                    <div key={log.id}>
-                      <span>{log.food.name}</span>
-                      <span>{log.totalCaloriesConsumed}</span>:
-                      <span>{log.totalProteinConsumed}</span>:
-                      <button onClick={(e) => removeFoodLog(e, log.id)}>
-                        <i
-                          className="fa-solid fa-circle-minus"
-                          style={{ color: "#ff0000" }}
-                        ></i>
-                      </button>
-                      <OpenModalButton
-                        buttonText={"Edit Food Item"}
-                        modalComponent={
-                          <FoodLogModal formType="update" log={log} />
-                        }
-                      />
-                    </div>
-                  ))
-                )}
-              </div> */}
             </div>
           </div>
         </div>
