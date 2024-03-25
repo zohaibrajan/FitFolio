@@ -93,5 +93,6 @@ def delete_user_weight_exercise_version(weight_exercise):
     db.session.commit()
 
     return {
+        "message": "Successfully Deleted Weight Exercise Version",
         "userWeightExercise": weight_exercise.to_dict()
     }
