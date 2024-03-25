@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import db, UserWeightExerciseVersion
 from app.forms import WeightExerciseForm
-from app.utils import verify_weight_exercise
+from app.utils import verify_weight_exercise # custom decorator to verify if the exercise exists an current owner is the one who created it
 
 user_weight_exercise_versions_routes = Blueprint("user-weight-exercise-versions", __name__)
 
@@ -61,15 +61,14 @@ def update_user_weight_exercise_version(weight_exercise):
     if form.validate_on_submit():
         data = form.data
 
-        exercise_exists = UserWeightExerciseVersion.query.filter(
-            UserWeightExerciseVersion.created_by_user_id == current_user.id,
+        exercise_exists = UserWeightExerciseVersion.query.filter(            # checking if exercise already exists
             UserWeightExerciseVersion.is_deleted == False,
             UserWeightExerciseVersion.exercise_name.ilike(data["exercise_name"])
         ).first()
 
         if exercise_exists:
             return {
-                "errorMessage": "Sorry, Exercise Already Exists"
+                "errorMessage": "Sorry, Exercise Already Exists" # throw error if exercise already exists
             }, 400
 
         weight_exercise.exercise_name = data["exercise_name"] + "*"
