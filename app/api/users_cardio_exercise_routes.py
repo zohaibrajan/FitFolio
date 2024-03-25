@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import db, UserCardioExerciseVersion
 from app.forms import CardioExerciseForm
-from app.utils import verify_cardio_exercise
+from app.utils import verify_cardio_exercise # custom decorator to verify if the exercise exists an current owner is the one who created it
 
 
 user_cardio_exercise_routes = Blueprint("user-cardio-exercise", __name__)
