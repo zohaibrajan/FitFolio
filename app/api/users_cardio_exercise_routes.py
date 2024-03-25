@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import db, UserCardioExerciseVersion
 from app.forms import CardioExerciseForm
-from app.utils import verify_cardio_exercise
+from app.utils import verify_cardio_exercise # custom decorator to verify if the exercise exists an current owner is the one who created it
 
 
 user_cardio_exercise_routes = Blueprint("user-cardio-exercise", __name__)
@@ -71,10 +71,7 @@ def update_user_cardio_exercise(user_cardio_exercise):
 
         exercise_id = user_cardio_exercise.id
 
-        # exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
-
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
-            UserCardioExerciseVersion.created_by_user_id == current_user.id,
             UserCardioExerciseVersion.is_deleted == False,
             UserCardioExerciseVersion.id != exercise_id,
             UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])

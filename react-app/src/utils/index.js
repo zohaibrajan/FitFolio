@@ -2,6 +2,7 @@
 
 export * from "./createFoodHelpers";
 export * from "./diaryHelpers";
+export * from "./exerciseHelpers";
 
 
 export const gettingTodaysDate = () => {
