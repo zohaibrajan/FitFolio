@@ -12,6 +12,7 @@ import MyExercises from "../MyExercises";
 import "./ExercisePage.css";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { formattingUserInputDate } from "../../utils";
+import { checkDuration, checkCaloriesBurned, checkSets, checkReps, checkWeightPerRep } from "../../utils/exerciseHelpers"
 
 function ExercisePage() {
   const dispatch = useDispatch();
@@ -112,42 +113,6 @@ function ExercisePage() {
       });
     }
 
-  };
-
-  const checkDuration = (duration) => {
-    if (duration <= 0) {
-      setCardioErrors({ ...cardioErrors, duration: "Must be greater than 0" });
-    }
-  };
-
-  const checkCaloriesBurned = (caloriesBurned) => {
-    if (caloriesBurned <= 0) {
-      setCardioErrors({
-        ...cardioErrors,
-        calories: "Must be greater than 0",
-      });
-    }
-  };
-
-  const checkSets = (sets) => {
-    if (sets <= 0) {
-      setWeightErrors({ ...weightErrors, sets: "Must be greater than 0" });
-    }
-  };
-
-  const checkReps = (reps) => {
-    if (reps <= 0) {
-      setWeightErrors({ ...weightErrors, reps: "Must be greater than 0" });
-    }
-  };
-
-  const checkWeightPerRep = (weightPerRep) => {
-    if (weightPerRep <= 0) {
-      setWeightErrors({
-        ...weightErrors,
-        weightPerRep: "Must be greater than 0",
-      });
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -280,7 +245,7 @@ function ExercisePage() {
                     value={duration}
                     placeholder="Duration eg. 30"
                     min={0}
-                    onBlur={() => checkDuration(duration)}
+                    onBlur={(e) => checkDuration(e.target.value, cardioErrors, setCardioErrors)}
                     onChange={(e) => {
                       setDuration(e.target.value);
                       setCardioErrors({ ...cardioErrors, duration: "" });
@@ -302,7 +267,7 @@ function ExercisePage() {
                     min={0}
                     placeholder="Calories Burned eg. 300"
                     value={caloriesBurned}
-                    onBlur={() => checkCaloriesBurned(caloriesBurned)}
+                    onBlur={(e) => checkCaloriesBurned(e.target.value, cardioErrors, setCardioErrors)}
                     onChange={(e) => {
                       setCaloriesBurned(e.target.value);
                       setCardioErrors({ ...cardioErrors, calories: "" });
@@ -326,7 +291,7 @@ function ExercisePage() {
                     type="number"
                     value={sets}
                     placeholder="Sets eg. 3"
-                    onBlur={() => checkSets(sets)}
+                    onBlur={(e) => checkSets(e.target.value, weightErrors, setWeightErrors)}
                     onChange={(e) => {
                       setSets(e.target.value);
                       setWeightErrors({ ...weightErrors, sets: "" });
@@ -345,7 +310,7 @@ function ExercisePage() {
                     type="number"
                     value={reps}
                     placeholder="Repetitions eg. 10"
-                    onBlur={() => checkReps(reps)}
+                    onBlur={(e) => checkReps(e.target.value, weightErrors, setWeightErrors)}
                     onChange={(e) => {
                       setReps(e.target.value);
                       setWeightErrors({ ...weightErrors, reps: "" });
@@ -364,7 +329,7 @@ function ExercisePage() {
                     type="number"
                     placeholder="Weight Per Rep eg. 50"
                     value={weightPerRep}
-                    onBlur={() => checkWeightPerRep(weightPerRep)}
+                    onBlur={(e) => checkWeightPerRep(e.target.value, weightErrors, setWeightErrors)}
                     onChange={(e) => {
                       setWeightPerRep(e.target.value);
                       setWeightErrors({ ...weightErrors, weightPerRep: "" });
