@@ -6,7 +6,7 @@ import { getUsersGoalThunk } from "../../store/goal";
 import { useDispatch, useSelector } from "react-redux";
 import "./Diary.css";
 
-function Diary() {
+function Diary() { // Diary component - contains all other components. All goal related data is fetched and computed here
   const dispatch = useDispatch();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
@@ -26,21 +26,21 @@ function Diary() {
   }, [dispatch]);
 
   useEffect(() => { // calculating the total calories burned and consumed
-    let caloriesB = 0; // calories burned
-    let caloriesC = 0; // calories consumed
+    let caloriesBurn = 0; // calories burned
+    let caloriesCon = 0; // calories consumed
     if (cardioLogs.length) {
       cardioLogs.forEach((log) => {
-        caloriesB += log.caloriesBurned;
+        caloriesBurn += log.caloriesBurned;
       });
     }
-    setCaloriesBurned(caloriesB);
+    setCaloriesBurned(caloriesBurn);
 
     if (foodLogs.length) {
       foodLogs.forEach((log) => {
-        caloriesC += log.totalCaloriesConsumed;
+        caloriesCon += log.totalCaloriesConsumed;
       });
     }
-    setCaloriesConsumed(caloriesC);
+    setCaloriesConsumed(caloriesCon);
   }, [cardioLogs, foodLogs]);
 
   return (
