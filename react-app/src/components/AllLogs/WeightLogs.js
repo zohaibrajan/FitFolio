@@ -7,11 +7,18 @@ import { formattingUserInputDate } from "../../utils";
 import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
 import { useRemoveStrengthLog } from "../../utils";
 import { useEffect } from "react";
-import "../Diary/Diary.css";
-
-
 
 function WeightLogs() {
+    const dispatch = useDispatch();
+    const { selectedDate } = useSelectedDate();
+    const removeWeightLog = useRemoveStrengthLog();
+    const weightLogsObj = useSelector((state) => state.weightLogs);
+    const weightLogs = Object.values(weightLogsObj);
+
+    useEffect(() => {
+        const formattedDateForFetch = formattingUserInputDate(selectedDate);
+        dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));
+    }, [dispatch, selectedDate]);
 
     return (
       <div className="users-cardio-log">
@@ -77,3 +84,6 @@ function WeightLogs() {
     );
 
 }
+
+
+export default WeightLogs;

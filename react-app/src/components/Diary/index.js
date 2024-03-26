@@ -3,18 +3,14 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
-import CardioLogs from "../AllLogs/CardioLogs";
+import { CardioLogs, WeightLogs } from "../AllLogs";
 import {
-  useRemoveCardioLog,
-  useRemoveStrengthLog,
   useRemoveFoodLog,
   isTodayOrFuture,
   formattingUserInputDate,
 } from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
-import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
-import { getAllWeightLogForADayThunk } from "../../store/weightLogs";
 import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
@@ -26,14 +22,11 @@ import "./Diary.css";
 function Diary() {
   const dispatch = useDispatch();
   const today = new Date();
-  const removeWeightLog = useRemoveStrengthLog();
   const removeFoodLog = useRemoveFoodLog();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
-  const weightLogsObj = useSelector((state) => state.weightLogs);
   const foodLogsObj = useSelector((state) => state.foodLogs);
   const foodLogs = Object.values(foodLogsObj);
-  const weightLogs = Object.values(weightLogsObj);
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
@@ -47,9 +40,8 @@ function Diary() {
   useEffect(() => {
     const formattedDateForFetch = formattingUserInputDate(selectedDate);
     dispatch(getUsersGoalThunk());
-    dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));
     dispatch(getAllFoodLogsForADayThunk(formattedDateForFetch));
-    dispatch(getUsersCardioExercisesThunk());
+    // dispatch(getUsersCardioExercisesThunk());
   }, [dispatch, selectedDate]);
 
   useEffect(() => {
@@ -173,68 +165,7 @@ function Diary() {
             </div>
             <div className="users-log-container">
               <CardioLogs />
-              <div className="users-cardio-log">
-                <h4>Strength Training: </h4>
-                <div className="users-logs">
-                  <table>
-                    <tr>
-                      <th>Exercise Name</th>
-                      <th>Sets</th>
-                      <th>Repetitions</th>
-                      <th>Weight Per Repetitions</th>
-                      <th></th>
-                    </tr>
-                    {!weightLogs.length ? (
-                      <div
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <div style={{ fontSize: "12px", fontWeight: "600" }}>
-                          You have no Weight Logs
-                        </div>
-                      </div>
-                    ) : (
-                      weightLogs.map((log) => (
-                        <>
-                          <tr>
-                            <td>{log.weightExercise.exerciseName}</td>
-                            <td>{log.sets}</td>
-                            <td>{log.repetitions}</td>
-                            <td>{log.weightPerRep}</td>
-                            <td>
-                              <button
-                                onClick={(e) => removeWeightLog(e, log.id)}
-                                style={{
-                                  padding: "0",
-                                  border: "none",
-                                  backgroundColor: "transparent",
-                                  cursor: "pointer",
-                                }}
-                                title="Delete"
-                              >
-                                <i
-                                  className="fa-solid fa-circle-minus"
-                                  style={{ color: "#ff0000" }}
-                                ></i>
-                              </button>
-                              <span style={{ color: "transparent" }}>Z</span>
-                              <OpenModalButton
-                                buttonText={"Edit Exercise"}
-                                modalComponent={
-                                  <WeightLogModal
-                                    formType="update"
-                                    log={log}
-                                    dateFromDiary={selectedDate}
-                                  />
-                                }
-                              />
-                            </td>
-                          </tr>
-                        </>
-                      ))
-                    )}
-                  </table>
-                </div>
-              </div>
+              <WeightLogs />
               <div className="users-cardio-log">
                 <h4>Foods: </h4>
                 <div className="users-logs">

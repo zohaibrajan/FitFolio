@@ -7,7 +7,6 @@ import { formattingUserInputDate } from "../../utils";
 import { getAllCardioLogsForADateThunk } from "../../store/cardioLogs";
 import { useRemoveCardioLog } from "../../utils";
 import { useEffect } from "react";
-import "../Diary/Diary.css";
 
 function CardioLogs() {
   const dispatch = useDispatch();
