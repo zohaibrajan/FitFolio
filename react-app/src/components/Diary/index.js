@@ -37,7 +37,8 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  const { selectedDate, setSelectedDate } = useSelectedDate()
+  const { selectedDate, setSelectedDate } = useSelectedDate();
+  
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
       ? "calories-green"
