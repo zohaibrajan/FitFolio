@@ -3,6 +3,7 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
+import CardioLogs from "../AllLogs/CardioLogs";
 import {
   useRemoveCardioLog,
   useRemoveStrengthLog,
@@ -25,7 +26,6 @@ import "./Diary.css";
 function Diary() {
   const dispatch = useDispatch();
   const today = new Date();
-  const removeCardioLog = useRemoveCardioLog();
   const removeWeightLog = useRemoveStrengthLog();
   const removeFoodLog = useRemoveFoodLog();
   const goal = useSelector((state) => state.goal);
@@ -38,7 +38,7 @@ function Diary() {
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
   const { selectedDate, setSelectedDate } = useSelectedDate();
-  
+
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
       ? "calories-green"
@@ -47,7 +47,6 @@ function Diary() {
   useEffect(() => {
     const formattedDateForFetch = formattingUserInputDate(selectedDate);
     dispatch(getUsersGoalThunk());
-    dispatch(getAllCardioLogsForADateThunk(formattedDateForFetch));
     dispatch(getAllWeightLogForADayThunk(formattedDateForFetch));
     dispatch(getAllFoodLogsForADayThunk(formattedDateForFetch));
     dispatch(getUsersCardioExercisesThunk());
@@ -173,66 +172,7 @@ function Diary() {
               </span>
             </div>
             <div className="users-log-container">
-              <div className="users-cardio-log">
-                <h4>Cardio Training: </h4>
-                <div className="users-logs">
-                  <table>
-                    <tr>
-                      <th>Exercise Name</th>
-                      <th>Calories Burned</th>
-                      <th>Minutes</th>
-                      <th></th>
-                    </tr>
-                    {!cardioLogs.length ? (
-                      <div
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <div style={{ fontSize: "12px", fontWeight: "600" }}>
-                          You have no Cardio Logs
-                        </div>
-                      </div>
-                    ) : (
-                      cardioLogs.map((log) => (
-                        <>
-                          <tr>
-                            <td>{log.cardioExercise.exerciseName}</td>
-                            <td>{log.caloriesBurned}</td>
-                            <td>{log.duration}</td>
-                            <td>
-                              <button
-                                onClick={(e) => removeCardioLog(e, log.id)}
-                                style={{
-                                  padding: "0",
-                                  border: "none",
-                                  backgroundColor: "transparent",
-                                  cursor: "pointer",
-                                }}
-                                title="Delete"
-                              >
-                                <i
-                                  className="fa-solid fa-circle-minus"
-                                  style={{ color: "#ff0000" }}
-                                ></i>
-                              </button>
-                              <span style={{ color: "transparent" }}>Z</span>
-                              <OpenModalButton
-                                buttonText={"Edit Exercise"}
-                                modalComponent={
-                                  <CardioLogModal
-                                    formType="update"
-                                    log={log}
-                                    dateFromDiary={selectedDate}
-                                  />
-                                }
-                              />
-                            </td>
-                          </tr>
-                        </>
-                      ))
-                    )}
-                  </table>
-                </div>
-              </div>
+              <CardioLogs />
               <div className="users-cardio-log">
                 <h4>Strength Training: </h4>
                 <div className="users-logs">
