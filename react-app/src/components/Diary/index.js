@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import OpenModalButton from "../OpenModalButton";
-import CardioLogModal from "../CardioLogModel";
-import WeightLogModal from "../WeightLogModal";
-import FoodLogModal from "../FoodLogModal";
 import AllLogs from "../AllLogs";
 import Calendar from "../Calendar";
-import { useSelectedDate } from "../../context/SelectedDate";
+import LogButtons from "../LogButtons";
 import { getUsersGoalThunk } from "../../store/goal";
 import { useDispatch, useSelector } from "react-redux";
 import "./Diary.css";
@@ -19,7 +15,6 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  const { selectedDate } = useSelectedDate();
 
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
@@ -30,9 +25,9 @@ function Diary() {
     dispatch(getUsersGoalThunk());
   }, [dispatch]);
 
-  useEffect(() => {
-    let caloriesB = 0;
-    let caloriesC = 0;
+  useEffect(() => { // calculating the total calories burned and consumed
+    let caloriesB = 0; // calories burned
+    let caloriesC = 0; // calories consumed
     if (cardioLogs.length) {
       cardioLogs.forEach((log) => {
         caloriesB += log.caloriesBurned;
@@ -79,21 +74,7 @@ function Diary() {
               </div>
               <Calendar /> {/* Contains the DatePicker component - makes changing dates easier */}
             </div>
-            <div className="log-buttons-container">
-              <OpenModalButton
-                modalComponent={<CardioLogModal dateFromDiary={selectedDate} />}
-                buttonText={"Add Cardio Exercise"}
-              />
-              <OpenModalButton
-                modalComponent={<WeightLogModal dateFromDiary={selectedDate} />}
-                buttonText={"Add Weight Exercise"}
-              />
-              <OpenModalButton
-                modalComponent={<FoodLogModal dateFromDiary={selectedDate} />}
-                buttonText={"Add Food"}
-              />
-            </div>
-
+            <LogButtons /> {/* Contains the OpenModalButton component, allows use to add cardio, strength, and food logs to diary */}
             <div className="calories-progress-bar-container">
               <progress
                 className="progress-bar"
