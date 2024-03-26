@@ -1,6 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css"; // default styling for datepicker component
 import { addDays, subDays } from "date-fns";
 import { isTodayOrFuture } from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
@@ -21,7 +21,7 @@ function Calendar() {
       <button className="prev-date-button" onClick={decrementDate}>
         <i className="fa-solid fa-angle-left" style={{ color: "white" }}></i>
       </button>
-      <DatePicker
+      <DatePicker {/* allows for easy date change, npm */}
         className="date-picker"
         showIcon
         selected={selectedDate}
