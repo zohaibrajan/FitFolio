@@ -142,7 +142,7 @@ function Diary() {
               />
             </div>
           </div>
-          <AllLogs />
+          <AllLogs /> {/* Contains all cardio, strength and food logs - saved 150+ lines of code */}
         </div>
       </div>
     </>

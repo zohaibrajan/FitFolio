@@ -16,7 +16,7 @@ function AllLogs() {
           </span>
         </div>
         <div className="users-log-container">
-          <CardioLogs />
+          <CardioLogs /> {/* Separated all logs into components, combined here  */}
           <WeightLogs />
           <FoodLogs />
         </div>
@@ -25,4 +25,3 @@ function AllLogs() {
 }
 
 export default AllLogs;
-
