@@ -3,17 +3,11 @@ import OpenModalButton from "../OpenModalButton";
 import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
-import { CardioLogs, WeightLogs } from "../AllLogs";
-import {
-  useRemoveFoodLog,
-  isTodayOrFuture,
-  formattingUserInputDate,
-} from "../../utils";
+import AllLogs from "../AllLogs";
+import { isTodayOrFuture } from "../../utils";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
-import { getAllFoodLogsForADayThunk } from "../../store/foodLogs";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersCardioExercisesThunk } from "../../store/userOwnedExercises";
 import DatePicker from "react-datepicker";
 import { addDays, subDays } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,7 +16,6 @@ import "./Diary.css";
 function Diary() {
   const dispatch = useDispatch();
   const today = new Date();
-  const removeFoodLog = useRemoveFoodLog();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const foodLogsObj = useSelector((state) => state.foodLogs);
@@ -38,11 +31,8 @@ function Diary() {
       : "calories-red";
 
   useEffect(() => {
-    const formattedDateForFetch = formattingUserInputDate(selectedDate);
     dispatch(getUsersGoalThunk());
-    dispatch(getAllFoodLogsForADayThunk(formattedDateForFetch));
-    // dispatch(getUsersCardioExercisesThunk());
-  }, [dispatch, selectedDate]);
+  }, [dispatch]);
 
   useEffect(() => {
     let caloriesB = 0;
@@ -152,82 +142,7 @@ function Diary() {
               />
             </div>
           </div>
-
-          <div className="all-diary-logs">
-            <div
-              className="diary-details-title"
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <span>Todays Diary</span>
-              <span style={{ fontSize: "12px", fontWeight: "600" }}>
-                Exercises and Foods marked with a * are your custom.
-              </span>
-            </div>
-            <div className="users-log-container">
-              <CardioLogs />
-              <WeightLogs />
-              <div className="users-cardio-log">
-                <h4>Foods: </h4>
-                <div className="users-logs">
-                  <table>
-                    <tr>
-                      <th>Food Name</th>
-                      <th>Calories</th>
-                      <th>Protein (g)</th>
-                      <th></th>
-                    </tr>
-                    {!foodLogs.length ? (
-                      <div
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <div style={{ fontSize: "12px", fontWeight: "600" }}>
-                          No Food Logs
-                        </div>
-                      </div>
-                    ) : (
-                      foodLogs.map((log) => (
-                        <>
-                          <tr>
-                            <td>{log.food.name}</td>
-                            <td>{log.totalCaloriesConsumed}</td>
-                            <td>{log.totalProteinConsumed}</td>
-                            <td>
-                              <button
-                                onClick={(e) => removeFoodLog(e, log.id)}
-                                style={{
-                                  padding: "0",
-                                  border: "none",
-                                  backgroundColor: "transparent",
-                                  cursor: "pointer",
-                                }}
-                                title="Delete"
-                              >
-                                <i
-                                  className="fa-solid fa-circle-minus"
-                                  style={{ color: "#ff0000" }}
-                                ></i>
-                              </button>
-                              <span style={{ color: "transparent" }}>Z</span>
-                              <OpenModalButton
-                                buttonText={"Edit Food Item"}
-                                modalComponent={
-                                  <FoodLogModal
-                                    formType="update"
-                                    log={log}
-                                    dateFromDiary={selectedDate}
-                                  />
-                                }
-                              />
-                            </td>
-                          </tr>
-                        </>
-                      ))
-                    )}
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AllLogs />
         </div>
       </div>
     </>
