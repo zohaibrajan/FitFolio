@@ -21,7 +21,7 @@ function Calendar() {
       <button className="prev-date-button" onClick={decrementDate}>
         <i className="fa-solid fa-angle-left" style={{ color: "white" }}></i>
       </button>
-      <DatePicker {/* allows for easy date change, npm */}
+      <DatePicker // datepicker component, allows user to select a date
         className="date-picker"
         showIcon
         selected={selectedDate}
