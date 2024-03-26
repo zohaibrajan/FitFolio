@@ -4,18 +4,14 @@ import CardioLogModal from "../CardioLogModel";
 import WeightLogModal from "../WeightLogModal";
 import FoodLogModal from "../FoodLogModal";
 import AllLogs from "../AllLogs";
-import { isTodayOrFuture } from "../../utils";
+import Calendar from "../Calendar";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { getUsersGoalThunk } from "../../store/goal";
 import { useDispatch, useSelector } from "react-redux";
-import DatePicker from "react-datepicker";
-import { addDays, subDays } from "date-fns";
-import "react-datepicker/dist/react-datepicker.css";
 import "./Diary.css";
 
 function Diary() {
   const dispatch = useDispatch();
-  const today = new Date();
   const goal = useSelector((state) => state.goal);
   const cardioLogsObj = useSelector((state) => state.cardioLogs);
   const foodLogsObj = useSelector((state) => state.foodLogs);
@@ -23,7 +19,7 @@ function Diary() {
   const cardioLogs = Object.values(cardioLogsObj);
   const [caloriesBurned, setCaloriesBurned] = useState(0);
   const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  const { selectedDate, setSelectedDate } = useSelectedDate();
+  const { selectedDate } = useSelectedDate();
 
   const caloriesStyle =
     goal.caloriesPerDay + caloriesBurned - caloriesConsumed > 0
@@ -51,14 +47,6 @@ function Diary() {
     }
     setCaloriesConsumed(caloriesC);
   }, [cardioLogs, foodLogs]);
-
-  const incrementDate = () => {
-    setSelectedDate(addDays(selectedDate, 1));
-  };
-
-  const decrementDate = () => {
-    setSelectedDate(subDays(selectedDate, 1));
-  };
 
   return (
     <>
@@ -89,35 +77,7 @@ function Diary() {
                   </span>
                 </span>
               </div>
-              <div className="diary-calendar-container">
-                <button className="prev-date-button" onClick={decrementDate}>
-                  <i
-                    className="fa-solid fa-angle-left"
-                    style={{ color: "white" }}
-                  ></i>
-                </button>
-                <DatePicker
-                  className="date-picker"
-                  showIcon
-                  selected={selectedDate}
-                  maxDate={today}
-                  onChange={(date) => {
-                    if (date <= today) {
-                      setSelectedDate(date);
-                    }
-                  }}
-                />
-                <button
-                  className="next-date-button"
-                  onClick={incrementDate}
-                  disabled={isTodayOrFuture(selectedDate)}
-                >
-                  <i
-                    className="fa-solid fa-angle-right"
-                    style={{ color: "white" }}
-                  />
-                </button>
-              </div>
+              <Calendar /> {/* Contains the DatePicker component - makes changing dates easier */}
             </div>
             <div className="log-buttons-container">
               <OpenModalButton
