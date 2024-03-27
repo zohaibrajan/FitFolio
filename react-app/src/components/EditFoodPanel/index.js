@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { updateUserFoodThunk } from "../../store/userFoods";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserFoodsThunk } from "../../store/userFoods";
+import { isEmpty, hasErrors } from "../../utils";
 import {
   checkRestaurants,
   checkServings,
@@ -11,6 +12,7 @@ import {
   checkUnits,
   checkForFood
 } from "../../utils/createFoodHelpers";
+import ErrorHandlingComponent from "../ErrorHandlingComponent"; // ErrorHandlingComponent is a component that displays an error message
 import "./EditFoodPanel.css";
 
 function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
@@ -22,7 +24,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
   const [protein, setProtein] = useState(selectedFood.protein);
   const [units, setUnits] = useState(selectedFood.unitOfServing);
   const [servings, setServings] = useState(1);
-  const [isFormModified, setIsFormModified] = useState(false);
+  const [isFormModified, setIsFormModified] = useState(false); // keeps button disabled until form is modified
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({
     name: "",
@@ -45,9 +47,6 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     setUnits(selectedFood.unitOfServing);
   }, [selectedFood]);
 
-  const isEmpty = (str) => str === "";
-  const hasErrors = (errors) =>
-    Object.values(errors).some((error) => error !== "");
   const commonChecks =
     [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors);
 
@@ -104,11 +103,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.name ? (
-          <div className="exercise-name-error">{errors.name}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.name} />
         <label className="edit-food-panel-label">
           Restaurant
           <input
@@ -123,11 +118,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.restaurant ? (
-          <div className="exercise-name-error">{errors.restaurant}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.restaurant} />
         <label className="serving-size-label">
           Serving Size
           <div className="serving-size-inputs">
@@ -160,13 +151,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             />
           </div>
         </label>
-        {errors.unit || errors.servings ? (
-          <div className="exercise-name-error">
-            {errors.unit || errors.servings}
-          </div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.unit || errors.servings} />
         <label className="edit-food-panel-label">
           Calories
           <input
@@ -182,11 +167,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.calories ? (
-          <div className="exercise-name-error">{errors.calories}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.calories} />
         <label className="edit-food-panel-label">
           Protein
           <input
@@ -202,11 +183,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.protein ? (
-          <div className="exercise-name-error">{errors.protein}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.protein} />
         <div className="edit-food-panel-submit-button-container">
           <button
             type="submit"
