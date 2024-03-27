@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { isEmpty, hasErrors, checkCaloriesBurned, checkDuration } from "../../utils";
 import {
   updateUserCardioExerciseThunk,
   updateUserWeightExerciseThunk,
@@ -41,10 +42,6 @@ function EditExercisePanel({
   const [weightErrors, setWeightErrors] = useState({
     exercise: "",
   });
-
-  const isEmpty = (str) => str === "";
-  const hasErrors = (errors) =>
-    Object.values(errors).some((error) => error.length > 0);
 
   const commonChecks = isEmpty(exerciseName);
   const cardioChecks =
@@ -114,22 +111,6 @@ function EditExercisePanel({
       }
     }
   };
-
-  const checkDuration = (duration) => {
-    if (duration <= 0) {
-      setCardioErrors({ ...cardioErrors, duration: "Must be greater than 0" });
-    }
-  };
-
-  const checkCaloriesBurned = (caloriesBurned) => {
-    if (caloriesBurned <= 0) {
-      setCardioErrors({
-        ...cardioErrors,
-        calories: "Must be greater than 0",
-      });
-    }
-  };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -222,7 +203,7 @@ function EditExercisePanel({
                 type="number"
                 value={duration}
                 onBlur={() => {
-                  checkDuration(duration);
+                  checkDuration(duration, cardioErrors, setCardioErrors);
                   checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
@@ -243,7 +224,7 @@ function EditExercisePanel({
                 type="number"
                 value={caloriesBurned}
                 onBlur={() => {
-                  checkCaloriesBurned(caloriesBurned);
+                  checkCaloriesBurned(caloriesBurned, cardioErrors, setCardioErrors);
                   checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
