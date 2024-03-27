@@ -87,4 +87,6 @@ export {
     checkSets,
     checkReps,
     checkWeightPerRep,
+    checkCardioExercise,
+    checkWeightExercise
     };
