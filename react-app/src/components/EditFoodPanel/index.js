@@ -3,16 +3,17 @@ import { useState, useEffect } from "react";
 import { updateUserFoodThunk } from "../../store/userFoods";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserFoodsThunk } from "../../store/userFoods";
-import { isEmpty, hasErrors } from "../../utils";
+import ErrorHandlingComponent from "../ErrorHandlingComponent"; // ErrorHandlingComponent is a component that displays an error message
 import {
   checkRestaurants,
   checkServings,
   checkCalories,
   checkProtein,
   checkUnits,
-  checkForFood
-} from "../../utils/createFoodHelpers";
-import ErrorHandlingComponent from "../ErrorHandlingComponent"; // ErrorHandlingComponent is a component that displays an error message
+  checkForFood,
+  isEmpty,
+  hasErrors,
+} from "../../utils";
 import "./EditFoodPanel.css";
 
 function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
