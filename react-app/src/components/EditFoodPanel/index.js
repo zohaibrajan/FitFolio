@@ -3,6 +3,17 @@ import { useState, useEffect } from "react";
 import { updateUserFoodThunk } from "../../store/userFoods";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserFoodsThunk } from "../../store/userFoods";
+import ErrorHandlingComponent from "../ErrorHandlingComponent"; // ErrorHandlingComponent is a component that displays an error message
+import {
+  checkRestaurants,
+  checkServings,
+  checkCalories,
+  checkProtein,
+  checkUnits,
+  checkForFood,
+  isEmpty,
+  hasErrors,
+} from "../../utils";
 import "./EditFoodPanel.css";
 
 function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
@@ -12,9 +23,9 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
   const [restaurant, setRestaurant] = useState(selectedFood.restaurant);
   const [calories, setCalories] = useState(selectedFood.calories);
   const [protein, setProtein] = useState(selectedFood.protein);
+  const [units, setUnits] = useState(selectedFood.unitOfServing);
   const [servings, setServings] = useState(1);
-  const [isFormModified, setIsFormModified] = useState(false);
-  const [units, setUnits] = useState("oz");
+  const [isFormModified, setIsFormModified] = useState(false); // keeps button disabled until form is modified
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({
     name: "",
@@ -29,7 +40,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     dispatch(getUserFoodsThunk());
   }, [dispatch]);
 
-  useEffect(() => {
+  useEffect(() => { // when user changes what food item they want to edit, the form will be populated with the selected food item's data
     setFoodName(selectedFood.name.split("*")[0]);
     setRestaurant(selectedFood.restaurant);
     setCalories(selectedFood.calories);
@@ -37,75 +48,24 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
     setUnits(selectedFood.unitOfServing);
   }, [selectedFood]);
 
-  const isEmpty = (str) => str === "";
-  const hasErrors = (errors) =>
-    Object.values(errors).some((error) => error !== "");
   const commonChecks =
     [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors);
 
   const disabled = commonChecks || calories === 0 || protein === 0;
-
-  const checkForFood = (foodName) => {
-    const foodExists = userFoods.some(
-      (food) =>
-        food.name.split("*")[0].toLowerCase() === foodName.trim().toLowerCase()
-    );
-    if (foodExists) {
-      setErrors({ ...errors, name: "Food already exists" });
-    }
-
-
-    if (foodName.length > 50 || foodName.length < 4) {
-      setErrors({
-        ...errors,
-        name: "Food name invalid",
-      });
-    }
-  };
-
-  const checkRestaurants = (restaurant) => {
-    if (restaurant.length > 50 || restaurant.length < 4) {
-      setErrors({
-        ...errors,
-        restaurant: "Restaurant name invalid",
-      });
-    }
-  };
-
-  const checkUnits = (units) => {
-    if (units.length > 15 || units.length < 1) {
-      setErrors({
-        ...errors,
-        unit: "Unit name invalid",
-      });
-    }
-  };
-
-  const checkCalories = (calories) => {
-    if (calories < 1) {
-      setErrors({ ...errors, calories: "Calories must be greater than 0" });
-    }
-  };
-
-  const checkProtein = (protein) => {
-    if (protein < 1) {
-      setErrors({ ...errors, protein: "Protein must be greater than 0" });
-    }
-  };
-
-  const checkServings = (servings) => {
-    if (servings < 1) {
-      setErrors({ ...errors, servings: "Servings must be greater than 0" });
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", `${foodName}*`);
     formData.append("restaurant", restaurant);
-    formData.append("calories", servings > 1 ? Math.ceil(calories / servings) : calories);
-    formData.append("protein", servings > 1 ? Math.ceil(protein / servings) : protein);
+    formData.append(
+      "calories",
+      servings > 1 ? Math.ceil(calories / servings) : calories
+    );
+    formData.append(
+      "protein",
+      servings > 1 ? Math.ceil(protein / servings) : protein
+    );
     formData.append("unit_of_serving", units);
 
     try {
@@ -135,7 +95,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
           <input
             type="text"
             value={foodName}
-            onBlur={(e) => checkForFood(e.target.value)}
+            onBlur={(e) => checkForFood(e.target.value, userFoods, errors, setErrors)}
             required
             onChange={(e) => {
               setFoodName(e.target.value);
@@ -144,18 +104,14 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.name ? (
-          <div className="exercise-name-error">{errors.name}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.name} />
         <label className="edit-food-panel-label">
           Restaurant
           <input
             type="text"
             value={restaurant}
             required
-            onBlur={(e) => checkRestaurants(e.target.value)}
+            onBlur={(e) => checkRestaurants(e.target.value, errors, setErrors)}
             onChange={(e) => {
               setRestaurant(e.target.value);
               setIsFormModified(true);
@@ -163,11 +119,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.restaurant ? (
-          <div className="exercise-name-error">{errors.restaurant}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.restaurant} />
         <label className="serving-size-label">
           Serving Size
           <div className="serving-size-inputs">
@@ -178,7 +130,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
               min={1}
               required
               placeholder="Servings eg. 1"
-              onBlur={(e) => checkServings(e.target.value)}
+              onBlur={(e) => checkServings(e.target.value, errors, setErrors)}
               onChange={(e) => {
                 setErrors({ ...errors, servings: "" });
                 setIsFormModified(true);
@@ -191,7 +143,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
               id="units"
               placeholder="Units eg. cup"
               required
-              onBlur={(e) => checkUnits(e.target.value)}
+              onBlur={(e) => checkUnits(e.target.value, errors, setErrors)}
               onChange={(e) => {
                 setErrors({ ...errors, unit: "" });
                 setIsFormModified(true);
@@ -200,13 +152,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             />
           </div>
         </label>
-        {errors.unit || errors.servings ? (
-          <div className="exercise-name-error">
-            {errors.unit || errors.servings}
-          </div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.unit || errors.servings} />
         <label className="edit-food-panel-label">
           Calories
           <input
@@ -214,7 +160,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             min={1}
             value={calories}
             required
-            onBlur={(e) => checkCalories(e.target.value)}
+            onBlur={(e) => checkCalories(e.target.value, errors, setErrors)}
             onChange={(e) => {
               setErrors({ ...errors, calories: "" });
               setIsFormModified(true);
@@ -222,11 +168,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.calories ? (
-          <div className="exercise-name-error">{errors.calories}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.calories} />
         <label className="edit-food-panel-label">
           Protein
           <input
@@ -234,7 +176,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             min={1}
             value={protein}
             required
-            onBlur={(e) => checkProtein(e.target.value)}
+            onBlur={(e) => checkProtein(e.target.value, errors, setErrors)}
             onChange={(e) => {
               setErrors({ ...errors, protein: "" });
               setProtein(e.target.value);
@@ -242,11 +184,7 @@ function EditFoodPanel({ selectedFood, foodId, setIsPanelOpen }) {
             }}
           />
         </label>
-        {errors.protein ? (
-          <div className="exercise-name-error">{errors.protein}</div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={errors.protein} />
         <div className="edit-food-panel-submit-button-container">
           <button
             type="submit"

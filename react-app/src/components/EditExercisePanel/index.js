@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { isEmpty, hasErrors, checkCaloriesBurned, checkDuration } from "../../utils";
 import {
   updateUserCardioExerciseThunk,
   updateUserWeightExerciseThunk,
@@ -8,6 +9,7 @@ import {
   updateCardioExerciseAllExercises,
   updateWeightExerciseAllExercises,
 } from "../../store/userOwnedExercises";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({
@@ -41,10 +43,6 @@ function EditExercisePanel({
   const [weightErrors, setWeightErrors] = useState({
     exercise: "",
   });
-
-  const isEmpty = (str) => str === "";
-  const hasErrors = (errors) =>
-    Object.values(errors).some((error) => error.length > 0);
 
   const commonChecks = isEmpty(exerciseName);
   const cardioChecks =
@@ -115,22 +113,6 @@ function EditExercisePanel({
     }
   };
 
-  const checkDuration = (duration) => {
-    if (duration <= 0) {
-      setCardioErrors({ ...cardioErrors, duration: "Must be greater than 0" });
-    }
-  };
-
-  const checkCaloriesBurned = (caloriesBurned) => {
-    if (caloriesBurned <= 0) {
-      setCardioErrors({
-        ...cardioErrors,
-        calories: "Must be greater than 0",
-      });
-    }
-  };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (exerciseType === "Cardio") {
@@ -189,13 +171,7 @@ function EditExercisePanel({
             }}
           />
         </label>
-        {cardioErrors.exercise || weightErrors.exercise ? (
-          <div className="exercise-name-error">
-            {cardioErrors.exercise || weightErrors.exercise}
-          </div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={cardioErrors.exercise || weightErrors.exercise} />
         {exerciseType === "Cardio" ? (
           <>
             <label className="edit-exercise-panel-label">
@@ -222,7 +198,7 @@ function EditExercisePanel({
                 type="number"
                 value={duration}
                 onBlur={() => {
-                  checkDuration(duration);
+                  checkDuration(duration, cardioErrors, setCardioErrors);
                   checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
@@ -232,18 +208,14 @@ function EditExercisePanel({
                 }}
               ></input>
             </label>
-            {cardioErrors.duration ? (
-              <div className="exercise-name-error">{cardioErrors.duration}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={cardioErrors.duration} />
             <label className="edit-exercise-panel-label">
               Calories Burned:
               <input
                 type="number"
                 value={caloriesBurned}
                 onBlur={() => {
-                  checkCaloriesBurned(caloriesBurned);
+                  checkCaloriesBurned(caloriesBurned, cardioErrors, setCardioErrors);
                   checkForExercise(exerciseName, exerciseId);
                 }}
                 onChange={(e) => {
@@ -253,11 +225,7 @@ function EditExercisePanel({
                 }}
               ></input>
             </label>
-            {cardioErrors.calories ? (
-              <div className="exercise-name-error">{cardioErrors.calories}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={cardioErrors.calories} />
           </>
         ) : (
           <>

@@ -40,6 +40,5 @@ export {
     checkCaloriesBurned,
     checkSets,
     checkReps,
-    checkWeightPerRep,
+    checkWeightPerRep
     };
-

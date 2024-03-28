@@ -34,10 +34,28 @@ const checkServings = (servings, errors, setErrors) => {
   }
 };
 
+const checkForFood = (foodName, userFoods, errors, setErrors) => {
+  const foodExists = userFoods.some(
+    (food) =>
+      food.name.split("*")[0].toLowerCase() === foodName.trim().toLowerCase()
+  );
+  if (foodExists) {
+    setErrors({ ...errors, name: "Food already exists" });
+  }
+
+  if (foodName.length > 50 || foodName.length < 4) {
+    setErrors({
+      ...errors,
+      name: "Food name invalid",
+    });
+  }
+};
+
 export {
   checkRestaurants,
   checkUnits,
   checkCalories,
   checkProtein,
   checkServings,
+  checkForFood
 };

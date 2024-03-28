@@ -35,3 +35,8 @@ export const formattingUserInputDate = (userDate) => {
 
     return formattedDate;
 }
+
+
+export const isEmpty = (str) => str === "";
+export const hasErrors = (errors) =>
+    Object.values(errors).some((error) => error !== "");

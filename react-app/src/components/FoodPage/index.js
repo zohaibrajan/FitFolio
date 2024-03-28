@@ -1,13 +1,12 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import MyFoodPage from "../MyFoods";
 import { addFoodThunk } from "../../store/foods";
 import { getUserFoodsThunk } from "../../store/userFoods";
-import { useDispatch } from "react-redux";
 import { createFoodLogThunk } from "../../store/foodLogs";
 import { useSelectedDate } from "../../context/SelectedDate";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import {
   formattingUserInputDate,
   checkRestaurants,
@@ -15,6 +14,9 @@ import {
   checkCalories,
   checkServings,
   checkProtein,
+  checkForFood,
+  isEmpty,
+  hasErrors,
 } from "../../utils";
 import "./FoodPage.css";
 
@@ -44,30 +46,10 @@ function FoodPage() {
     dispatch(getUserFoodsThunk());
   }, [dispatch]);
 
-  const isEmpty = (str) => str === "";
-  const hasErrors = (errors) =>
-    Object.values(errors).some((error) => error !== "");
   const commonChecks =
     [foodName, restaurant, servings, units].some(isEmpty) || hasErrors(errors);
 
   const disabled = commonChecks || calories === "" || protein === "";
-
-  const checkForFood = (foodName) => {
-    const foodExists = userFoods.some(
-      (food) =>
-        food.name.split("*")[0].toLowerCase() === foodName.trim().toLowerCase()
-    );
-    if (foodExists) {
-      setErrors({ ...errors, name: "Food already exists" });
-    }
-
-    if (foodName.length > 50 || foodName.length < 4) {
-      setErrors({
-        ...errors,
-        name: "Food name invalid",
-      });
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,7 +101,7 @@ function FoodPage() {
               <input
                 type="text"
                 value={foodName}
-                onBlur={(e) => checkForFood(e.target.value)}
+                onBlur={(e) => checkForFood(e.target.value, userFoods, errors, setErrors)}
                 required
                 placeholder="Food Description"
                 onChange={(e) => {
@@ -128,11 +110,7 @@ function FoodPage() {
                 }}
               />
             </label>
-            {errors.name ? (
-              <div className="exercise-name-error">{errors.name}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={errors.name} />
             <label className="food-labels">
               Restaurant
               <span style={{ fontWeight: "400", fontSize: "12px" }}>
@@ -152,11 +130,7 @@ function FoodPage() {
                 }}
               />
             </label>
-            {errors.restaurant ? (
-              <div className="exercise-name-error">{errors.restaurant}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={errors.restaurant} />
             <label className="serving-size-label">
               Serving Size
               <div className="serving-size-inputs">
@@ -189,13 +163,7 @@ function FoodPage() {
                 />
               </div>
             </label>
-            {errors.unit || errors.servings ? (
-              <div className="exercise-name-error">
-                {errors.unit || errors.servings}
-              </div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={errors.unit || errors.servings} />
             <label className="food-labels">
               Calories
               <input
@@ -211,11 +179,7 @@ function FoodPage() {
                 }}
               />
             </label>
-            {errors.calories ? (
-              <div className="exercise-name-error">{errors.calories}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={errors.calories} />
             <label className="food-labels">
               Protein
               <input
@@ -231,11 +195,7 @@ function FoodPage() {
                 }}
               />
             </label>
-            {errors.protein ? (
-              <div className="exercise-name-error">{errors.protein}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={errors.name} />
             <label className="can-others-use-label">
               <input
                 type="checkbox"
