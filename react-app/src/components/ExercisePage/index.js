@@ -12,7 +12,15 @@ import MyExercises from "../MyExercises";
 import "./ExercisePage.css";
 import { useSelectedDate } from "../../context/SelectedDate";
 import { formattingUserInputDate } from "../../utils";
-import { checkDuration, checkCaloriesBurned, checkSets, checkReps, checkWeightPerRep } from "../../utils/exerciseHelpers"
+import {
+  checkDuration,
+  checkCaloriesBurned,
+  checkSets,
+  checkReps,
+  checkWeightPerRep,
+} from "../../utils/exerciseHelpers";
+import { FormInput, FormSelect } from "../FormInputs";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 
 function ExercisePage() {
   const dispatch = useDispatch();
@@ -112,7 +120,6 @@ function ExercisePage() {
         exercise: "Must be less than 50 characters",
       });
     }
-
   };
 
   const handleSubmit = async (e) => {
@@ -167,7 +174,23 @@ function ExercisePage() {
             onSubmit={handleSubmit}
             encType="multipart/form-data"
           >
-            <label
+            <FormInput
+              label={"Exercise Name"}
+              type={"text"}
+              value={exerciseName}
+              placeholder={"Exercise Name eg. Running"}
+              name={"exercise-name"}
+              onBlur={() => checkForExercise(exerciseName)}
+              onChange={(e) => {
+                setExerciseName(e.target.value);
+                setCardioErrors({ ...cardioErrors, exercise: "" });
+                setWeightErrors({ ...weightErrors, exercise: "" });
+              }}
+            />
+            <ErrorHandlingComponent
+              error={cardioErrors.exercise || weightErrors.exercise}
+            />
+            {/* <label
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -197,8 +220,18 @@ function ExercisePage() {
               </div>
             ) : (
               <div className="exercise-name-error"></div>
-            )}
-            <label
+            )} */}
+            <FormSelect
+              label={"Exercise Type"}
+              name={"exercise-type"}
+              value={exerciseType}
+              onChange={(e) => setExerciseType(e.target.value)}
+              options={[
+                { label: "Cardio", value: "cardio" },
+                { label: "Strength", value: "strength" },
+              ]}
+            />
+            {/* <label
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -216,8 +249,8 @@ function ExercisePage() {
               >
                 <option value="cardio">Cardio</option>
                 <option value="strength">Strength</option>
-              </select>
-            </label>
+              </select> */}
+            {/* </label> */}
             {exerciseType === "cardio" ? (
               <>
                 <label
@@ -245,7 +278,13 @@ function ExercisePage() {
                     value={duration}
                     placeholder="Duration eg. 30"
                     min={0}
-                    onBlur={(e) => checkDuration(e.target.value, cardioErrors, setCardioErrors)}
+                    onBlur={(e) =>
+                      checkDuration(
+                        e.target.value,
+                        cardioErrors,
+                        setCardioErrors
+                      )
+                    }
                     onChange={(e) => {
                       setDuration(e.target.value);
                       setCardioErrors({ ...cardioErrors, duration: "" });
@@ -267,7 +306,13 @@ function ExercisePage() {
                     min={0}
                     placeholder="Calories Burned eg. 300"
                     value={caloriesBurned}
-                    onBlur={(e) => checkCaloriesBurned(e.target.value, cardioErrors, setCardioErrors)}
+                    onBlur={(e) =>
+                      checkCaloriesBurned(
+                        e.target.value,
+                        cardioErrors,
+                        setCardioErrors
+                      )
+                    }
                     onChange={(e) => {
                       setCaloriesBurned(e.target.value);
                       setCardioErrors({ ...cardioErrors, calories: "" });
@@ -291,7 +336,9 @@ function ExercisePage() {
                     type="number"
                     value={sets}
                     placeholder="Sets eg. 3"
-                    onBlur={(e) => checkSets(e.target.value, weightErrors, setWeightErrors)}
+                    onBlur={(e) =>
+                      checkSets(e.target.value, weightErrors, setWeightErrors)
+                    }
                     onChange={(e) => {
                       setSets(e.target.value);
                       setWeightErrors({ ...weightErrors, sets: "" });
@@ -310,7 +357,9 @@ function ExercisePage() {
                     type="number"
                     value={reps}
                     placeholder="Repetitions eg. 10"
-                    onBlur={(e) => checkReps(e.target.value, weightErrors, setWeightErrors)}
+                    onBlur={(e) =>
+                      checkReps(e.target.value, weightErrors, setWeightErrors)
+                    }
                     onChange={(e) => {
                       setReps(e.target.value);
                       setWeightErrors({ ...weightErrors, reps: "" });
@@ -329,7 +378,13 @@ function ExercisePage() {
                     type="number"
                     placeholder="Weight Per Rep eg. 50"
                     value={weightPerRep}
-                    onBlur={(e) => checkWeightPerRep(e.target.value, weightErrors, setWeightErrors)}
+                    onBlur={(e) =>
+                      checkWeightPerRep(
+                        e.target.value,
+                        weightErrors,
+                        setWeightErrors
+                      )
+                    }
                     onChange={(e) => {
                       setWeightPerRep(e.target.value);
                       setWeightErrors({ ...weightErrors, weightPerRep: "" });
