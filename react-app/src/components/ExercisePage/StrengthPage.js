@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
-import { FormInput } from "../FormInputs";
+import { FormInput } from "../FormElements";
 import { useSelectedDate } from "../../context/SelectedDate";
 import {
   checkSets,

@@ -19,7 +19,7 @@ import {
   checkReps,
   checkWeightPerRep,
 } from "../../utils/exerciseHelpers";
-import { FormInput, FormSelect } from "../FormInputs";
+import { FormInput, FormSelect } from "../FormElements";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
 
 function ExercisePage() {
