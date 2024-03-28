@@ -34,59 +34,11 @@ const checkWeightPerRep = (weightPerRep, weightErrors, setWeightErrors) => {
   }
 };
 
-  const checkCardioExercise = (exerciseId, cardioExercises, usersExercises, exerciseName, cardioErrors, setCardioErrors) => {
-    const exerciseExists =
-      cardioExercises.some(
-        (exercise) =>
-          exercise.id !== exerciseId &&
-          exercise.exerciseName.toLowerCase() ===
-            exerciseName.trim().toLowerCase()
-      ) ||
-      usersExercises.some(
-        (exercise) =>
-          exercise.id !== exerciseId &&
-          exercise.exerciseName.split("*")[0].toLowerCase() ===
-            exerciseName.trim().toLowerCase()
-      );
-
-    if (exerciseExists) {
-      setCardioErrors({
-        ...cardioErrors,
-        exercise: "Exercise already exists",
-      });
-    }
-  }
-
-  const checkWeightExercise = (exerciseId, weightExercises, usersExercises, exerciseName, weightErrors, setWeightErrors) => {
-    const exerciseExists =
-        weightExercises.some(
-          (exercise) =>
-            exercise.id !== exerciseId &&
-            exercise.exerciseName.toLowerCase() ===
-              exerciseName.trim().toLowerCase()
-        ) ||
-        usersExercises.some(
-          (exercise) =>
-            exercise.id !== exerciseId &&
-            exercise.exerciseName.split("*")[0].toLowerCase() ===
-              exerciseName.trim().toLowerCase()
-        );
-
-      if (exerciseExists) {
-        setWeightErrors({
-          ...weightErrors,
-          exercise: "Exercise already exists",
-        });
-      }
-    }
-
 
 export {
     checkDuration,
     checkCaloriesBurned,
     checkSets,
     checkReps,
-    checkWeightPerRep,
-    checkCardioExercise,
-    checkWeightExercise
+    checkWeightPerRep
     };

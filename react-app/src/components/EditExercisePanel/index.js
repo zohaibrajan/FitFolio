@@ -9,6 +9,7 @@ import {
   updateCardioExerciseAllExercises,
   updateWeightExerciseAllExercises,
 } from "../../store/userOwnedExercises";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({
@@ -170,13 +171,7 @@ function EditExercisePanel({
             }}
           />
         </label>
-        {cardioErrors.exercise || weightErrors.exercise ? (
-          <div className="exercise-name-error">
-            {cardioErrors.exercise || weightErrors.exercise}
-          </div>
-        ) : (
-          <div className="exercise-name-error"></div>
-        )}
+        <ErrorHandlingComponent error={cardioErrors.exercise || weightErrors.exercise} />
         {exerciseType === "Cardio" ? (
           <>
             <label className="edit-exercise-panel-label">
@@ -213,11 +208,7 @@ function EditExercisePanel({
                 }}
               ></input>
             </label>
-            {cardioErrors.duration ? (
-              <div className="exercise-name-error">{cardioErrors.duration}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={cardioErrors.duration} />
             <label className="edit-exercise-panel-label">
               Calories Burned:
               <input
@@ -234,11 +225,7 @@ function EditExercisePanel({
                 }}
               ></input>
             </label>
-            {cardioErrors.calories ? (
-              <div className="exercise-name-error">{cardioErrors.calories}</div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={cardioErrors.calories} />
           </>
         ) : (
           <>
