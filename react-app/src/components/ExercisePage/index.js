@@ -123,45 +123,45 @@ function ExercisePage() {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (exerciseType === "cardio") {
-  //     const cardioExerciseForm = new FormData();
-  //     const cardioLog = new FormData();
-  //     cardioLog.append("duration", duration);
-  //     cardioLog.append("calories_burned", caloriesBurned);
-  //     cardioLog.append("date", formattingUserInputDate(date.selectedDate));
-  //     cardioLog.append("exercise_name", exerciseName);
-  //     cardioExerciseForm.append("exercise_name", exerciseName);
-  //     cardioExerciseForm.append("intensity", intensity);
-  //     cardioExerciseForm.append("duration", duration);
-  //     cardioExerciseForm.append("calories_burned", caloriesBurned);
-  //     try {
-  //       await dispatch(createCardioExerciseThunk(cardioExerciseForm));
-  //       await dispatch(createCardioLogThunk(cardioLog));
-  //       history.replace("/my-home/diary");
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   } else {
-  //     const strengthExerciseForm = new FormData();
-  //     const strengthLog = new FormData();
-  //     strengthLog.append("sets", sets);
-  //     strengthLog.append("repetitions", reps);
-  //     strengthLog.append("weight_per_rep", weightPerRep);
-  //     strengthLog.append("date", formattingUserInputDate(date.selectedDate));
-  //     strengthLog.append("exercise_name", exerciseName);
-  //     strengthExerciseForm.append("exercise_name", exerciseName);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (exerciseType === "cardio") {
+      const cardioExerciseForm = new FormData();
+      const cardioLog = new FormData();
+      cardioLog.append("duration", duration);
+      cardioLog.append("calories_burned", caloriesBurned);
+      cardioLog.append("date", formattingUserInputDate(date.selectedDate));
+      cardioLog.append("exercise_name", exerciseName);
+      cardioExerciseForm.append("exercise_name", exerciseName);
+      cardioExerciseForm.append("intensity", intensity);
+      cardioExerciseForm.append("duration", duration);
+      cardioExerciseForm.append("calories_burned", caloriesBurned);
+      try {
+        await dispatch(createCardioExerciseThunk(cardioExerciseForm));
+        await dispatch(createCardioLogThunk(cardioLog));
+        history.replace("/my-home/diary");
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      const strengthExerciseForm = new FormData();
+      const strengthLog = new FormData();
+      strengthLog.append("sets", sets);
+      strengthLog.append("repetitions", reps);
+      strengthLog.append("weight_per_rep", weightPerRep);
+      strengthLog.append("date", formattingUserInputDate(date.selectedDate));
+      strengthLog.append("exercise_name", exerciseName);
+      strengthExerciseForm.append("exercise_name", exerciseName);
 
-  //     try {
-  //       await dispatch(createWeightExerciseThunk(strengthExerciseForm));
-  //       await dispatch(createWeightLogThunk(strengthLog));
-  //       history.replace("/my-home/diary");
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   }
-  // };
+      try {
+        await dispatch(createWeightExerciseThunk(strengthExerciseForm));
+        await dispatch(createWeightLogThunk(strengthLog));
+        history.replace("/my-home/diary");
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   return (
     <div className="exercise-page-container">
