@@ -1,4 +1,5 @@
 import React from "react";
+import StrengthExerciseForm from "./StrengthPage";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -122,45 +123,45 @@ function ExercisePage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (exerciseType === "cardio") {
-      const cardioExerciseForm = new FormData();
-      const cardioLog = new FormData();
-      cardioLog.append("duration", duration);
-      cardioLog.append("calories_burned", caloriesBurned);
-      cardioLog.append("date", formattingUserInputDate(date.selectedDate));
-      cardioLog.append("exercise_name", exerciseName);
-      cardioExerciseForm.append("exercise_name", exerciseName);
-      cardioExerciseForm.append("intensity", intensity);
-      cardioExerciseForm.append("duration", duration);
-      cardioExerciseForm.append("calories_burned", caloriesBurned);
-      try {
-        await dispatch(createCardioExerciseThunk(cardioExerciseForm));
-        await dispatch(createCardioLogThunk(cardioLog));
-        history.replace("/my-home/diary");
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      const strengthExerciseForm = new FormData();
-      const strengthLog = new FormData();
-      strengthLog.append("sets", sets);
-      strengthLog.append("repetitions", reps);
-      strengthLog.append("weight_per_rep", weightPerRep);
-      strengthLog.append("date", formattingUserInputDate(date.selectedDate));
-      strengthLog.append("exercise_name", exerciseName);
-      strengthExerciseForm.append("exercise_name", exerciseName);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (exerciseType === "cardio") {
+  //     const cardioExerciseForm = new FormData();
+  //     const cardioLog = new FormData();
+  //     cardioLog.append("duration", duration);
+  //     cardioLog.append("calories_burned", caloriesBurned);
+  //     cardioLog.append("date", formattingUserInputDate(date.selectedDate));
+  //     cardioLog.append("exercise_name", exerciseName);
+  //     cardioExerciseForm.append("exercise_name", exerciseName);
+  //     cardioExerciseForm.append("intensity", intensity);
+  //     cardioExerciseForm.append("duration", duration);
+  //     cardioExerciseForm.append("calories_burned", caloriesBurned);
+  //     try {
+  //       await dispatch(createCardioExerciseThunk(cardioExerciseForm));
+  //       await dispatch(createCardioLogThunk(cardioLog));
+  //       history.replace("/my-home/diary");
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   } else {
+  //     const strengthExerciseForm = new FormData();
+  //     const strengthLog = new FormData();
+  //     strengthLog.append("sets", sets);
+  //     strengthLog.append("repetitions", reps);
+  //     strengthLog.append("weight_per_rep", weightPerRep);
+  //     strengthLog.append("date", formattingUserInputDate(date.selectedDate));
+  //     strengthLog.append("exercise_name", exerciseName);
+  //     strengthExerciseForm.append("exercise_name", exerciseName);
 
-      try {
-        await dispatch(createWeightExerciseThunk(strengthExerciseForm));
-        await dispatch(createWeightLogThunk(strengthLog));
-        history.replace("/my-home/diary");
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
+  //     try {
+  //       await dispatch(createWeightExerciseThunk(strengthExerciseForm));
+  //       await dispatch(createWeightLogThunk(strengthLog));
+  //       history.replace("/my-home/diary");
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="exercise-page-container">
@@ -169,11 +170,7 @@ function ExercisePage() {
           <span>Create a New Exercise</span>
         </div>
         <div className="create-exercise-container">
-          <form
-            className="create-exercise-form"
-            onSubmit={handleSubmit}
-            encType="multipart/form-data"
-          >
+          <div className="create-exercise-form">
             <FormInput
               label={"Exercise Name"}
               type={"text"}
@@ -329,7 +326,8 @@ function ExercisePage() {
               </>
             ) : (
               <>
-                <label className="exercise-labels">
+              <StrengthExerciseForm exerciseName={exerciseName} />
+                {/* <label className="exercise-labels">
                   Sets
                   <input
                     className="exercise-inputs"
@@ -397,10 +395,10 @@ function ExercisePage() {
                   </div>
                 ) : (
                   <div className="exercise-name-error"></div>
-                )}
+                )} */}
               </>
             )}
-            <div className="create-exercise-button-container">
+            {/* <div className="create-exercise-button-container">
               <button
                 type="submit"
                 className="create-exercise-button"
@@ -408,8 +406,8 @@ function ExercisePage() {
               >
                 Add Exercise
               </button>
-            </div>
-          </form>
+            </div> */}
+          </div>
           <div className="create-exercise-text">
             <h3>Creating a New Exercise</h3>
             <p>

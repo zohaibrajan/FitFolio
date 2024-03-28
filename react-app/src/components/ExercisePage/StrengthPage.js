@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
-import { FormInput } from "../FormElements";
+import { FormInput, FormSubmitButton } from "../FormElements";
 import { useSelectedDate } from "../../context/SelectedDate";
+import { createWeightExerciseThunk } from "../../store/weightExercises";
+import { createWeightLogThunk } from "../../store/weightLogs";
+import { useHistory } from "react-router-dom";
 import {
   checkSets,
   checkReps,
   checkWeightPerRep,
   isEmpty,
   hasErrors,
-  formattingUserInputDate
+  formattingUserInputDate,
 } from "../../utils";
 
 function StrengthExerciseForm({ exerciseName }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const date = useSelectedDate();
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
@@ -88,15 +92,14 @@ function StrengthExerciseForm({ exerciseName }) {
         }}
       />
       <ErrorHandlingComponent error={weightErrors.weightPerRep} />
-      <div className="create-exercise-button-container">
-        <button
-          type="submit"
-          className="create-exercise-button"
-          disabled={disabled}
-        >
-          Add Exercise
-        </button>
-      </div>
+      <FormSubmitButton
+        disabled={disabled}
+        divClass={"create-exercise-button-container"}
+        buttonClass={"create-exercise-button"}
+        text={"Add Exercise"}
+      />
     </form>
   );
 }
+
+export default StrengthExerciseForm;
