@@ -60,8 +60,8 @@ function CardioForm({ exerciseName }) {
         onChange={(e) => setIntensity(e.target.value)}
         options={[
           { label: "Low", value: "Low" },
-          { label: "High", value: "High" },
           { label: "Medium", value: "Medium" },
+          { label: "High", value: "High" }
         ]}
       />
       <ErrorHandlingComponent error={false} />
