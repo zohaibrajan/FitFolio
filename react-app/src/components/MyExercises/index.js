@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import "./MyExercises.css";
 import EditExercisePanel from "../EditExercisePanel";
 
-function MyExercises() {
+function MyExercises({ type }) {
   // exerciseType = exerciseType.charAt(0).toUpperCase() + exerciseType.slice(1);
-  const [exerciseType, setExerciseType] = useState("Cardio"); // ["Cardio", "Strength"]
+  const [exerciseType, setExerciseType] = useState(type); // ["Cardio", "Strength"]
   const dispatch = useDispatch();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState({});
@@ -39,6 +39,10 @@ function MyExercises() {
     setIsPanelOpen(false);
   }, [exerciseType]);
 
+  useEffect(() => {
+    setExerciseType(type);
+  }, [type]);
+
   const handleDelete = (e, exerciseId) => {
     e.preventDefault();
     if (exerciseType === "Cardio") {
@@ -56,6 +60,7 @@ function MyExercises() {
             <span>
               My
               <select
+                value={exerciseType}
                 onChange={(e) => setExerciseType(e.target.value)}
                 className="exercise-type-select"
               >
