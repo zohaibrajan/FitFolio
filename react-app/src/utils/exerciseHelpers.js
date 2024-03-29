@@ -34,11 +34,36 @@ const checkWeightPerRep = (weightPerRep, weightErrors, setWeightErrors) => {
   }
 };
 
+  const checkForExercise = (exerciseName, exerciseType, cardioExercises, weightExercises, usersExercises, setNameError) => {
+    const trimmedExerciseName = exerciseName.trim().toLowerCase(); // trim and lowercase exercise name
+    const exercises =
+      exerciseType === "cardio" ? cardioExercises : weightExercises; // get exercises based on exerciseType
+
+    const exerciseExists = // check if exercise already exists
+      exercises.some(
+        (exercise) =>
+          exercise.exerciseName.toLowerCase() === trimmedExerciseName
+      ) ||
+      usersExercises.some(
+        (exercise) =>
+          exercise.exerciseName.split("*")[0].toLowerCase() ===
+          trimmedExerciseName
+      );
+
+    if (exerciseExists) {
+      // set error if exercise already exists
+      setNameError("Exercise already exists");
+    } else if (exerciseName.length > 50) {
+      setNameError("Must be less than 50 characters");
+    }
+  };
+
 
 export {
     checkDuration,
     checkCaloriesBurned,
     checkSets,
     checkReps,
-    checkWeightPerRep
+    checkWeightPerRep,
+    checkForExercise
     };

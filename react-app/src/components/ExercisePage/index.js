@@ -2,12 +2,13 @@ import React from "react";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import StrengthExerciseForm from "./StrengthPage";
 import CardioForm from "./CardioPage";
+import MyExercises from "../MyExercises";
 import { FormInput, FormSelect } from "../FormElements";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
-import MyExercises from "../MyExercises";
+import { checkForExercise } from "../../utils";
 import "./ExercisePage.css";
 
 function ExercisePage() {
@@ -20,7 +21,7 @@ function ExercisePage() {
   const weightExercises = Object.values(weightExercisesObj);
   const [exerciseName, setExerciseName] = useState("");
   const [nameError, setNameError] = useState("");
-  const [exerciseType, setExerciseType] = useState("cardio");
+  const [exerciseType, setExerciseType] = useState("Cardio");
 
   useEffect(() => { // useEffect to get exercises based on exerciseType
     const thunkAction =
@@ -28,30 +29,16 @@ function ExercisePage() {
         ? getAllCardioExercisesThunk
         : getAllWeightExercisesThunk;
     dispatch(thunkAction());
+    checkForExercise(
+      exerciseName,
+      exerciseType,
+      cardioExercises,
+      weightExercises,
+      usersExercises,
+      setNameError
+    ); // checks for exercise when exerciseType changes
+    // eslint-disable-next-line
   }, [dispatch, exerciseType]);
-
-  const checkForExercise = (exerciseName) => {
-    const trimmedExerciseName = exerciseName.trim().toLowerCase(); // trim and lowercase exercise name
-    const exercises =
-      exerciseType === "cardio" ? cardioExercises : weightExercises; // get exercises based on exerciseType
-
-    const exerciseExists = // check if exercise already exists
-      exercises.some(
-        (exercise) =>
-          exercise.exerciseName.toLowerCase() === trimmedExerciseName
-      ) ||
-      usersExercises.some(
-        (exercise) =>
-          exercise.exerciseName.split("*")[0].toLowerCase() ===
-          trimmedExerciseName
-      );
-
-    if (exerciseExists) { // set error if exercise already exists
-      setNameError("Exercise already exists");
-    } else if (exerciseName.length > 50) {
-      setNameError("Must be less than 50 characters");
-    }
-  };
 
   return (
     <div className="exercise-page-container">
@@ -67,7 +54,7 @@ function ExercisePage() {
               value={exerciseName}
               placeholder={"Exercise Name eg. Running"}
               name={"exercise-name"}
-              onBlur={() => checkForExercise(exerciseName)}
+              onBlur={(e) => checkForExercise(e.target.value, exerciseType, cardioExercises, weightExercises, usersExercises, setNameError)}
               onChange={(e) => {
                 setExerciseName(e.target.value);
                 setNameError("");
@@ -80,12 +67,12 @@ function ExercisePage() {
               value={exerciseType}
               onChange={(e) => setExerciseType(e.target.value)}
               options={[
-                { label: "Cardio", value: "cardio" },
-                { label: "Strength", value: "strength" },
+                { label: "Cardio", value: "Cardio" },
+                { label: "Strength", value: "Strength" },
               ]}
             />
             <ErrorHandlingComponent error={false} />
-            {exerciseType === "cardio" ? (
+            {exerciseType === "Cardio" ? (
               <CardioForm exerciseName={exerciseName} />
             ) : (
               <StrengthExerciseForm exerciseName={exerciseName} />
@@ -110,7 +97,7 @@ function ExercisePage() {
           </div>
         </div>
       </div>
-      <MyExercises exerciseType={exerciseType} />
+      <MyExercises type={exerciseType} />
     </div>
   );
 }
