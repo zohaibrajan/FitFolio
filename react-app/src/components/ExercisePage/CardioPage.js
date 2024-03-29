@@ -6,16 +6,33 @@ import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import { FormInput, FormSubmitButton, FormSelect } from "../FormElements";
 import { createCardioExerciseThunk } from "../../store/cardioExercises";
 import { createCardioLogThunk } from "../../store/cardioLogs";
+import {
+  checkDuration,
+  checkCaloriesBurned,
+  isEmpty,
+  hasErrors,
+  formattingUserInputDate,
+} from "../../utils";
 
-function CardioPage() {
+function CardioForm({ exerciseName }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const date = useSelectedDate();
   const [intensity, setIntensity] = useState("Low");
   const [caloriesBurned, setCaloriesBurned] = useState("");
   const [duration, setDuration] = useState("");
+  const [cardioErrors, setCardioErrors] = useState({
+    duration: "",
+    calories: "",
+  });
+
+  const commonChecks = isEmpty(exerciseName);
+  const cardioChecks =
+    [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
+  const disabled = commonChecks || cardioChecks;
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const cardioExerciseForm = new FormData();
     const cardioLog = new FormData();
     cardioLog.append("duration", duration);
@@ -47,7 +64,7 @@ function CardioPage() {
           { label: "Medium", value: "Medium" },
         ]}
       />
-      <span style={{ height: "10px" }}></span>
+      <ErrorHandlingComponent error={false} />
       <FormInput
         label={"How Long? (Minutes)"}
         type={"number"}
@@ -87,3 +104,6 @@ function CardioPage() {
     </form>
   );
 }
+
+
+export default CardioForm;

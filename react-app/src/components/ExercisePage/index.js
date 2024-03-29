@@ -1,32 +1,17 @@
 import React from "react";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import StrengthExerciseForm from "./StrengthPage";
+import CardioForm from "./CardioPage";
+import { FormInput, FormSelect } from "../FormElements";
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
-import { createCardioExerciseThunk } from "../../store/cardioExercises";
-import { createWeightExerciseThunk } from "../../store/weightExercises";
-import { createWeightLogThunk } from "../../store/weightLogs";
-import { createCardioLogThunk } from "../../store/cardioLogs";
 import MyExercises from "../MyExercises";
 import "./ExercisePage.css";
-import { useSelectedDate } from "../../context/SelectedDate";
-import { formattingUserInputDate } from "../../utils";
-import {
-  checkDuration,
-  checkCaloriesBurned,
-  checkSets,
-  checkReps,
-  checkWeightPerRep,
-} from "../../utils/exerciseHelpers";
-import { FormInput, FormSelect } from "../FormElements";
-import ErrorHandlingComponent from "../ErrorHandlingComponent";
 
 function ExercisePage() {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const date = useSelectedDate();
   const cardioExercisesObj = useSelector((state) => state.cardioExercises);
   const weightExercisesObj = useSelector((state) => state.weightExercises);
   const usersExercisesObj = useSelector((state) => state.userExercisesFiltered);
@@ -34,132 +19,37 @@ function ExercisePage() {
   const cardioExercises = Object.values(cardioExercisesObj);
   const weightExercises = Object.values(weightExercisesObj);
   const [exerciseName, setExerciseName] = useState("");
-  const [intensity, setIntensity] = useState("Low");
-  const [caloriesBurned, setCaloriesBurned] = useState("");
-  const [duration, setDuration] = useState("");
-  const [sets, setSets] = useState("");
-  const [reps, setReps] = useState("");
-  const [weightPerRep, setWeightPerRep] = useState("");
+  const [nameError, setNameError] = useState("");
   const [exerciseType, setExerciseType] = useState("cardio");
-  const [cardioErrors, setCardioErrors] = useState({
-    exercise: "",
-    duration: "",
-    calories: "",
-  });
-  const [weightErrors, setWeightErrors] = useState({
-    exercise: "",
-    sets: "",
-    reps: "",
-    weightPerRep: "",
-  });
 
-  const isEmpty = (str) => str === "";
-  const hasErrors = (errors) =>
-    Object.values(errors).some((error) => error.length > 0);
-
-  const commonChecks = isEmpty(exerciseName);
-  const cardioChecks =
-    [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
-  const weightChecks =
-    [sets, reps, weightPerRep].some(isEmpty) || hasErrors(weightErrors);
-
-  const disabled =
-    commonChecks || (exerciseType === "cardio" ? cardioChecks : weightChecks);
-
-  useEffect(() => {
-    if (exerciseType === "cardio") {
-      dispatch(getAllCardioExercisesThunk());
-    } else {
-      dispatch(getAllWeightExercisesThunk());
-    }
+  useEffect(() => { // useEffect to get exercises based on exerciseType
+    const thunkAction =
+      exerciseType === "cardio"
+        ? getAllCardioExercisesThunk
+        : getAllWeightExercisesThunk;
+    dispatch(thunkAction());
   }, [dispatch, exerciseType]);
 
   const checkForExercise = (exerciseName) => {
-    if (exerciseType === "cardio") {
-      const exerciseExists =
-        cardioExercises.some(
-          (exercise) =>
-            exercise.exerciseName.toLowerCase() ===
-            exerciseName.trim().toLowerCase()
-        ) ||
-        usersExercises.some(
-          (exercise) =>
-            exercise.exerciseName.split("*")[0].toLowerCase() ===
-            exerciseName.trim().toLowerCase()
-        );
+    const trimmedExerciseName = exerciseName.trim().toLowerCase(); // trim and lowercase exercise name
+    const exercises =
+      exerciseType === "cardio" ? cardioExercises : weightExercises; // get exercises based on exerciseType
 
-      if (exerciseExists) {
-        setCardioErrors({
-          ...cardioErrors,
-          exercise: "Exercise already exists",
-        });
-      }
-    } else {
-      const exerciseExists =
-        weightExercises.some(
-          (exercise) =>
-            exercise.exerciseName.toLowerCase() ===
-            exerciseName.trim().toLowerCase()
-        ) ||
-        usersExercises.some(
-          (exercise) =>
-            exercise.exerciseName.split("*")[0].toLowerCase() ===
-            exerciseName.trim().toLowerCase()
-        );
+    const exerciseExists = // check if exercise already exists
+      exercises.some(
+        (exercise) =>
+          exercise.exerciseName.toLowerCase() === trimmedExerciseName
+      ) ||
+      usersExercises.some(
+        (exercise) =>
+          exercise.exerciseName.split("*")[0].toLowerCase() ===
+          trimmedExerciseName
+      );
 
-      if (exerciseExists) {
-        setCardioErrors({
-          ...cardioErrors,
-          exercise: "Exercise already exists",
-        });
-      }
-    }
-
-    if (exerciseName.length > 50) {
-      setCardioErrors({
-        ...cardioErrors,
-        exercise: "Must be less than 50 characters",
-      });
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (exerciseType === "cardio") {
-      const cardioExerciseForm = new FormData();
-      const cardioLog = new FormData();
-      cardioLog.append("duration", duration);
-      cardioLog.append("calories_burned", caloriesBurned);
-      cardioLog.append("date", formattingUserInputDate(date.selectedDate));
-      cardioLog.append("exercise_name", exerciseName);
-      cardioExerciseForm.append("exercise_name", exerciseName);
-      cardioExerciseForm.append("intensity", intensity);
-      cardioExerciseForm.append("duration", duration);
-      cardioExerciseForm.append("calories_burned", caloriesBurned);
-      try {
-        await dispatch(createCardioExerciseThunk(cardioExerciseForm));
-        await dispatch(createCardioLogThunk(cardioLog));
-        history.replace("/my-home/diary");
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      const strengthExerciseForm = new FormData();
-      const strengthLog = new FormData();
-      strengthLog.append("sets", sets);
-      strengthLog.append("repetitions", reps);
-      strengthLog.append("weight_per_rep", weightPerRep);
-      strengthLog.append("date", formattingUserInputDate(date.selectedDate));
-      strengthLog.append("exercise_name", exerciseName);
-      strengthExerciseForm.append("exercise_name", exerciseName);
-
-      try {
-        await dispatch(createWeightExerciseThunk(strengthExerciseForm));
-        await dispatch(createWeightLogThunk(strengthLog));
-        history.replace("/my-home/diary");
-      } catch (e) {
-        console.error(e);
-      }
+    if (exerciseExists) { // set error if exercise already exists
+      setNameError("Exercise already exists");
+    } else if (exerciseName.length > 50) {
+      setNameError("Must be less than 50 characters");
     }
   };
 
@@ -180,44 +70,10 @@ function ExercisePage() {
               onBlur={() => checkForExercise(exerciseName)}
               onChange={(e) => {
                 setExerciseName(e.target.value);
-                setCardioErrors({ ...cardioErrors, exercise: "" });
-                setWeightErrors({ ...weightErrors, exercise: "" });
+                setNameError("");
               }}
             />
-            <ErrorHandlingComponent
-              error={cardioErrors.exercise || weightErrors.exercise}
-            />
-            {/* <label
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "3px",
-                fontWeight: "bold",
-                width1: "100%",
-              }}
-            >
-              Exercise Name
-              <input
-                className="exercise-inputs"
-                type="text"
-                value={exerciseName}
-                placeholder="Exercise Name eg. Running"
-                name="exercise-name"
-                onBlur={() => checkForExercise(exerciseName)}
-                onChange={(e) => {
-                  setExerciseName(e.target.value);
-                  setCardioErrors({ ...cardioErrors, exercise: "" });
-                  setWeightErrors({ ...weightErrors, exercise: "" });
-                }}
-              />
-            </label>
-            {cardioErrors.exercise || weightErrors.exercise ? (
-              <div className="exercise-name-error">
-                {cardioErrors.exercise || weightErrors.exercise}
-              </div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )} */}
+            <ErrorHandlingComponent error={nameError} />
             <FormSelect
               label={"Exercise Type"}
               name={"exercise-type"}
@@ -228,185 +84,12 @@ function ExercisePage() {
                 { label: "Strength", value: "strength" },
               ]}
             />
-            {/* <label
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "3px",
-                marginBottom: "7px",
-                fontWeight: "bold",
-              }}
-            >
-              Exercise Type
-              <select
-                style={{ width: "65%" }}
-                name="exercise-type"
-                value={exerciseType}
-                onChange={(e) => setExerciseType(e.target.value)}
-              >
-                <option value="cardio">Cardio</option>
-                <option value="strength">Strength</option>
-              </select> */}
-            {/* </label> */}
+            <ErrorHandlingComponent error={false} />
             {exerciseType === "cardio" ? (
-              <>
-                <label
-                  className="exercise-labels"
-                  style={{ marginBottom: "5px" }}
-                >
-                  Intensity?
-                  <select
-                    className="exercise-inputs"
-                    name="intensity"
-                    value={intensity}
-                    onChange={(e) => setIntensity(e.target.value)}
-                  >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                  </select>
-                </label>
-                <span style={{ height: "10px" }}></span>
-                <label className="exercise-labels">
-                  How Long? (Minutes)
-                  <input
-                    className="exercise-inputs"
-                    type="number"
-                    value={duration}
-                    placeholder="Duration eg. 30"
-                    min={0}
-                    onBlur={(e) =>
-                      checkDuration(
-                        e.target.value,
-                        cardioErrors,
-                        setCardioErrors
-                      )
-                    }
-                    onChange={(e) => {
-                      setDuration(e.target.value);
-                      setCardioErrors({ ...cardioErrors, duration: "" });
-                    }}
-                  />
-                </label>
-                {cardioErrors.duration ? (
-                  <div className="exercise-name-error">
-                    {cardioErrors.duration}
-                  </div>
-                ) : (
-                  <div className="exercise-name-error"></div>
-                )}
-                <label className="exercise-labels">
-                  Calories Burned
-                  <input
-                    className="exercise-inputs"
-                    type="number"
-                    min={0}
-                    placeholder="Calories Burned eg. 300"
-                    value={caloriesBurned}
-                    onBlur={(e) =>
-                      checkCaloriesBurned(
-                        e.target.value,
-                        cardioErrors,
-                        setCardioErrors
-                      )
-                    }
-                    onChange={(e) => {
-                      setCaloriesBurned(e.target.value);
-                      setCardioErrors({ ...cardioErrors, calories: "" });
-                    }}
-                  />
-                </label>
-                {cardioErrors.calories ? (
-                  <div className="exercise-name-error">
-                    {cardioErrors.calories}
-                  </div>
-                ) : (
-                  <div className="exercise-name-error"></div>
-                )}
-              </>
+              <CardioForm exerciseName={exerciseName} />
             ) : (
-              <>
               <StrengthExerciseForm exerciseName={exerciseName} />
-                {/* <label className="exercise-labels">
-                  Sets
-                  <input
-                    className="exercise-inputs"
-                    type="number"
-                    value={sets}
-                    placeholder="Sets eg. 3"
-                    onBlur={(e) =>
-                      checkSets(e.target.value, weightErrors, setWeightErrors)
-                    }
-                    onChange={(e) => {
-                      setSets(e.target.value);
-                      setWeightErrors({ ...weightErrors, sets: "" });
-                    }}
-                  />
-                </label>
-                {weightErrors.sets ? (
-                  <div className="exercise-name-error">{weightErrors.sets}</div>
-                ) : (
-                  <div className="exercise-name-error"></div>
-                )}
-                <label className="exercise-labels">
-                  Repetitions:
-                  <input
-                    className="exercise-inputs"
-                    type="number"
-                    value={reps}
-                    placeholder="Repetitions eg. 10"
-                    onBlur={(e) =>
-                      checkReps(e.target.value, weightErrors, setWeightErrors)
-                    }
-                    onChange={(e) => {
-                      setReps(e.target.value);
-                      setWeightErrors({ ...weightErrors, reps: "" });
-                    }}
-                  />
-                </label>
-                {weightErrors.reps ? (
-                  <div className="exercise-name-error">{weightErrors.reps}</div>
-                ) : (
-                  <div className="exercise-name-error"></div>
-                )}
-                <label className="exercise-labels">
-                  Weight Per Repetition:
-                  <input
-                    className="exercise-inputs"
-                    type="number"
-                    placeholder="Weight Per Rep eg. 50"
-                    value={weightPerRep}
-                    onBlur={(e) =>
-                      checkWeightPerRep(
-                        e.target.value,
-                        weightErrors,
-                        setWeightErrors
-                      )
-                    }
-                    onChange={(e) => {
-                      setWeightPerRep(e.target.value);
-                      setWeightErrors({ ...weightErrors, weightPerRep: "" });
-                    }}
-                  />
-                </label>
-                {weightErrors.weightPerRep ? (
-                  <div className="exercise-name-error">
-                    {weightErrors.weightPerRep}
-                  </div>
-                ) : (
-                  <div className="exercise-name-error"></div>
-                )} */}
-              </>
             )}
-            {/* <div className="create-exercise-button-container">
-              <button
-                type="submit"
-                className="create-exercise-button"
-                disabled={disabled}
-              >
-                Add Exercise
-              </button>
-            </div> */}
           </div>
           <div className="create-exercise-text">
             <h3>Creating a New Exercise</h3>
