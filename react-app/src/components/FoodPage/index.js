@@ -7,6 +7,7 @@ import { getUserFoodsThunk } from "../../store/userFoods";
 import { createFoodLogThunk } from "../../store/foodLogs";
 import { useSelectedDate } from "../../context/SelectedDate";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
+import { FormInput } from "../FormElements";
 import {
   formattingUserInputDate,
   checkRestaurants,
@@ -101,7 +102,9 @@ function FoodPage() {
               <input
                 type="text"
                 value={foodName}
-                onBlur={(e) => checkForFood(e.target.value, userFoods, errors, setErrors)}
+                onBlur={(e) =>
+                  checkForFood(e.target.value, userFoods, errors, setErrors)
+                }
                 required
                 placeholder="Food Description"
                 onChange={(e) => {
@@ -164,38 +167,31 @@ function FoodPage() {
               </div>
             </label>
             <ErrorHandlingComponent error={errors.unit || errors.servings} />
-            <label className="food-labels">
-              Calories
-              <input
-                type="number"
-                min={1}
-                value={calories}
-                required
-                placeholder="Calories in Serving"
-                onBlur={(e) => checkCalories(e.target.value, errors, setErrors)}
-                onChange={(e) => {
-                  setErrors({ ...errors, calories: "" });
-                  setCalories(e.target.value);
-                }}
-              />
-            </label>
+            <FormInput
+              label={"Calories"}
+              type="number"
+              value={calories}
+              required
+              placeholder="Calories in Serving"
+              onBlur={(e) => checkCalories(e.target.value, errors, setErrors)}
+              onChange={(e) => {
+                setErrors({ ...errors, calories: "" });
+                setCalories(e.target.value);
+              }}
+            />
             <ErrorHandlingComponent error={errors.calories} />
-            <label className="food-labels">
-              Protein
-              <input
-                type="number"
-                min={1}
-                value={protein}
-                required
-                placeholder="Protein in Serving"
-                onBlur={(e) => checkProtein(e.target.value, errors, setErrors)}
-                onChange={(e) => {
-                  setErrors({ ...errors, protein: "" });
-                  setProtein(e.target.value);
-                }}
-              />
-            </label>
-            <ErrorHandlingComponent error={errors.name} />
+            <FormInput
+              label={"Protein"}
+              type="number"
+              value={protein}
+              placeholder="Protein in Serving"
+              onBlur={(e) => checkProtein(e.target.value, errors, setErrors)}
+              onChange={(e) => {
+                setErrors({ ...errors, protein: "" });
+                setProtein(e.target.value);
+              }}
+            />
+            <ErrorHandlingComponent error={errors.protein} />
             <label className="can-others-use-label">
               <input
                 type="checkbox"
@@ -204,14 +200,7 @@ function FoodPage() {
               />
               Yes, other members can use this food
             </label>
-            {canOthersUse ? (
-              <div className="exercise-name-error">
-                {" "}
-                You will not be able to delete or edit this item once created
-              </div>
-            ) : (
-              <div className="exercise-name-error"></div>
-            )}
+            <ErrorHandlingComponent error={canOthersUse} />
             <div className="create-food-button-container">
               <button
                 className="create-food-button"

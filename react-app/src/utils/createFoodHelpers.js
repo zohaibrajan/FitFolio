@@ -23,8 +23,10 @@ const checkCalories = (calories, errors, setErrors) => {
 };
 
 const checkProtein = (protein, errors, setErrors) => {
+  console.log(protein < 1);
   if (protein < 1) {
     setErrors({ ...errors, protein: "Protein must be greater than 0" });
+    console.log(errors.protein); 
   }
 };
 
