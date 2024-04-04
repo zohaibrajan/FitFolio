@@ -1,7 +1,7 @@
 from flask_login import current_user
 from app.models import Goal
 
-def verify_goal(func):
+def check_if_goal(func):
     def wrapper():
         goal = Goal.query.where(Goal.user_id == current_user.id).first()
 
@@ -11,5 +11,19 @@ def verify_goal(func):
             }, 403
 
         return func()
+
+    return wrapper
+
+
+def check_current_goal(func):
+    def wrapper():
+        current_goal = Goal.query.where(Goal.user_id == current_user.id).first()
+
+        if not current_goal:
+            return {
+                "message": "Goal Does Not Exist."
+            }, 404
+
+        return func(current_goal)
 
     return wrapper

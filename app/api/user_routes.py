@@ -8,10 +8,8 @@ from app.utils import (
     verify_cardio_log,
     verify_weight_log,
     verify_food_log,
-    verify_goal,
-    calculate_age,
-    calculate_calories_per_day,
-    convert_height_to_cm
+    check_if_goal,
+    check_current_goal
 )
 user_routes = Blueprint('users', __name__)
 
@@ -194,26 +192,20 @@ def deleting_a_food_log(food_log):
         "message": "Success"
     }, 200
 
-@user_routes.route('/goal')
+@user_routes.route('/goal', methods=["GET"], endpoint="user_goal")
 @login_required
-def user_goal():
+@check_current_goal
+def user_goal(current_goal):
     """"Get the users goal"""
-    goal = Goal.query.where(Goal.user_id == current_user.id).first()
-
-    if not goal:
-        return {
-            "message": "You have no goal"
-        }, 404
-
     return {
-        "goal": goal.to_dict()
+        "goal": current_goal.to_dict()
     }
 
 
-@user_routes.route('/goal', methods=["POST"])
+@user_routes.route('/goal', methods=["POST"], endpoint="create_goal")
 @login_required
-@verify_goal
-def creating_user_goal():
+@check_if_goal
+def create_goal_route():
     """Creating a goal"""
     user = User.query.get(current_user.id)
     user_info = user.to_dict_with_info()
@@ -222,47 +214,15 @@ def creating_user_goal():
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-        data = form.data
-        goal = data["goal"]
-        lbs_per_week = data["lbs_per_week"]
-        starting_weight_kg = data["starting_weight"] * 0.453592
-        age = calculate_age(user_info["dateOfBirth"])
-        height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
-        gender = user_info["gender"]
-        calories_per_day = calculate_calories_per_day(gender, starting_weight_kg, height, age, goal, lbs_per_week)
-
-        starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
-        user.current_weight_lbs = starting_weight
-
-        new_goal = Goal(
-            user_id = current_user.id,
-            goal = goal,
-            starting_weight = starting_weight,
-            target_weight = data["target_weight"],
-            lbs_per_week = lbs_per_week,
-            calories_per_day = calories_per_day
-        )
-
-        db.session.add(new_goal)
-        db.session.flush()
-        db.session.commit()
-
-        return new_goal.to_dict()
-
+        return create_goal(form.data, user, user_info) # from app/api_helpers/goal_functions.py
     if form.errors:
         return form.errors
 
-@user_routes.route('/goal', methods=["PUT"])
+@user_routes.route('/goal', methods=["PUT"], endpoint="updating_user_goal")
 @login_required
-def updating_user_goal():
+@check_current_goal
+def updating_user_goal(current_goal):
     """Updating a goal"""
-    current_goal = Goal.query.where(Goal.user_id == current_user.id).first()
-
-    if not current_goal:
-        return {
-            "message": "Goal Does Not Exist."
-        }, 404
-
     user = User.query.get(current_user.id)
     user_info = user.to_dict_with_info()
 
@@ -270,43 +230,16 @@ def updating_user_goal():
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-        data = form.data
-        goal = data["goal"]
-        lbs_per_week = data["lbs_per_week"]
-        starting_weight_kg = data["starting_weight"] * 0.453592
-        age = calculate_age(user_info["dateOfBirth"])
-        height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
-        gender = user_info["gender"]
-        calories_per_day = calories_per_day = calculate_calories_per_day(gender, starting_weight_kg, height, age, goal, lbs_per_week)
-
-        starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
-        user.current_weight_lbs = starting_weight
-
-        current_goal.goal = goal
-        current_goal.starting_weight = starting_weight
-        current_goal.target_weight = data["target_weight"]
-        current_goal.lbs_per_week = lbs_per_week
-        current_goal.calories_per_day = calories_per_day
-
-        db.session.commit()
-
-        return current_goal.to_dict()
-
+        return update_goal(form.data, user, user_info, current_goal)
     if form.errors:
         return form.errors
 
 
-@user_routes.route('/goal', methods=["DELETE"])
+@user_routes.route('/goal', methods=["DELETE"], endpoint="deleting_users_goal")
 @login_required
-def deleting_users_goal():
-    goal = Goal.query.where(Goal.user_id == current_user.id).first()
-
-    if not goal:
-        return {
-            "message": "Goal could not be found"
-        }, 404
-
-    db.session.delete(goal)
+@check_current_goal
+def deleting_users_goal(current_goal):
+    db.session.delete(current_goal)
     db.session.commit()
 
     return {

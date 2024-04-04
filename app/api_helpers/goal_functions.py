@@ -29,3 +29,26 @@ def create_goal(data, user, user_info):
     db.session.commit()
 
     return new_goal.to_dict()
+
+
+def update_goal(data, user, user_info, current_goal):
+    goal = data["goal"]
+    lbs_per_week = data["lbs_per_week"]
+    starting_weight_kg = data["starting_weight"] * 0.453592
+    age = calculate_age(user_info["dateOfBirth"])
+    height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
+    gender = user_info["gender"]
+    calories_per_day = calories_per_day = calculate_calories_per_day(gender, starting_weight_kg, height, age, goal, lbs_per_week)
+
+    starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
+    user.current_weight_lbs = starting_weight
+
+    current_goal.goal = goal
+    current_goal.starting_weight = starting_weight
+    current_goal.target_weight = data["target_weight"]
+    current_goal.lbs_per_week = lbs_per_week
+    current_goal.calories_per_day = calories_per_day
+
+    db.session.commit()
+
+    return current_goal.to_dict()
