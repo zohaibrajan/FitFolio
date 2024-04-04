@@ -4,13 +4,7 @@ from app.models import User, CardioLog, db, WeightLog, FoodLog, Goal
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from app.api_helpers import *
-from app.utils import (
-    verify_cardio_log,
-    verify_weight_log,
-    verify_food_log,
-    check_if_goal,
-    check_current_goal
-)
+from app.utils import *
 user_routes = Blueprint('users', __name__)
 
 @user_routes.route('/')
