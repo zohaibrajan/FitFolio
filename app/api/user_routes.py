@@ -4,7 +4,7 @@ from app.models import User, CardioLog, CardioExercise, db, WeightExercise, Weig
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from sqlalchemy import and_, or_
-from app.utils import verify_cardio_log, calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
+from app.utils import verify_cardio_log, verify_weight_log, calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
 
 user_routes = Blueprint('users', __name__)
 
@@ -74,10 +74,6 @@ def update_a_users_cardio_log(cardio_log):
                 "errorMessage": "Sorry, exercise Does Not Exist"
             }, 404
 
-        if not data['calories_burned']:
-            data['calories_burned'] = int(data['duration']) * exercise.calories_per_minute
-
-
         updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
 
         cardio_log.duration = data['duration']
@@ -89,7 +85,7 @@ def update_a_users_cardio_log(cardio_log):
 
         db.session.commit()
 
-        return cardio_log.to_dict(), 201
+        return cardio_log.to_dict(), 200
 
     if form.errors:
         return form.errors
@@ -118,7 +114,7 @@ def create_user_cardio_log():
 
         exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
 
-        if not exercise:
+        if not exercise: # if the exercise is not found in the CardioExercise table, check the UserCardioExerciseVersion table
             exercise = UserCardioExerciseVersion.query.where(
                 and_(
                     UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
@@ -127,13 +123,10 @@ def create_user_cardio_log():
                 )
             ).first()
 
-        if not exercise:
+        if not exercise: # if the exercise is not found in the UserCardioExerciseVersion table, return an error message
             return {
                 "errorMessage": "Sorry, Exercise Does Not Exist"
             }, 404
-
-        if not data['calories_burned']:
-            data['calories_burned'] = int(data['duration']) * exercise.calories_per_minute
 
         new_cardio_log = CardioLog(
             duration = data['duration'],
@@ -170,7 +163,6 @@ def user_weight_logs_for_date(date):
     return {
         "allWeightLogs": [log.to_dict() for log in weight_logs]
     }
-
 
 @user_routes.route('/weight-logs', methods=["POST"])
 @login_required
@@ -220,20 +212,9 @@ def create_user_weight_log():
 
 @user_routes.route('/weight-logs/<int:weightLogId>', methods=["PUT"])
 @login_required
-def update_a_users_weight_log(weightLogId):
+@verify_weight_log
+def update_a_users_weight_log(weight_log):
     """Updating a weight log for a user"""
-    weight_log = WeightLog.query.get(weightLogId)
-
-    if not weight_log:
-        return {
-            "errorMessage": "Sorry, weight-log Does Not Exist"
-        }, 404
-
-    if weight_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     form = WeightLogForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
@@ -269,7 +250,7 @@ def update_a_users_weight_log(weightLogId):
 
             db.session.commit()
 
-            return weight_log.to_dict(), 201
+            return weight_log.to_dict(), 200
 
     if form.errors:
         return form.errors
