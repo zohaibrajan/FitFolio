@@ -9,15 +9,11 @@ from app.utils import (
     verify_weight_log,
     verify_food_log,
     calculate_age,
-    calculate_bmr_for_men,
-    calculate_bmr_for_women,
+    calculate_calories_per_day,
     convert_height_to_cm,
-    get_weight_exercise
+    get_weight_exercise,
+    get_cardio_exercise
 )
-
-# or_ is a function that allows you to specify multiple conditions in a query,
-# where at least one of the conditions needs to be true for a record to be included in the result set
-
 user_routes = Blueprint('users', __name__)
 
 @user_routes.route('/')
@@ -68,17 +64,7 @@ def update_a_users_cardio_log(cardio_log):
     if form.validate_on_submit():
         data = form.data
         exercise_from_form = data['exercise_name']
-
-        exercise = CardioExercise.query.filter(
-            or_(
-                CardioExercise.exercise_name.ilike(exercise_from_form),
-                and_(
-                    UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
-                    UserCardioExerciseVersion.is_deleted == False,
-                    UserCardioExerciseVersion.created_by_user_id == current_user.id
-                )
-            )
-        ).first()
+        exercise = get_cardio_exercise(exercise_from_form)
 
         if not exercise:
             return {
@@ -112,7 +98,6 @@ def deleting_a_cardio_log(cardio_log):
         "message": "Success"
     }, 200
 
-
 @user_routes.route('/cardio-logs', methods=["POST"])
 @login_required
 def create_user_cardio_log():
@@ -122,17 +107,7 @@ def create_user_cardio_log():
     if form.validate_on_submit():
         data = form.data
         exercise_from_form = data['exercise_name']
-
-        exercise = CardioExercise.query.filter(
-            or_(
-                CardioExercise.exercise_name.ilike(exercise_from_form),
-                and_(
-                    UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
-                    UserCardioExerciseVersion.is_deleted == False,
-                    UserCardioExerciseVersion.created_by_user_id == current_user.id
-                )
-            )
-        ).first()
+        exercise = get_cardio_exercise(exercise_from_form)
 
         if not exercise:
             return {
@@ -184,7 +159,6 @@ def create_user_weight_log():
     if form.validate_on_submit():
         data = form.data
         exercise_from_form = data['exercise_name']
-
         exercise = get_weight_exercise(exercise_from_form)
 
         if not exercise:
@@ -209,7 +183,6 @@ def create_user_weight_log():
 
     if form.errors:
         return form.errors
-
 
 @user_routes.route('/weight-logs/<int:weightLogId>', methods=["PUT"], endpoint="update_a_users_weight_log")
 @login_required
@@ -286,21 +259,15 @@ def create_user_food_log():
         food_from_form = data['name']
         servings = int(data["servings"])
 
-        food = Food.query.filter(
-            Food.name.ilike(f"{food_from_form}"),
-            or_(
-                ~Food.name.endswith('*'),
-                and_(Food.name.endswith('*'), Food.created_by_user_id == current_user.id)
-                )).first()
+        food = Food.query.filter(Food.name.ilike(f"{food_from_form}")).first()
 
         if not food:
             return {
-                "errorMessage": "Sorry, food Does Not Exist"
+                "errorMessage": "Sorry, Food Does Not Exist"
             }, 404
 
         calories_consumed = servings * food.calories
         protein_consumed = servings * food.protein
-
 
         new_food_log = FoodLog(
             servings = servings,
@@ -319,7 +286,6 @@ def create_user_food_log():
     if form.errors:
         return form.errors
 
-
 @user_routes.route('/food-logs/<int:foodLogId>', methods=["PUT"], endpoint="update_a_users_food_log")
 @login_required
 @verify_food_log
@@ -337,7 +303,7 @@ def update_a_users_food_log(food_log):
 
             if not food:
                 return {
-                    "errorMessage": "Sorry, food Does Not Exist"
+                    "errorMessage": "Sorry, Food Does Not Exist"
                 }, 404
 
             calories_consumed = servings * food.calories
@@ -370,7 +336,6 @@ def deleting_a_food_log(food_log):
     return {
         "message": "Success"
     }, 200
-
 
 @user_routes.route('/goal')
 @login_required
@@ -413,27 +378,10 @@ def creating_user_goal():
         age = calculate_age(user_info["dateOfBirth"])
         height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
         gender = user_info["gender"]
-        maintenance_calories = None
-        calories_per_day = None
-
-        if gender == "Female":
-            maintenance_calories = calculate_bmr_for_women(starting_weight_kg, height, age) + 600
-
-        if gender == "Male":
-            maintenance_calories = calculate_bmr_for_men(starting_weight_kg, height, age) + 600
-
-        if goal == "Maintain Weight":
-            calories_per_day = maintenance_calories
-        if goal == "Lose Weight":
-            calorie_deficit = (lbs_per_week * 3500) / 7
-            calories_per_day = maintenance_calories - calorie_deficit
-        if goal == "Gain Weight":
-            calorie_surplus = (lbs_per_week * 3500) / 7
-            calories_per_day = maintenance_calories + calorie_surplus
+        calories_per_day = calculate_calories_per_day(gender, starting_weight_kg, height, age, goal, lbs_per_week)
 
         starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
         user.current_weight_lbs = starting_weight
-
 
         new_goal = Goal(
             user_id = current_user.id,
@@ -478,23 +426,7 @@ def updating_user_goal():
         age = calculate_age(user_info["dateOfBirth"])
         height = convert_height_to_cm(user_info["heightFt"], user_info["heightIn"])
         gender = user_info["gender"]
-        maintenance_calories = None
-        calories_per_day = None
-
-        if gender == "Female":
-            maintenance_calories = calculate_bmr_for_women(starting_weight_kg, height, age)
-
-        if gender == "Male":
-            maintenance_calories = calculate_bmr_for_men(starting_weight_kg, height, age)
-
-        if goal == "Maintain Weight":
-            calories_per_day = maintenance_calories
-        if goal == "Lose Weight":
-            calorie_deficit = (lbs_per_week * 3500) / 7
-            calories_per_day = maintenance_calories - calorie_deficit
-        if goal == "Gain Weight":
-            calorie_surplus = (lbs_per_week * 3500) / 7
-            calories_per_day = maintenance_calories + calorie_surplus
+        calories_per_day = calories_per_day = calculate_calories_per_day(gender, starting_weight_kg, height, age, goal, lbs_per_week)
 
         starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
         user.current_weight_lbs = starting_weight
