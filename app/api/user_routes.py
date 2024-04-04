@@ -4,7 +4,7 @@ from app.models import User, CardioLog, CardioExercise, db, WeightExercise, Weig
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from sqlalchemy import and_, or_
-from utils import calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
+from app.utils import verify_cardio_log, calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
 
 user_routes = Blueprint('users', __name__)
 
@@ -47,42 +47,11 @@ def user_cardio_logs_for_date(date):
     }
 
 
-@user_routes.route('/cardio-logs/<int:cardioLogId>')
+@user_routes.route('/cardio-logs/<int:cardioLogId>', methods=["PUT"], endpoint="update_a_users_cardio_log")
 @login_required
-def get_a_cardio_log(cardioLogId):
-    """Get a single cardio log for a user"""
-    cardio_log = CardioLog.query.get(cardioLogId)
-
-    if not cardio_log:
-        return {
-            "errorMessage": "Sorry, cardio-log Does Not Exist"
-        }, 404
-
-    if cardio_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
-    return cardio_log.to_dict()
-
-
-
-@user_routes.route('/cardio-logs/<int:cardioLogId>', methods=["PUT"])
-@login_required
-def update_a_users_cardio_log(cardioLogId):
+@verify_cardio_log
+def update_a_users_cardio_log(cardio_log):
     """Updating a cardio log for a user"""
-    cardio_log = CardioLog.query.get(cardioLogId)
-
-    if not cardio_log:
-        return {
-            "errorMessage": "Sorry, cardio-log Does Not Exist"
-        }, 404
-
-    if cardio_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     form = CardioLogForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
@@ -125,21 +94,10 @@ def update_a_users_cardio_log(cardioLogId):
     if form.errors:
         return form.errors
 
-@user_routes.route('/cardio-logs/<int:cardioLogId>', methods=["DELETE"])
+@user_routes.route('/cardio-logs/<int:cardioLogId>', methods=["DELETE"], endpoint="deleting_a_cardio_log")
 @login_required
-def deleting_a_cardio_log(cardioLogId):
-    cardio_log = CardioLog.query.get(cardioLogId)
-
-    if not cardio_log:
-        return {
-        "errorMessage": "Sorry, cardio-log Does Not Exist"
-        }, 404
-
-    if cardio_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
+@verify_cardio_log
+def deleting_a_cardio_log(cardio_log):
     db.session.delete(cardio_log)
     db.session.commit()
 
@@ -213,23 +171,6 @@ def user_weight_logs_for_date(date):
         "allWeightLogs": [log.to_dict() for log in weight_logs]
     }
 
-@user_routes.route('/weight-logs/<int:weightLogId>')
-@login_required
-def get_a_weight_log(weightLogId):
-    """Get a single weight log for a user"""
-    weight_log = WeightLog.query.get(weightLogId)
-
-    if not weight_log:
-        return {
-            "errorMessage": "Sorry, weight-log Does Not Exist"
-        }, 404
-
-    if weight_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
-    return weight_log.to_dict()
 
 @user_routes.route('/weight-logs', methods=["POST"])
 @login_required
@@ -376,23 +317,6 @@ def user_food_logs_for_date(date):
         "allFoodLogs": [log.to_dict() for log in food_logs]
     }
 
-@user_routes.route('/food-logs/<int:foodLogId>')
-@login_required
-def get_a_food_log(foodLogId):
-    """Get a single food log for a user"""
-    food_log = FoodLog.query.get(foodLogId)
-
-    if not food_log:
-        return {
-            "errorMessage": "Sorry, food-log Does Not Exist"
-        }, 404
-
-    if food_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
-    return food_log.to_dict()
 
 
 @user_routes.route('/food-logs', methods=["POST"])
