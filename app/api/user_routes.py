@@ -4,7 +4,7 @@ from app.models import User, CardioLog, CardioExercise, db, WeightExercise, Weig
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from sqlalchemy import and_, or_
-from app.utils import verify_cardio_log, verify_weight_log, calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
+from app.utils import verify_cardio_log, verify_weight_log, verify_food_log, calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
 
 user_routes = Blueprint('users', __name__)
 
@@ -16,7 +16,6 @@ def users():
     """
     users = User.query.all()
     return {'users': [user.to_dict() for user in users]}
-
 
 @user_routes.route('/<int:id>')
 @login_required
@@ -45,7 +44,6 @@ def user_cardio_logs_for_date(date):
     return {
         "allCardioLogs": [log.to_dict() for log in cardio_logs]
     }
-
 
 @user_routes.route('/cardio-logs/<int:cardioLogId>', methods=["PUT"], endpoint="update_a_users_cardio_log")
 @login_required
@@ -174,16 +172,16 @@ def create_user_weight_log():
         data = form.data
         exercise_from_form = data['exercise_name']
 
-        exercise = WeightExercise.query.where(WeightExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
-
-        if not exercise:
-            exercise = UserWeightExerciseVersion.query.where(
+        exercise = WeightExercise.query.filter(
+            or_(
+                WeightExercise.exercise_name.ilike(exercise_from_form),
                 and_(
-                    UserWeightExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserWeightExerciseVersion.exercise_name.ilike(exercise_from_form),
                     UserWeightExerciseVersion.is_deleted == False,
                     UserWeightExerciseVersion.created_by_user_id == current_user.id
                 )
-            ).first()
+            )
+        ).first()
 
         if not exercise:
             return {
@@ -210,7 +208,7 @@ def create_user_weight_log():
         return form.errors
 
 
-@user_routes.route('/weight-logs/<int:weightLogId>', methods=["PUT"])
+@user_routes.route('/weight-logs/<int:weightLogId>', methods=["PUT"], endpoint="update_a_users_weight_log")
 @login_required
 @verify_weight_log
 def update_a_users_weight_log(weight_log):
@@ -256,29 +254,16 @@ def update_a_users_weight_log(weight_log):
         return form.errors
 
 
-@user_routes.route('/weight-logs/<int:weightLogId>', methods=["DELETE"])
+@user_routes.route('/weight-logs/<int:weightLogId>', methods=["DELETE"], endpoint="deleting_a_weight_log")
 @login_required
-def deleting_a_weight_log(weightLogId):
-    weight_log = WeightLog.query.get(weightLogId)
-
-    if not weight_log:
-        return {
-        "errorMessage": "Sorry, weight-log Does Not Exist"
-        }, 404
-
-    if weight_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
+@verify_weight_log
+def deleting_a_weight_log(weight_log):
     db.session.delete(weight_log)
     db.session.commit()
 
     return {
         "message": "Success"
     }, 200
-
-
 
 @user_routes.route('/food-logs/<string:date>')
 @login_required
@@ -345,22 +330,11 @@ def create_user_food_log():
         return form.errors
 
 
-@user_routes.route('/food-logs/<int:foodLogId>', methods=["PUT"])
+@user_routes.route('/food-logs/<int:foodLogId>', methods=["PUT"], endpoint="update_a_users_food_log")
 @login_required
-def update_a_users_food_log(foodLogId):
+@verify_food_log
+def update_a_users_food_log(food_log):
     """Updating a food log for a user"""
-    food_log = FoodLog.query.get(foodLogId)
-
-    if not food_log:
-        return {
-            "errorMessage": "Sorry, food-log Does Not Exist"
-        }, 404
-
-    if food_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     form = FoodLogForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
@@ -390,27 +364,16 @@ def update_a_users_food_log(foodLogId):
 
             db.session.commit()
 
-            return food_log.to_dict(), 201
+            return food_log.to_dict(), 200
 
     if form.errors:
         return form.errors
 
 
-@user_routes.route('/food-logs/<int:foodLogId>', methods=["DELETE"])
+@user_routes.route('/food-logs/<int:foodLogId>', methods=["DELETE"], endpoint="deleting_a_food_log")
 @login_required
-def deleting_a_food_log(foodLogId):
-    food_log = FoodLog.query.get(foodLogId)
-
-    if not food_log:
-        return {
-        "errorMessage": "Sorry, food-log Does Not Exist"
-        }, 404
-
-    if food_log.user_id != current_user.id:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
+@verify_food_log
+def deleting_a_food_log(food_log):
     db.session.delete(food_log)
     db.session.commit()
 
@@ -478,8 +441,6 @@ def creating_user_goal():
             calorie_surplus = (lbs_per_week * 3500) / 7
             calories_per_day = maintenance_calories + calorie_surplus
 
-
-
         starting_weight = data["starting_weight"] if data["starting_weight"] != user_info["currentWeight"] else user_info["currentWeight"]
         user.current_weight_lbs = starting_weight
 
@@ -498,8 +459,6 @@ def creating_user_goal():
         db.session.commit()
 
         return new_goal.to_dict()
-
-
 
     if form.errors:
         return form.errors
@@ -559,8 +518,6 @@ def updating_user_goal():
         db.session.commit()
 
         return current_goal.to_dict()
-
-
 
     if form.errors:
         return form.errors
