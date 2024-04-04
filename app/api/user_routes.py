@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserWeightExerciseVersion
+from app.models import User, CardioLog, db, WeightLog, FoodLog, Food, Goal
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from app.api_helpers import *
@@ -10,8 +10,7 @@ from app.utils import (
     verify_food_log,
     calculate_age,
     calculate_calories_per_day,
-    convert_height_to_cm,
-    get_weight_exercise
+    convert_height_to_cm
 )
 user_routes = Blueprint('users', __name__)
 
