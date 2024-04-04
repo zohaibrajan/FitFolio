@@ -118,7 +118,7 @@ def update_food(food):
         data = form.data
         unit = data["unit_of_serving"]
 
-        if unit.endswith("s"):
+        if unit.endswith("s"): # if user inputs the plural form of the unit, remove the "s"
             unit = unit[:-1]
 
 

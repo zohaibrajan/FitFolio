@@ -49,8 +49,9 @@ def create_cardio_exercise():
 
         calories_burned_per_minute = round(calories_burned / duration)
 
-        exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first()
-        user_exercise_exists = UserCardioExerciseVersion.query.filter(
+        exercise_exists = CardioExercise.query.filter(CardioExercise.exercise_name.ilike(data["exercise_name"])).first() # checking if the exercise is in the database
+
+        user_exercise_exists = UserCardioExerciseVersion.query.filter( # checking if the user has already created the exercise
         UserCardioExerciseVersion.created_by_user_id == current_user.id,
         UserCardioExerciseVersion.is_deleted == False,
         UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
