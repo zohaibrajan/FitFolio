@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from app.models import User, CardioLog, CardioExercise, db, WeightExercise, WeightLog, FoodLog, Food, Goal, UserCardioExerciseVersion, UserWeightExerciseVersion
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
-from sqlalchemy import and_, or_
+from app.api_helpers import *
 from app.utils import (
     verify_cardio_log,
     verify_weight_log,
@@ -105,28 +105,29 @@ def create_user_cardio_log():
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-        data = form.data
-        exercise_from_form = data['exercise_name']
-        exercise = get_cardio_exercise(exercise_from_form)
+        return create_cardio_log(form.data) # from app/api_helpers/cardio_functions.py
+        # data = form.data
+        # exercise_from_form = data['exercise_name']
+        # exercise = get_cardio_exercise(exercise_from_form)
 
-        if not exercise:
-            return {
-                "errorMessage": "Sorry, Exercise Does Not Exist"
-            }, 404
+        # if not exercise:
+        #     return {
+        #         "errorMessage": "Sorry, Exercise Does Not Exist"
+        #     }, 404
 
-        new_cardio_log = CardioLog(
-            duration = data['duration'],
-            calories_burned = data['calories_burned'],
-            exercise_id = int(exercise.id) if isinstance(exercise, CardioExercise) else None,
-            user_exercise_id = int(exercise.id) if isinstance(exercise, UserCardioExerciseVersion) else None,
-            date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
-            user_id = int(current_user.id)
-        )
+        # new_cardio_log = CardioLog(
+        #     duration = data['duration'],
+        #     calories_burned = data['calories_burned'],
+        #     exercise_id = int(exercise.id) if isinstance(exercise, CardioExercise) else None,
+        #     user_exercise_id = int(exercise.id) if isinstance(exercise, UserCardioExerciseVersion) else None,
+        #     date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date(),
+        #     user_id = int(current_user.id)
+        # )
 
-        db.session.add(new_cardio_log)
-        db.session.commit()
+        # db.session.add(new_cardio_log)
+        # db.session.commit()
 
-        return new_cardio_log.to_dict(), 201
+        # return new_cardio_log.to_dict(), 201
 
     if form.errors:
         return form.errors
