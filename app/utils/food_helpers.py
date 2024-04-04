@@ -19,3 +19,7 @@ def verify_food(func):
         return func(food)
 
     return wrapper
+
+
+def get_food(food_from_form):
+    return Food.query.where(Food.name.ilike(f"{food_from_form}")).first()

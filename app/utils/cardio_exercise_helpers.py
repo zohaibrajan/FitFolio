@@ -1,5 +1,6 @@
 from flask_login import current_user
-from app.models import UserCardioExerciseVersion
+from sqlalchemy import and_, or_
+from app.models import UserCardioExerciseVersion, CardioExercise
 
 def verify_cardio_exercise(func):
     def wrapper(userCardioExerciseId):
@@ -18,3 +19,16 @@ def verify_cardio_exercise(func):
         return func(cardio_exercise)
 
     return wrapper
+
+
+def get_cardio_exercise(exercise_from_form):
+    return CardioExercise.query.filter(
+        or_(
+            CardioExercise.exercise_name.ilike(exercise_from_form),
+            and_(
+                UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
+                UserCardioExerciseVersion.is_deleted == False,
+                UserCardioExerciseVersion.created_by_user_id == current_user.id
+            )
+        )
+    ).first()
