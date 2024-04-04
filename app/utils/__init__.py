@@ -3,3 +3,4 @@ from .cardio_exercise_helpers import *
 from .food_helpers import *
 from .log_helpers import *
 from .user_helpers import *
+from .goal_helpers import *

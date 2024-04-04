@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import User, CardioLog, db, WeightLog, FoodLog, Food, Goal
+from app.models import User, CardioLog, db, WeightLog, FoodLog, Goal
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from app.api_helpers import *
@@ -8,6 +8,7 @@ from app.utils import (
     verify_cardio_log,
     verify_weight_log,
     verify_food_log,
+    verify_goal,
     calculate_age,
     calculate_calories_per_day,
     convert_height_to_cm
@@ -159,78 +160,25 @@ def user_food_logs_for_date(date):
 
 @user_routes.route('/food-logs', methods=["POST"])
 @login_required
-def create_user_food_log():
+def create_food_log_route():
     form = FoodLogForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-        data = form.data
-        food_from_form = data['name']
-        servings = int(data["servings"])
-
-        food = Food.query.filter(Food.name.ilike(f"{food_from_form}")).first()
-
-        if not food:
-            return {
-                "errorMessage": "Sorry, Food Does Not Exist"
-            }, 404
-
-        calories_consumed = servings * food.calories
-        protein_consumed = servings * food.protein
-
-        new_food_log = FoodLog(
-            servings = servings,
-            calories_consumed = calories_consumed,
-            protein_consumed = protein_consumed,
-            food_id = int(food.id),
-            date = data["date"],
-            user_id = int(current_user.id)
-        )
-
-        db.session.add(new_food_log)
-        db.session.commit()
-
-        return new_food_log.to_dict(), 201
-
+        return create_food_log(form.data) # from app/api_helpers/food_functions.py
     if form.errors:
         return form.errors
 
 @user_routes.route('/food-logs/<int:foodLogId>', methods=["PUT"], endpoint="update_a_users_food_log")
 @login_required
 @verify_food_log
-def update_a_users_food_log(food_log):
+def update_food_log_route(food_log):
     """Updating a food log for a user"""
     form = FoodLogForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-            data = form.data
-            food_from_form = data['name']
-            servings = int(data["servings"])
-
-            food = Food.query.where(Food.name.ilike(f"{food_from_form}")).first()
-
-            if not food:
-                return {
-                    "errorMessage": "Sorry, Food Does Not Exist"
-                }, 404
-
-            calories_consumed = servings * food.calories
-            protein_consumed = servings * food.protein
-
-            updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
-
-            food_log.servings = servings
-            food_log.calories_consumed = calories_consumed
-            food_log.protein_consumed = protein_consumed
-            food_log.food_id = int(food.id)
-            food_log.date = updated_date
-            food_log.user_id = int(current_user.id)
-
-            db.session.commit()
-
-            return food_log.to_dict(), 200
-
+            return update_food_log(food_log, form.data) # from app/api_helpers/food_functions.py
     if form.errors:
         return form.errors
 
@@ -264,15 +212,9 @@ def user_goal():
 
 @user_routes.route('/goal', methods=["POST"])
 @login_required
+@verify_goal
 def creating_user_goal():
     """Creating a goal"""
-    goal = Goal.query.where(Goal.user_id == current_user.id).first()
-
-    if goal:
-        return {
-            "message": "You already have a goal."
-        }, 403
-
     user = User.query.get(current_user.id)
     user_info = user.to_dict_with_info()
 
