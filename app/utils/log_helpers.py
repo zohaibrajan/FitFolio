@@ -56,3 +56,5 @@ def verify_food_log(func):
         return func(food_log)
 
     return wrapper
+
+

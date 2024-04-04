@@ -4,7 +4,19 @@ from app.models import User, CardioLog, CardioExercise, db, WeightExercise, Weig
 from app.forms import CardioLogForm, WeightLogForm, FoodLogForm, GoalForm
 from datetime import datetime
 from sqlalchemy import and_, or_
-from app.utils import verify_cardio_log, verify_weight_log, verify_food_log, calculate_age, calculate_bmr_for_men, calculate_bmr_for_women, convert_height_to_cm
+from app.utils import (
+    verify_cardio_log,
+    verify_weight_log,
+    verify_food_log,
+    calculate_age,
+    calculate_bmr_for_men,
+    calculate_bmr_for_women,
+    convert_height_to_cm,
+    get_weight_exercise
+)
+
+# or_ is a function that allows you to specify multiple conditions in a query,
+# where at least one of the conditions needs to be true for a record to be included in the result set
 
 user_routes = Blueprint('users', __name__)
 
@@ -57,15 +69,16 @@ def update_a_users_cardio_log(cardio_log):
         data = form.data
         exercise_from_form = data['exercise_name']
 
-        exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
-
-        if not exercise:
-            exercise = UserCardioExerciseVersion.query.where(
+        exercise = CardioExercise.query.filter(
+            or_(
+                CardioExercise.exercise_name.ilike(exercise_from_form),
                 and_(
-                    UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
+                    UserCardioExerciseVersion.is_deleted == False,
                     UserCardioExerciseVersion.created_by_user_id == current_user.id
                 )
-            ).first()
+            )
+        ).first()
 
         if not exercise:
             return {
@@ -110,18 +123,18 @@ def create_user_cardio_log():
         data = form.data
         exercise_from_form = data['exercise_name']
 
-        exercise = CardioExercise.query.where(CardioExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
-
-        if not exercise: # if the exercise is not found in the CardioExercise table, check the UserCardioExerciseVersion table
-            exercise = UserCardioExerciseVersion.query.where(
+        exercise = CardioExercise.query.filter(
+            or_(
+                CardioExercise.exercise_name.ilike(exercise_from_form),
                 and_(
-                    UserCardioExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
+                    UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
                     UserCardioExerciseVersion.is_deleted == False,
                     UserCardioExerciseVersion.created_by_user_id == current_user.id
                 )
-            ).first()
+            )
+        ).first()
 
-        if not exercise: # if the exercise is not found in the UserCardioExerciseVersion table, return an error message
+        if not exercise:
             return {
                 "errorMessage": "Sorry, Exercise Does Not Exist"
             }, 404
@@ -172,22 +185,12 @@ def create_user_weight_log():
         data = form.data
         exercise_from_form = data['exercise_name']
 
-        exercise = WeightExercise.query.filter(
-            or_(
-                WeightExercise.exercise_name.ilike(exercise_from_form),
-                and_(
-                    UserWeightExerciseVersion.exercise_name.ilike(exercise_from_form),
-                    UserWeightExerciseVersion.is_deleted == False,
-                    UserWeightExerciseVersion.created_by_user_id == current_user.id
-                )
-            )
-        ).first()
+        exercise = get_weight_exercise(exercise_from_form)
 
         if not exercise:
             return {
                 "errorMessage": "Sorry, Exercise Does Not Exist"
             }, 404
-
 
         new_weight_log = WeightLog(
             sets = data['sets'],
@@ -219,21 +222,11 @@ def update_a_users_weight_log(weight_log):
     if form.validate_on_submit():
             data = form.data
             exercise_from_form = data['exercise_name']
-
-            exercise = WeightExercise.query.where(WeightExercise.exercise_name.ilike(f"{exercise_from_form}")).first()
-
-            if not exercise:
-                exercise = UserWeightExerciseVersion.query.where(
-                    and_(
-                        UserWeightExerciseVersion.exercise_name.ilike(f"{exercise_from_form}"),
-                        UserWeightExerciseVersion.created_by_user_id == current_user.id
-                    )
-                ).first()
-
+            exercise = get_weight_exercise(exercise_from_form)
 
             if not exercise:
                 return {
-                    "errorMessage": "Sorry, exercise Does Not Exist"
+                    "errorMessage": "Sorry, Exercise Does Not Exist"
                 }, 404
 
             updated_date = datetime.strptime(str(data["date"]), "%Y-%m-%d").date()
@@ -252,7 +245,6 @@ def update_a_users_weight_log(weight_log):
 
     if form.errors:
         return form.errors
-
 
 @user_routes.route('/weight-logs/<int:weightLogId>', methods=["DELETE"], endpoint="deleting_a_weight_log")
 @login_required
@@ -282,8 +274,6 @@ def user_food_logs_for_date(date):
     return {
         "allFoodLogs": [log.to_dict() for log in food_logs]
     }
-
-
 
 @user_routes.route('/food-logs', methods=["POST"])
 @login_required
