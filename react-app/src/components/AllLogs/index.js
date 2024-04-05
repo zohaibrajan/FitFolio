@@ -12,7 +12,7 @@ function AllLogs() {
         >
           <span>Todays Diary</span>
           <span style={{ fontSize: "12px", fontWeight: "600" }}>
-            Exercises and Foods marked with a * are your custom.
+            Exercises and Foods marked with a * have been edited
           </span>
         </div>
         <div className="users-log-container">

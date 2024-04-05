@@ -59,7 +59,7 @@ def create_weight_exercise():
             }, 400
 
         weight_exercise = WeightExercise(
-            exercise_name=data["exercise_name"],
+            exercise_name=data["exercise_name"].title(),
             created_by_user_id=current_user.id
         )
 
