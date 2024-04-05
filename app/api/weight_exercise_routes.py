@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import db, WeightExercise, UserWeightExerciseVersion
 from app.forms import WeightExerciseForm
-from app.utils import verify_weight_exercise
+from app.utils import get_weight_exercise
 
 
 weight_exercise_routes = Blueprint("weight-exercise", __name__)
@@ -17,24 +17,6 @@ def get_all_weight_exercises():
         "weightExercises": [exercise.to_dict() for exercise in exercises]
     }
 
-
-@weight_exercise_routes.route("<int:weightExerciseId>", endpoint="get_weight_exercise")
-@login_required
-def get_weight_exercise(weightExerciseId):
-    """Get a single Weight Exercise"""
-    exercise = WeightExercise.query.get(weightExerciseId)
-
-    if not exercise:
-        return {
-            "errorMessage": "Sorry, Weight Exercise Does Not Exist"
-        }, 404
-
-
-    return {
-        "weightExercise": exercise.to_dict()
-    }
-
-
 @weight_exercise_routes.route("/new", methods=["POST"])
 @login_required
 def create_weight_exercise():
@@ -44,16 +26,10 @@ def create_weight_exercise():
 
     if form.validate_on_submit():
         data = form.data
+        exercise_from_form = data["exercise_name"].title()
+        exercise_exists = get_weight_exercise(exercise_from_form)
 
-        exercise_exists = WeightExercise.query.filter(WeightExercise.exercise_name.ilike(data["exercise_name"])).first()
-
-        user_exercise_exists = UserWeightExerciseVersion.query.filter(
-            UserWeightExerciseVersion.created_by_user_id == current_user.id,
-            UserWeightExerciseVersion.is_deleted == False,
-            UserWeightExerciseVersion.exercise_name.ilike(data["exercise_name"])
-        ).first()
-
-        if exercise_exists or user_exercise_exists:
+        if exercise_exists:
             return {
                 "errorMessage": "Sorry, Exercise Already Exists"
             }, 400
