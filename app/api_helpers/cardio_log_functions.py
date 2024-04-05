@@ -5,6 +5,7 @@ from datetime import datetime
 
 def create_cardio_log(data):
     exercise_from_form = data['exercise_name']
+    print("********************", exercise_from_form, "********************")
     exercise = get_cardio_exercise(exercise_from_form)
 
     if not exercise:

@@ -22,13 +22,16 @@ def verify_cardio_exercise(func):
 
 
 def get_cardio_exercise(exercise_from_form):
-    return CardioExercise.query.filter(
-        or_(
-            CardioExercise.exercise_name.ilike(exercise_from_form),
-            and_(
-                UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
-                UserCardioExerciseVersion.is_deleted == False,
-                UserCardioExerciseVersion.created_by_user_id == current_user.id
-            )
-        )
+    exercise = CardioExercise.query.filter(
+        CardioExercise.exercise_name.ilike(exercise_from_form)
     ).first()
+    # If the exercise was not found in the CardioExercise table,
+    # check the UserCardioExerciseVersion table
+    if not exercise:
+        exercise = UserCardioExerciseVersion.query.filter(
+            UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
+            UserCardioExerciseVersion.is_deleted == False,
+            UserCardioExerciseVersion.created_by_user_id == current_user.id
+        ).first()
+
+    return exercise
