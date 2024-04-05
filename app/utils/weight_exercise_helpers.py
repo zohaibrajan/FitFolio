@@ -24,13 +24,16 @@ def verify_weight_exercise(func):
 
 
 def get_weight_exercise(exercise_from_form):
-    return WeightExercise.query.filter(
-        or_(
-            WeightExercise.exercise_name.ilike(exercise_from_form),
-            and_(
-                UserWeightExerciseVersion.exercise_name.ilike(exercise_from_form),
-                UserWeightExerciseVersion.is_deleted == False,
-                UserWeightExerciseVersion.created_by_user_id == current_user.id
-            )
-        )
+    exercise = WeightExercise.query.filter(
+        WeightExercise.exercise_name.ilike(exercise_from_form)
     ).first()
+    # If the exercise was not found in the WeightExercise table,
+    # check the UserWeightExerciseVersion table
+    if not exercise:
+        exercise = UserWeightExerciseVersion.query.filter(
+            UserWeightExerciseVersion.exercise_name.ilike(exercise_from_form),
+            UserWeightExerciseVersion.is_deleted == False,
+            UserWeightExerciseVersion.created_by_user_id == current_user.id
+        ).first()
+
+    return exercise

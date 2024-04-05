@@ -1,5 +1,4 @@
 from flask_login import current_user
-from sqlalchemy import and_, or_
 from app.models import UserCardioExerciseVersion, CardioExercise
 
 def verify_cardio_exercise(func):
