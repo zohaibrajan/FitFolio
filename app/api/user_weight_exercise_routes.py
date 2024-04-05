@@ -60,10 +60,9 @@ def update_user_weight_exercise_version(weight_exercise):
 
     if form.validate_on_submit():
         data = form.data
-
         exercise_exists = UserWeightExerciseVersion.query.filter(            # checking if exercise already exists
             UserWeightExerciseVersion.is_deleted == False,
-            UserWeightExerciseVersion.exercise_name.ilike(data["exercise_name"])
+            UserWeightExerciseVersion.exercise_name.ilike(data["exercise_name"].title() + "*"),
         ).first()
 
         if exercise_exists:
@@ -71,7 +70,7 @@ def update_user_weight_exercise_version(weight_exercise):
                 "errorMessage": "Sorry, Exercise Already Exists" # throw error if exercise already exists
             }, 400
 
-        weight_exercise.exercise_name = data["exercise_name"] + "*"
+        weight_exercise.exercise_name = data["exercise_name"].title() + "*"
         db.session.commit()
 
         return {

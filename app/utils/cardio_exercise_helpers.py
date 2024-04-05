@@ -15,6 +15,11 @@ def verify_cardio_exercise(func):
                 "errorMessage": "Unauthorized"
             }, 403
 
+        if cardio_exercise.is_deleted:
+            return {
+                "errorMessage": "Sorry, Cardio Exercise Has Been Deleted"
+            }, 404
+
         return func(cardio_exercise)
 
     return wrapper

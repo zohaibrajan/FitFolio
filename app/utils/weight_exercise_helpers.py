@@ -1,7 +1,4 @@
 from flask_login import current_user
-from sqlalchemy import and_, or_
-# or_ is a function that allows you to specify multiple conditions in a query,
-# where at least one of the conditions needs to be true for a record to be included in the result set
 from app.models import UserWeightExerciseVersion, WeightExercise
 
 def verify_weight_exercise(func):
@@ -17,6 +14,11 @@ def verify_weight_exercise(func):
             return {
                 "errorMessage": "Unauthorized"
             }, 403
+
+        if weight_exercise.is_deleted:
+            return {
+                "errorMessage": "Sorry, Exercise Has Been Deleted"
+            }, 404
 
         return func(weight_exercise)
 

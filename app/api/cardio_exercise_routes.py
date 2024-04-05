@@ -36,7 +36,7 @@ def create_cardio_exercise():
                 "errors": f'Exercise already exists: {exercise_from_form}'
             }, 400
 
-        cardio_exercise = CardioExercise(
+        cardio_exercise = CardioExercise( # first, create a new CardioExercise
             created_by_user_id=current_user.id,
             exercise_name=data["exercise_name"].title(),
             intensity=data["intensity"],
@@ -45,7 +45,7 @@ def create_cardio_exercise():
         db.session.add(cardio_exercise)
         db.session.flush()  # This is needed to get the id of the new cardio_exercise
 
-        user_exercise_version = UserCardioExerciseVersion(
+        user_exercise_version = UserCardioExerciseVersion( # then, create a new UserCardioExerciseVersion
             created_by_user_id=current_user.id,
             cardio_exercise_id=cardio_exercise.id,
             exercise_name=data["exercise_name"].title() + "*",

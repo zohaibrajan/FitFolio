@@ -35,8 +35,6 @@ def get_filtered_user_cardio_exercises():
     }
 
 
-
-
 @user_cardio_exercise_routes.route("/<int:userCardioExerciseId>")
 @login_required
 def get_user_cardio_exercise(userCardioExerciseId):
@@ -58,7 +56,6 @@ def get_user_cardio_exercise(userCardioExerciseId):
 @verify_cardio_exercise
 def update_user_cardio_exercise(user_cardio_exercise):
     """Update a Cardio Exercise"""
-
     form = CardioExerciseForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
@@ -66,15 +63,13 @@ def update_user_cardio_exercise(user_cardio_exercise):
         data = form.data
         duration = data["duration"]
         calories_burned = data["calories_burned"]
-
         calories_burned_per_minute = round(calories_burned / duration)
-
         exercise_id = user_cardio_exercise.id
 
         user_exercise_exists = UserCardioExerciseVersion.query.filter(
+            UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"].title() + "*"),
             UserCardioExerciseVersion.is_deleted == False,
-            UserCardioExerciseVersion.id != exercise_id,
-            UserCardioExerciseVersion.exercise_name.ilike(data["exercise_name"])
+            UserCardioExerciseVersion.id != exercise_id
         ).first()
 
         if user_exercise_exists:
