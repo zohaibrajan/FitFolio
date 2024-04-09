@@ -29,11 +29,11 @@ def create_cardio_exercise():
         calories_burned = data["calories_burned"]
         exercise_from_form = data["exercise_name"].title()
         calories_burned_per_minute = round(calories_burned / duration)
-        exercise_exists = get_cardio_exercise(exercise_from_form)
+        exercise_exists = get_cardio_exercise(exercise_from_form) # check if the exercise already exists
 
-        if exercise_exists:
+        if exercise_exists: # if the exercise already exists, return an error
             return {
-                "errors": f'Exercise already exists: {exercise_from_form}'
+                "errors": "Exercise already exists"
             }, 400
 
         cardio_exercise = CardioExercise( # first, create a new CardioExercise

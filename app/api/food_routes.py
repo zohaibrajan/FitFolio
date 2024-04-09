@@ -2,10 +2,9 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import Food, db
 from app.forms import FoodForm
-from app.utils import verify_food
+from app.utils import verify_food, verify_single_food
 
 food_routes = Blueprint("foods", __name__)
-
 
 @food_routes.route("")
 @login_required
@@ -16,7 +15,6 @@ def get_all_foods():
     return {
         "foods": [food.to_dict() for food in foods]
     }
-
 
 
 @food_routes.route("/new", methods=["POST"])
@@ -30,9 +28,12 @@ def create_food():
         data = form.data
         unit = data["unit_of_serving"]
 
+        # the reason for not checking if food already exists is because
+        # the user may want to create a food with the same name but different
+        # nutritional values
+
         if unit.endswith("s"):
             unit = unit[:-1]
-
 
         food = Food(
             name=data["name"].title(),
@@ -57,9 +58,9 @@ def create_food():
     }, 400
 
 
-@food_routes.route("/my-foods-all")
-@login_required
-def get_my_foods_all():
+@food_routes.route("/my-foods-all") # get all foods, including deleted ones
+@login_required                     # this is needed because if a user decides to delete a food, they should still be able to see it in their history
+def get_my_foods_all():             # allowing them to edit their food log history
     """Get all of a User's Foods"""
     foods = Food.query.filter(
         Food.created_by_user_id == current_user.id
@@ -70,8 +71,8 @@ def get_my_foods_all():
     }
 
 
-@food_routes.route("/my-foods")
-@login_required
+@food_routes.route("/my-foods") # get all foods that are not deleted
+@login_required                 # allowing used to create food logs, from their MyFoods component in the frontend
 def get_my_foods():
     """Get all of a User's Foods"""
     foods = Food.query.filter(
@@ -86,16 +87,9 @@ def get_my_foods():
 
 @food_routes.route("/<int:foodId>")
 @login_required
-def get_food(foodId):
-    """Get a single Food"""
-    food = Food.query.where(Food.can_others_use == True,
-        Food.is_deleted == False).get(foodId)
-
-    if not food:
-        return {
-            "errorMessage": "Sorry, Food Does Not Exist"
-        }, 404
-
+@verify_single_food
+def get_food_route(food):
+    """Get a single Food""" 
     return {
         "food": food.to_dict()
     }
@@ -109,18 +103,12 @@ def update_food(food):
     form = FoodForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
 
-    if food.can_others_use == True:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     if form.validate_on_submit():
         data = form.data
         unit = data["unit_of_serving"]
 
         if unit.endswith("s"): # if user inputs the plural form of the unit, remove the "s"
             unit = unit[:-1]
-
 
         food.name = data["name"].title()
         food.restaurant = data["restaurant"].title()
@@ -144,11 +132,6 @@ def update_food(food):
 @verify_food
 def delete_food(food):
     """Delete a Food"""
-    if food.can_others_use == True:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     food.is_deleted = True
     db.session.commit()
 

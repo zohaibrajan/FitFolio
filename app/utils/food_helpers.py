@@ -15,11 +15,44 @@ def verify_food(func):
                 "errorMessage": "Unauthorized"
                 }, 403
 
+        if food.can_others_use == True:
+            return {
+                "errorMessage": "Unauthorized"
+            }, 403
+
+        if food.is_deleted:
+            return {
+                "errorMessage": "Sorry, Food Has Been Deleted"
+            }, 404
+
 
         return func(food)
 
     return wrapper
 
+def verify_single_food(func):
+    def wrapper(foodId):
+        food = Food.query.get(foodId)
+
+        if not food:
+            return {
+                "errorMessage": "Food not found"
+                }, 404
+
+        if (food.can_others_use == False and
+            food.created_by_user_id != current_user.id):
+            return {
+                "errorMessage": "Unauthorized"
+            }, 403
+
+        if food.is_deleted:
+            return {
+                "errorMessage": "Sorry, Food Has Been Deleted"
+            }, 404
+
+        return func(food)
+
+    return wrapper
 
 def get_food(food_from_form):
     return Food.query.where(Food.name.ilike(f"{food_from_form}")).first()
