@@ -33,7 +33,7 @@ def get_weight_exercise(exercise_from_form):
     # check the UserWeightExerciseVersion table
     if not exercise:
         exercise = UserWeightExerciseVersion.query.filter(
-            UserWeightExerciseVersion.exercise_name.ilike(exercise_from_form),
+            UserWeightExerciseVersion.exercise_name.ilike(exercise_from_form + "*"),
             UserWeightExerciseVersion.is_deleted == False,
             UserWeightExerciseVersion.created_by_user_id == current_user.id
         ).first()
