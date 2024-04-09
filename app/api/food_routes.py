@@ -2,10 +2,9 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from app.models import Food, db
 from app.forms import FoodForm
-from app.utils import verify_food
+from app.utils import verify_food, verify_single_food
 
 food_routes = Blueprint("foods", __name__)
-
 
 @food_routes.route("")
 @login_required
@@ -28,6 +27,10 @@ def create_food():
     if form.validate_on_submit():
         data = form.data
         unit = data["unit_of_serving"]
+
+        # the reason for not checking if food already exists is because
+        # the user may want to create a food with the same name but different
+        # nutritional values
 
         if unit.endswith("s"):
             unit = unit[:-1]
@@ -84,16 +87,9 @@ def get_my_foods():
 
 @food_routes.route("/<int:foodId>")
 @login_required
-def get_food_route(foodId): # the reason we cannot use the verify_food decorator here is because
-    """Get a single Food""" # we need to make sure that this current user is allowed to use the food
-    food = Food.query.where(Food.can_others_use == True,
-        Food.is_deleted == False).get(foodId)
-
-    if not food:
-        return {
-            "errorMessage": "Sorry, Food Does Not Exist"
-        }, 404
-
+@verify_single_food
+def get_food_route(food):
+    """Get a single Food""" 
     return {
         "food": food.to_dict()
     }
