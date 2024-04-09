@@ -33,7 +33,7 @@ def get_cardio_exercise(exercise_from_form):
     # check the UserCardioExerciseVersion table
     if not exercise:
         exercise = UserCardioExerciseVersion.query.filter(
-            UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form),
+            UserCardioExerciseVersion.exercise_name.ilike(exercise_from_form + "*"),
             UserCardioExerciseVersion.is_deleted == False,
             UserCardioExerciseVersion.created_by_user_id == current_user.id
         ).first()

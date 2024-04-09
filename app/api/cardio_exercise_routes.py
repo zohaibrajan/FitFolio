@@ -33,7 +33,7 @@ def create_cardio_exercise():
 
         if exercise_exists:
             return {
-                "errors": f'Exercise already exists: {exercise_from_form}'
+                "errors": "Exercise already exists"
             }, 400
 
         cardio_exercise = CardioExercise( # first, create a new CardioExercise
