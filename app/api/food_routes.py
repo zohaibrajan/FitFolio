@@ -18,7 +18,6 @@ def get_all_foods():
     }
 
 
-
 @food_routes.route("/new", methods=["POST"])
 @login_required
 def create_food():
@@ -32,7 +31,6 @@ def create_food():
 
         if unit.endswith("s"):
             unit = unit[:-1]
-
 
         food = Food(
             name=data["name"].title(),
@@ -57,9 +55,9 @@ def create_food():
     }, 400
 
 
-@food_routes.route("/my-foods-all")
-@login_required
-def get_my_foods_all():
+@food_routes.route("/my-foods-all") # get all foods, including deleted ones
+@login_required                     # this is needed because if a user decides to delete a food, they should still be able to see it in their history
+def get_my_foods_all():             # allowing them to edit their food log history
     """Get all of a User's Foods"""
     foods = Food.query.filter(
         Food.created_by_user_id == current_user.id
@@ -70,8 +68,8 @@ def get_my_foods_all():
     }
 
 
-@food_routes.route("/my-foods")
-@login_required
+@food_routes.route("/my-foods") # get all foods that are not deleted
+@login_required                 # allowing used to create food logs, from their MyFoods component in the frontend
 def get_my_foods():
     """Get all of a User's Foods"""
     foods = Food.query.filter(
@@ -86,8 +84,8 @@ def get_my_foods():
 
 @food_routes.route("/<int:foodId>")
 @login_required
-def get_food(foodId):
-    """Get a single Food"""
+def get_food_route(foodId): # the reason we cannot use the verify_food decorator here is because
+    """Get a single Food""" # we need to make sure that this current user is allowed to use the food
     food = Food.query.where(Food.can_others_use == True,
         Food.is_deleted == False).get(foodId)
 
@@ -109,18 +107,12 @@ def update_food(food):
     form = FoodForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
 
-    if food.can_others_use == True:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     if form.validate_on_submit():
         data = form.data
         unit = data["unit_of_serving"]
 
         if unit.endswith("s"): # if user inputs the plural form of the unit, remove the "s"
             unit = unit[:-1]
-
 
         food.name = data["name"].title()
         food.restaurant = data["restaurant"].title()
@@ -144,11 +136,6 @@ def update_food(food):
 @verify_food
 def delete_food(food):
     """Delete a Food"""
-    if food.can_others_use == True:
-        return {
-            "errorMessage": "Unauthorized"
-        }, 403
-
     food.is_deleted = True
     db.session.commit()
 

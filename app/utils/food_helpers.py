@@ -15,6 +15,16 @@ def verify_food(func):
                 "errorMessage": "Unauthorized"
                 }, 403
 
+        if food.can_others_use == True:
+            return {
+                "errorMessage": "Unauthorized"
+            }, 403
+
+        if food.is_deleted:
+            return {
+                "errorMessage": "Sorry, Food Has Been Deleted"
+            }, 404
+
 
         return func(food)
 
