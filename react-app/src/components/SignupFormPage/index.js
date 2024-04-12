@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMultistepForm } from "./useMultistepForm";
+import { CreateGoalForm } from "./CreateGoalForm";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
@@ -10,6 +11,7 @@ import { getUsersGoalThunk } from "../../store/goal";
 import "./SignupForm.css";
 
 const DATA = {
+  firstName: "Zohaib",
   email: "",
   username: "",
   password: "",
@@ -26,7 +28,11 @@ const DATA = {
 function SignupFormPage() {
   const [data, setData] = useState(DATA);
   const { step, steps, currentStepIndex, next, back, goTo, isLastStep, isFirstStep } =
-    useMultistepForm([<h1>Step1</h1>, <h1>Step2</h1>, <h1>Step3</h1>]);
+    useMultistepForm([
+    <h1>Step1</h1>,
+    <CreateGoalForm {...data} updateData={updateData} />,
+    <h1>Step3</h1>
+  ]);
 
   function updateData(fields) {
     setData((prev) => ({ ...prev, ...fields }));
@@ -41,7 +47,7 @@ function SignupFormPage() {
   return (
     <div className="signup-form-parent">
       <form className="signup-form-container" onSubmit={handleSubmit}>
-        <progress max={steps.length} value={currentStepIndex + 1}/>
+        <progress id="signup-progress" max={steps.length} value={currentStepIndex + 1}/>
         {step}
         <div>
           {!isFirstStep && (

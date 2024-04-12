@@ -1,3 +1,26 @@
+#signup-progress {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+}
+
+
+#signup-progress[value] {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+
+#signup-progress[value]::-webkit-progress-bar {
+    border-radius: 12px 12px 0 0;
+    background-color: rgb(188, 188, 192)
+}
+
+#signup-progress[value]::-webkit-progress-value {
+    border-radius: 12px 0 0 0 ;
+    background-color: rgb(0, 102, 238);
+}
+
 .signup-form {
     display: flex;
     flex-direction: column;
@@ -5,13 +28,15 @@
 }
 
 .signup-form-container {
+    position: relative;
     display: flex;
     flex-direction: column;
+    margin-top: 30px;
     width: 550px;
     align-items: center;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 8px 32px;
-    padding: 30px 45px;
-    border-radius: 20px;
+    /* padding: 30px 45px; */
+    border-radius: 0 0 12px 12px;
     font-family: "Inter", Helvetica, Arial, sans-serif;
 }
 
@@ -20,7 +45,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 1425px; */
     border-top: 3px solid rgb(0, 102, 238);
 }
 
@@ -76,23 +100,6 @@
     font-size: 17px;
 }
 
-.signup-goal-button {
-    display: flex;
-    cursor: pointer;
-    font-family: "Inter", Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    justify-content: center;
-    background-color: rgb(240, 240, 240);
-    padding: 10px;
-    height: 40px;
-}
-
-.all-goals-container {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    font-size: 17px;
-}
 
 .all-goals-choices {
     display: flex;
