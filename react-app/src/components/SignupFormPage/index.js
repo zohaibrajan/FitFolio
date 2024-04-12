@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useMultistepForm } from "./useMultistepForm";
-import { CreateGoalForm } from "./CreateGoalForm";
-import { GetFirstName } from "./GetFirstName";
+import {
+  GetFirstName,
+  CreateGoalForm,
+  CalculateCalories
+} from "./SignupFormSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
@@ -18,6 +21,7 @@ const DATA = {
   password: "",
   confirmPassword: "",
   goal: "",
+  dob: "",
   gender: "",
   heightFt: "",
   heightIn: "",
@@ -29,11 +33,19 @@ const DATA = {
 function SignupFormPage() {
   const [data, setData] = useState(DATA);
   const [error, setError] = useState("");
-  const { step, steps, currentStepIndex, next, back, goTo, isLastStep, isFirstStep } =
-    useMultistepForm([
+  const {
+    step,
+    steps,
+    currentStepIndex,
+    next,
+    back,
+    goTo,
+    isLastStep,
+    isFirstStep,
+  } = useMultistepForm([
     <GetFirstName {...data} updateData={updateData} />,
     <CreateGoalForm {...data} updateData={updateData} />,
-    <h1>Step3</h1>
+    <CalculateCalories {...data} updateData={updateData} />,
   ]);
 
   function updateData(fields) {
@@ -44,7 +56,7 @@ function SignupFormPage() {
     e.preventDefault();
     if (currentStepIndex == 1 && !data.goal) {
       setError("Please select a goal");
-      return
+      return;
     }
     if (!isLastStep) return next();
     console.log(data);
@@ -54,19 +66,18 @@ function SignupFormPage() {
     setError("");
   }, [currentStepIndex]);
 
-
   return (
     <div className="signup-form-parent">
       <form className="signup-form-container" onSubmit={handleSubmit}>
-        <progress id="signup-progress" max={steps.length} value={currentStepIndex + 1}/>
+        <progress
+          id="signup-progress"
+          max={steps.length}
+          value={currentStepIndex}
+        />
         {step}
         {error && <div>{error}</div>}
         <div>
-          {!isFirstStep && (
-            <button type="button" onClick={back}>
-              Back
-            </button>
-          )}
+          <button type="button" onClick={back}>Back</button>
           <button type="submit">{isLastStep ? "Sign Up" : "Next"}</button>
         </div>
       </form>

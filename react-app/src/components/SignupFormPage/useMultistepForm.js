@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 export function useMultistepForm(steps) {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
+    const history = useHistory();
 
     function next() {
         setCurrentStepIndex(i => {
@@ -12,7 +14,7 @@ export function useMultistepForm(steps) {
 
     function back() {
         setCurrentStepIndex(i => {
-            if (i <= 0) return i;
+            if (i <= 0) return history.replace("/");
             return i - 1;
         })
     }
