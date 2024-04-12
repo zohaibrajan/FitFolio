@@ -25,15 +25,28 @@ const DATA = {
 
 function SignupFormPage() {
   const [data, setData] = useState(DATA);
-  const { steps, currentStepIndex, next, back, goTo, isLastStep, isFirstStep } = useMultistepForm([]);
+  const { steps, currentStepIndex, next, back, goTo, isLastStep, isFirstStep } = useMultistepForm([
+  <h1>Step1</h1>,
+  <h1>Step2</h1>,
+  <h1>Step3</h1>
+]);
 
   function updateData(fields) {
     setData(prev => ({ ...prev, ...fields }));
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(data);
+  }
+
 
   return (
-    <h1>SignupForm</h1>
+    <div className="signup-form-parent">
+      <form className="signup-form-container" onSubmit={handleSubmit}>
+
+      </form>
+    </div>
   )
 
 

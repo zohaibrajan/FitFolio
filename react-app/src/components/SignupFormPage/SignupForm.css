@@ -20,7 +20,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 1425px;
+    /* height: 1425px; */
     border-top: 3px solid rgb(0, 102, 238);
 }
 
