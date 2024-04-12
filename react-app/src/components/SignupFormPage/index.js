@@ -28,6 +28,7 @@ const DATA = {
 
 function SignupFormPage() {
   const [data, setData] = useState(DATA);
+  const [error, setError] = useState("");
   const { step, steps, currentStepIndex, next, back, goTo, isLastStep, isFirstStep } =
     useMultistepForm([
     <GetFirstName {...data} updateData={updateData} />,
@@ -41,15 +42,25 @@ function SignupFormPage() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (currentStepIndex == 1 && !data.goal) {
+      setError("Please select a goal");
+      return
+    }
     if (!isLastStep) return next();
     console.log(data);
   }
+
+  useEffect(() => {
+    setError("");
+  }, [currentStepIndex]);
+
 
   return (
     <div className="signup-form-parent">
       <form className="signup-form-container" onSubmit={handleSubmit}>
         <progress id="signup-progress" max={steps.length} value={currentStepIndex + 1}/>
         {step}
+        {error && <div>{error}</div>}
         <div>
           {!isFirstStep && (
             <button type="button" onClick={back}>
