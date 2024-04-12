@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMultistepForm } from "./useMultistepForm";
 import { CreateGoalForm } from "./CreateGoalForm";
+import { GetFirstName } from "./GetFirstName";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
@@ -11,7 +12,7 @@ import { getUsersGoalThunk } from "../../store/goal";
 import "./SignupForm.css";
 
 const DATA = {
-  firstName: "Zohaib",
+  firstName: "",
   email: "",
   username: "",
   password: "",
@@ -29,7 +30,7 @@ function SignupFormPage() {
   const [data, setData] = useState(DATA);
   const { step, steps, currentStepIndex, next, back, goTo, isLastStep, isFirstStep } =
     useMultistepForm([
-    <h1>Step1</h1>,
+    <GetFirstName {...data} updateData={updateData} />,
     <CreateGoalForm {...data} updateData={updateData} />,
     <h1>Step3</h1>
   ]);

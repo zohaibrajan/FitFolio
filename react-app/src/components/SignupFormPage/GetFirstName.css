@@ -1,0 +1,33 @@
+.input-container {
+    position: relative;
+    cursor: pointer;
+    margin-top: 2rem;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.input-field {
+    width: 100%;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    padding: 6px 0;
+}
+
+.input-label {
+    position: absolute;
+    left: 10px;
+    top: 14px;
+    pointer-events: none;
+    transition: 0.2s;
+    font-size: 16px;
+}
+
+.input-field:focus+.input-label,
+.input-field:not(:placeholder-shown)+.input-label {
+    transform: translateY(-32px);
+    font-size: 12px;
+    left: 0px;
+}
