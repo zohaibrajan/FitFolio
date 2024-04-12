@@ -1,7 +1,9 @@
+import { formattingUserInputDate, gettingTodaysDate } from "../../../utils";
 import { FormWrapper } from "./FormWrapper";
 
 export function CalculateCalories({ updateData, gender, dob }) {
-  const date = new Date()
+  const maxDate = gettingTodaysDate()
+  const date = formattingUserInputDate(dob)
   return (
     <FormWrapper
       title="Help us calculate your calories"
@@ -28,6 +30,7 @@ export function CalculateCalories({ updateData, gender, dob }) {
           />
           Male
         </label>
+      </div>
         <label
           className="goal-form-labels"
           style={{
@@ -40,13 +43,13 @@ export function CalculateCalories({ updateData, gender, dob }) {
           <input
             type="date"
             style={{ padding: "10px", width: "176px" }}
+            max={maxDate}
             value={date}
             pattern="\d{4}-\d{2}-\d{2}"
             onChange={(e) => updateData({ dob: e.target.value })}
             required
           ></input>
         </label>
-      </div>
     </FormWrapper>
   );
 }
