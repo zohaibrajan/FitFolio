@@ -1,0 +1,24 @@
+.gender-choices {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#gender {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.goal-form-labels {
+    display: flex;
+    font-weight: 600;
+    font-size: 17px;
+    gap: 5px;
+    align-items: center;
+}
+
+input[type=radio] {
+    transform: scale(1.25);
+    margin: 0 0.5em;
+}

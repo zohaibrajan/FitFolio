@@ -79,19 +79,6 @@
     font-size: 17px;
 }
 
-.signup-form-gender-choices {
-    display: flex;
-    margin-top: 5px;
-    gap: 25px;
-    flex-direction: row;
-}
-
-.signup-form-labels-gender {
-    display: flex;
-    font-size: 15px;
-    font-weight: 400;
-}
-
 .signup-form-gender-container {
     display: flex;
     margin: 10px 0;
@@ -117,13 +104,6 @@
 }
 
 
-.goal-form-labels {
-    display: flex;
-    font-weight: 600;
-    font-size: 17px;
-    gap: 5px;
-    align-items: center;
-}
 
 .height-labels-container {
     display: flex;

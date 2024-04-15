@@ -1,16 +1,18 @@
 import { formattingUserInputDate, gettingTodaysDate } from "../../../utils";
 import { FormWrapper } from "./FormWrapper";
+import "./CalculateCalories.css";
 
 export function CalculateCalories({ updateData, gender, dob }) {
-  const maxDate = gettingTodaysDate()
-  const date = formattingUserInputDate(dob)
+  const maxDate = gettingTodaysDate();
+  const date = formattingUserInputDate(dob);
   return (
     <FormWrapper
       title="Help us calculate your calories"
       text="We use this information to calculate an accurate calorie goal for you."
     >
-      <div className="signup-form-gender-choices">
-        <label className="signup-form-labels-gender">
+      <span id="gender">Gender</span>
+      <div className="gender-choices">
+        <label>
           <input
             type="radio"
             name="gender"
@@ -20,7 +22,7 @@ export function CalculateCalories({ updateData, gender, dob }) {
           />
           Female
         </label>
-        <label className="signup-form-labels-gender">
+        <label>
           <input
             type="radio"
             name="gender"
@@ -31,14 +33,8 @@ export function CalculateCalories({ updateData, gender, dob }) {
           Male
         </label>
       </div>
-        <label
-          className="goal-form-labels"
-          style={{
-            display: "flex",
-            marginTop: "5px",
-            flexDirection: "column",
-          }}
-        >
+      <div>
+        <label className="goal-form-labels">
           When were you born?
           <input
             type="date"
@@ -50,6 +46,7 @@ export function CalculateCalories({ updateData, gender, dob }) {
             required
           ></input>
         </label>
+      </div>
     </FormWrapper>
   );
 }
