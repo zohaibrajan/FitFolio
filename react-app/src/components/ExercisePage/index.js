@@ -1,5 +1,5 @@
 import React from "react";
-import ErrorHandlingComponent from "../ErrorHandlingComponent";
+import ErrorHandlingComponent from "../ErrorHandlingComponent"; // absolute import
 import StrengthExerciseForm from "./StrengthPage";
 import CardioForm from "./CardioPage";
 import MyExercises from "../MyExercises";
@@ -22,10 +22,11 @@ function ExercisePage() {
   const [exerciseName, setExerciseName] = useState("");
   const [nameError, setNameError] = useState("");
   const [exerciseType, setExerciseType] = useState("Cardio");
+  const isCardio = exerciseType === "Cardio";
 
   useEffect(() => { // useEffect to get exercises based on exerciseType
     const thunkAction =
-      exerciseType === "cardio"
+      isCardio
         ? getAllCardioExercisesThunk
         : getAllWeightExercisesThunk;
     dispatch(thunkAction());
@@ -72,14 +73,14 @@ function ExercisePage() {
               ]}
             />
             <ErrorHandlingComponent error={false} />
-            {exerciseType === "Cardio" ? (
+            {isCardio ? (
               <CardioForm exerciseName={exerciseName} /> // creates a cardio exercise and log
             ) : (
               <StrengthExerciseForm exerciseName={exerciseName} /> // creates a strength exercise and log
             )}
           </div>
           <div className="create-exercise-text">
-            <h3>Creating a New Exercise</h3> {/* text for creating a new exercise */}
+            <h3>Creating a New Exercise</h3> 
             <p>
               If you can't find an exercise in our database, you can easily add
               it yourself.

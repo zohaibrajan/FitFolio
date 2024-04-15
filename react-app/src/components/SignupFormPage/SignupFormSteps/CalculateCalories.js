@@ -39,7 +39,7 @@ export function CalculateCalories({ updateData, gender, dob }) {
             flexDirection: "column",
           }}
         >
-          Date of Birth
+          When were you born?
           <input
             type="date"
             style={{ padding: "10px", width: "176px" }}

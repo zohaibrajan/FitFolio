@@ -6,21 +6,21 @@ export function useMultistepForm(steps) {
     const history = useHistory();
 
     function next() {
-        setCurrentStepIndex(i => {
-            if (i >= steps.length - 1) return i;
-            return i + 1;
+        setCurrentStepIndex(index => {
+            if (index >= steps.length - 1) return index;
+            return index + 1;
         })
     }
 
     function back() {
-        setCurrentStepIndex(i => {
-            if (i <= 0) return history.replace("/");
-            return i - 1;
+        setCurrentStepIndex(index => {
+            if (index <= 0) return history.replace("/");
+            return index - 1;
         })
     }
 
-    function goTo(i) {
-        setCurrentStepIndex(i);
+    function goTo(index) {
+        setCurrentStepIndex(index);
     }
 
     return {
