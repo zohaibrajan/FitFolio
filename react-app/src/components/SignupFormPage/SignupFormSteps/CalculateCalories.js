@@ -55,21 +55,27 @@ export function CalculateCalories({
         </label>
       </div>
       <div style={{ marginTop: "25px" }}></div>
-      <label id="height">Height</label>
+      <label id="height">How tall are you?</label>
       <div className="height-input-container">
         <FormInputAnimated
           text="Height (ft)"
           label="heightFt"
+          type={"number"}
+          min={"3"}
+          max={"8"}
           width={"40%"}
-          marginTop={"10px"}
+          marginTop={"15px"}
           value={heightFt}
           updateData={updateData}
         />
         <FormInputAnimated
           text="Height (in)"
           label="heightIn"
+          type={"number"}
           width={"40%"}
-          marginTop={"10px"}
+          min={"0"}
+          max={"11"}
+          marginTop={"15px"}
           value={heightIn}
           updateData={updateData}
         />

@@ -3,7 +3,8 @@ import { useMultistepForm } from "./useMultistepForm";
 import {
   GetFirstName,
   CreateGoalForm,
-  CalculateCalories
+  CalculateCalories,
+  GetCurrentAndTargetWeight
 } from "./SignupFormSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -46,6 +47,7 @@ function SignupFormPage() {
     <GetFirstName {...data} updateData={updateData} />,
     <CreateGoalForm {...data} updateData={updateData} />,
     <CalculateCalories {...data} updateData={updateData} />,
+    <GetCurrentAndTargetWeight {...data} updateData={updateData} />,
   ]);
 
   function updateData(fields) {
@@ -57,6 +59,10 @@ function SignupFormPage() {
     if (currentStepIndex == 1 && !data.goal) {
       setError("Please select a goal");
       return;
+    }
+    if (currentStepIndex == 2 && !data.gender) {
+      setError("Please select a gender")
+      return
     }
     if (!isLastStep) return next();
     console.log(data);

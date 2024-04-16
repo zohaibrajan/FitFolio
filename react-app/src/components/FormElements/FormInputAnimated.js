@@ -1,12 +1,29 @@
 import React from "react";
 import "./FormInputAnimated.css";
 
-const FormInputAnimated = ({ text, label, value, updateData, width, marginTop }) => {
+const FormInputAnimated = ({
+  text,
+  label,
+  value,
+  updateData,
+  width,
+  marginTop,
+  type,
+  min,
+  max,
+  disabled,
+}) => {
   return (
-    <div className="input-container" style={{ width: width, marginTop: marginTop }}>
+    <div
+      className="input-container"
+      style={{ width: width, marginTop: marginTop }}
+    >
       <input
         required
-        type="text"
+        disabled={disabled}
+        min={min}
+        max={max}
+        type={type || "text"}
         className="input-field"
         placeholder=" "
         value={value}
