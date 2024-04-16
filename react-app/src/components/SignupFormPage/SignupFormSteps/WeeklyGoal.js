@@ -1,14 +1,7 @@
 import { FormWrapper } from "./FormWrapper";
-import { useEffect } from "react";
 
 export function WeeklyGoal({ goal, weeklyGoal, updateData }) {
     const maintainWeight = goal === "Maintain Weight";
-
-    useEffect(() => {
-      if (maintainWeight) {
-        updateData({ weeklyGoal: 0 });
-      }
-    }, [goal, updateData]);
 
     const goalText = goal === "Lose Weight" ? "Lose" : "Gain"
     const goalValues = {

@@ -86,6 +86,9 @@ function SignupFormPage() {
       }
     }
 
+    // if goal is to maintain weight, set target weight to current weight
+    // do not forget
+
     if (!isLastStep) return next();
     console.log(data);
   }
