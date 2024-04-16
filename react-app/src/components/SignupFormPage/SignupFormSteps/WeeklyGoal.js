@@ -1,22 +1,19 @@
 import { FormWrapper } from "./FormWrapper";
 
 export function WeeklyGoal({ goal, weeklyGoal, updateData }) {
-    const maintainWeight = goal === "Maintain Weight";
+  const maintainWeight = goal === "Maintain Weight";
 
-    const goalText = goal === "Lose Weight" ? "Lose" : "Gain"
-    const goalValues = {
-      [`${goalText} 0.5 lbs per week`]: 0.5,
-      [`${goalText} 1 lb per week`]: 1,
-      [`${goalText} 1.5 lbs per week`]: 1.5,
-    };
+  const goalText = goal === "Lose Weight" ? "Lose" : "Gain";
+  const goalValues = {
+    [`${goalText} 0.5 lbs per week`]: 0.5,
+    [`${goalText} 1 lb per week`]: 1,
+    [`${goalText} 1.5 lbs per week`]: 1.5,
+  };
   return (
     <>
       {maintainWeight ? (
         <FormWrapper title="Congratulations!">
-          <span>
-            You're one step closer to achieving your fitness goals. Lets create
-            your account!!
-          </span>
+          <span>You're one step closer to achieving your fitness goals!!</span>
         </FormWrapper>
       ) : (
         <FormWrapper

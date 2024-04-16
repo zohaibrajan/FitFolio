@@ -103,11 +103,11 @@ function SignupFormPage() {
         />
         {step}
         {error && <div>{error}</div>}
-        <div>
-          <button type="button" onClick={back}>
-            Back
+        <div className="signup-buttons-container">
+          <button id="signup-back" type="button" onClick={back}>
+            BACK
           </button>
-          <button type="submit">{isLastStep ? "Sign Up" : "Next"}</button>
+          <button id="signup-next" type="submit">{isLastStep ? "Sign Up" : "NEXT"}</button>
         </div>
       </form>
     </div>
