@@ -4,7 +4,7 @@ import {
   GetFirstName,
   CreateGoalForm,
   CalculateCalories,
-  GetCurrentAndTargetWeight
+  GetCurrentAndTargetWeight,
 } from "./SignupFormSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -14,6 +14,11 @@ import { createGoalThunk } from "../../store/goal";
 import { TailSpin } from "react-loader-spinner";
 import { getUsersGoalThunk } from "../../store/goal";
 import "./SignupForm.css";
+import {
+  validateGenderSelection,
+  validateGoalSelection,
+  validateWeights,
+} from "../../utils";
 
 const DATA = {
   firstName: "",
@@ -56,14 +61,24 @@ function SignupFormPage() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (currentStepIndex == 1 && !data.goal) {
-      setError("Please select a goal");
-      return;
+    const validators = [
+      null, // No validator for the first step
+      validateGoalSelection,
+      validateGenderSelection,
+      validateWeights,
+    ];
+
+    const validator = validators[currentStepIndex];
+    if (validator) {
+      const error = validator(data);
+
+      if (error) {
+        setError(error);
+        return;
+      }
     }
-    if (currentStepIndex == 2 && !data.gender) {
-      setError("Please select a gender")
-      return
-    }
+
+
     if (!isLastStep) return next();
     console.log(data);
   }
@@ -83,7 +98,9 @@ function SignupFormPage() {
         {step}
         {error && <div>{error}</div>}
         <div>
-          <button type="button" onClick={back}>Back</button>
+          <button type="button" onClick={back}>
+            Back
+          </button>
           <button type="submit">{isLastStep ? "Sign Up" : "Next"}</button>
         </div>
       </form>

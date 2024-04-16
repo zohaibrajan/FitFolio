@@ -36,6 +36,40 @@ export const formattingUserInputDate = (userDate) => {
     return formattedDate;
 }
 
+function validateGoal(goal, currentWeight, targetWeight) {
+  targetWeight = parseInt(targetWeight);
+  currentWeight = parseInt(currentWeight);
+  
+  if (goal === "Lose Weight" && targetWeight >= currentWeight) {
+    return "Your target weight must be less than your current weight";
+  }
+  if (goal === "Gain Weight" && targetWeight <= currentWeight) {
+    return "Your target weight must be greater than your current weight";
+  }
+  return "";
+}
+
+export function validateGoalSelection(data) {
+  if (!data.goal) {
+    return "Please select a goal";
+  }
+  return "";
+}
+
+export function validateGenderSelection(data) {
+  if (!data.gender) {
+    return "Please select a gender";
+  }
+  return "";
+}
+
+export function validateWeights(data) {
+  if (data.currentWeight && data.targetWeight) {
+    return validateGoal(data.goal, data.currentWeight, data.targetWeight);
+  }
+  return "";
+}
+
 
 export const isEmpty = (str) => str === "";
 export const hasErrors = (errors) =>
