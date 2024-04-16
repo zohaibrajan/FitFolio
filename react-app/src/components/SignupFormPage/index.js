@@ -5,6 +5,7 @@ import {
   CreateGoalForm,
   CalculateCalories,
   GetCurrentAndTargetWeight,
+  WeeklyGoal,
 } from "./SignupFormSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -39,6 +40,18 @@ const DATA = {
 function SignupFormPage() {
   const [data, setData] = useState(DATA);
   const [error, setError] = useState("");
+  function updateData(fields) {
+    setData((prev) => ({ ...prev, ...fields }));
+  }
+  const stepsComponents = [
+    <GetFirstName {...data} updateData={updateData} />,
+    <CreateGoalForm {...data} updateData={updateData} />,
+    <CalculateCalories {...data} updateData={updateData} />,
+    <GetCurrentAndTargetWeight {...data} updateData={updateData} />,
+    <WeeklyGoal {...data} updateData={updateData} />,
+    <span>h1</span>,
+  ];
+
   const {
     step,
     steps,
@@ -48,16 +61,11 @@ function SignupFormPage() {
     goTo,
     isLastStep,
     isFirstStep,
-  } = useMultistepForm([
-    <GetFirstName {...data} updateData={updateData} />,
-    <CreateGoalForm {...data} updateData={updateData} />,
-    <CalculateCalories {...data} updateData={updateData} />,
-    <GetCurrentAndTargetWeight {...data} updateData={updateData} />,
-  ]);
+  } = useMultistepForm(stepsComponents);
 
-  function updateData(fields) {
-    setData((prev) => ({ ...prev, ...fields }));
-  }
+  useEffect(() => {
+    setError("");
+  }, [currentStepIndex]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -78,14 +86,9 @@ function SignupFormPage() {
       }
     }
 
-
     if (!isLastStep) return next();
     console.log(data);
   }
-
-  useEffect(() => {
-    setError("");
-  }, [currentStepIndex]);
 
   return (
     <div className="signup-form-parent">
