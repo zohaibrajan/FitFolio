@@ -6,7 +6,6 @@
 
 #gender {
     font-weight: 600;
-    font-size: 18px;
     margin-bottom: 10px;
 }
 
@@ -20,4 +19,21 @@
 input[type=radio] {
     transform: scale(1.25);
     margin: 0 0.5em;
+}
+
+#date-input {
+    padding: 10px;
+    width: 198px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.height-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+#height {
+    font-weight: 600;
 }

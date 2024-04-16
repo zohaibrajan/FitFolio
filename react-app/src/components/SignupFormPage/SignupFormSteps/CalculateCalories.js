@@ -1,8 +1,15 @@
 import { formattingUserInputDate, gettingTodaysDate } from "../../../utils";
 import { FormWrapper } from "./FormWrapper";
+import FormInputAnimated from "../../FormElements/FormInputAnimated";
 import "./CalculateCalories.css";
 
-export function CalculateCalories({ updateData, gender, dob, heightFt, heightIn }) {
+export function CalculateCalories({
+  updateData,
+  gender,
+  dob,
+  heightFt,
+  heightIn,
+}) {
   const maxDate = gettingTodaysDate();
   const date = formattingUserInputDate(dob);
   return (
@@ -10,28 +17,6 @@ export function CalculateCalories({ updateData, gender, dob, heightFt, heightIn 
       title="Help us calculate your calories"
       text="We use this information to calculate an accurate calorie goal for you."
     >
-      <div className="input-container">
-        <input
-          required
-          type="text"
-          className="input-field"
-          placeholder=" "
-          value={heightFt}
-          onChange={(e) => updateData({ heightFt: e.target.value })}
-        />
-        <label className="input-label">Height (ft)</label>
-      </div>
-      <div className="input-container">
-        <input
-          required
-          type="text"
-          className="input-field"
-          placeholder=" "
-          value={heightIn}
-          onChange={(e) => updateData({ heightIn: e.target.value })}
-        />
-        <label className="input-label">Height (in)</label>
-      </div>
       <span id="gender">Gender</span>
       <div className="gender-choices">
         <label>
@@ -60,7 +45,7 @@ export function CalculateCalories({ updateData, gender, dob, heightFt, heightIn 
           When were you born?
           <input
             type="date"
-            style={{ padding: "10px", width: "176px" }}
+            id="date-input"
             max={maxDate}
             value={date}
             pattern="\d{4}-\d{2}-\d{2}"
@@ -68,6 +53,26 @@ export function CalculateCalories({ updateData, gender, dob, heightFt, heightIn 
             required
           ></input>
         </label>
+      </div>
+      <div style={{ marginTop: "25px" }}></div>
+      <label id="height">Height</label>
+      <div className="height-input-container">
+        <FormInputAnimated
+          text="Height (ft)"
+          label="heightFt"
+          width={"40%"}
+          marginTop={"10px"}
+          value={heightFt}
+          updateData={updateData}
+        />
+        <FormInputAnimated
+          text="Height (in)"
+          label="heightIn"
+          width={"40%"}
+          marginTop={"10px"}
+          value={heightIn}
+          updateData={updateData}
+        />
       </div>
     </FormWrapper>
   );
