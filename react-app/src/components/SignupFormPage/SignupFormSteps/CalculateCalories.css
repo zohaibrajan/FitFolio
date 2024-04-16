@@ -1,7 +1,7 @@
 .gender-choices {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin: 10px 0 25px 0;
 }
 
 #gender {
@@ -10,12 +10,11 @@
     margin-bottom: 10px;
 }
 
-.goal-form-labels {
+#goal-form-label {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
     font-weight: 600;
-    font-size: 17px;
-    gap: 5px;
-    align-items: center;
 }
 
 input[type=radio] {
