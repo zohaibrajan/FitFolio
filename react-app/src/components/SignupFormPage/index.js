@@ -173,7 +173,7 @@ function SignupFormPage() {
               value={currentStepIndex}
             />
             {step}
-            {error && <div>{error}</div>}
+            {error && <div id="error-message">{error}</div>}
             <div className="signup-buttons-container">
               <button id="signup-back" type="button" onClick={back}>
                 BACK

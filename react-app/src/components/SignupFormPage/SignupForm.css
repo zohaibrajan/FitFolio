@@ -122,3 +122,9 @@
     flex-direction: column;
     gap: 8px;
 }
+
+#error-message {
+    color: red;
+    font-size: 14px;
+    height: 40px;
+}
