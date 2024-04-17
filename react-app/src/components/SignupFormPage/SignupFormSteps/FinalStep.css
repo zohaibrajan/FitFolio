@@ -1,7 +1,8 @@
 #toggle-password-visibility {
     position: absolute;
-    right: 12px;
+    right: 20px;
     top: 50%;
+    padding: 0;
     transform: translateY(-50%);
     cursor: pointer;
     color: #8e8e8e;

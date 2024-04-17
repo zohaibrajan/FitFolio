@@ -3,7 +3,7 @@ import FormInputAnimated from "../../FormElements/FormInputAnimated";
 import { useState } from "react";
 import "./FinalStep.css";
 
-export function FinalStep({ updateData, email, password, confirmPassword }) {
+export function FinalStep({ updateData, email, password, confirmPassword, username }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = (e) => {
@@ -18,17 +18,26 @@ export function FinalStep({ updateData, email, password, confirmPassword }) {
     >
       <div className="username-password-container">
         <FormInputAnimated
+          type="text"
+          marginTop={"0px"}
+          label="username"
+          value={username}
+          updateData={updateData}
+          text="Username"
+        />
+        <FormInputAnimated
           type="email"
-          marginTop={"20px"}
+          marginTop={"25px"}
           label="email"
           value={email}
           updateData={updateData}
           text="Email"
         />
-        <div style={{ position: "relative", marginTop: "20px" }}>
+        <div style={{ position: "relative", marginTop: "10px" }}>
           <FormInputAnimated
             type={showPassword ? "text" : "password"}
             label="password"
+            marginTop={"25px"}
             value={password}
             updateData={updateData}
             text="Password"
@@ -38,15 +47,15 @@ export function FinalStep({ updateData, email, password, confirmPassword }) {
             id="toggle-password-visibility"
           >
             {showPassword ? (
-              <i className="fa-solid fa-eye-slash"></i>
-            ) : (
               <i className="fa-solid fa-eye"></i>
+            ) : (
+              <i className="fa-solid fa-eye-slash"></i>
             )}
           </button>
         </div>
         <FormInputAnimated
           type="password"
-          marginTop={"20px"}
+          marginTop={"25px"}
           label="confirmPassword"
           value={confirmPassword}
           updateData={updateData}

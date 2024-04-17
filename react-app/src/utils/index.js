@@ -71,11 +71,25 @@ export function validateWeights(data) {
 }
 
 export function validateWeeklyGoal(data) {
-  if (data.goal == "Maintain Weight") {
+  if (data.goal === "Maintain Weight") {
     return "";
   }
   if (!data.weeklyGoal) {
     return "Please select a weekly goal";
+  }
+  return "";
+}
+
+export function validateUsernameAndPassword(data) {
+  const { username, password, confirmPassword } = data;
+  if (username.length < 5 || username.length > 50) {
+    return "Username must be between 5 and 50 characters";
+  }
+  if (password.length < 8 || password.length > 50) {
+    return "Password must be between 8 and 50 characters";
+  }
+  if (password !== confirmPassword) {
+    return "Passwords do not match";
   }
   return "";
 }
