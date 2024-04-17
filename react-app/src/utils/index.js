@@ -39,7 +39,7 @@ export const formattingUserInputDate = (userDate) => {
 function validateGoal(goal, currentWeight, targetWeight) {
   targetWeight = parseInt(targetWeight);
   currentWeight = parseInt(currentWeight);
-  
+
   if (goal === "Lose Weight" && targetWeight >= currentWeight) {
     return "Your target weight must be less than your current weight";
   }
@@ -66,6 +66,16 @@ export function validateGenderSelection(data) {
 export function validateWeights(data) {
   if (data.currentWeight && data.targetWeight) {
     return validateGoal(data.goal, data.currentWeight, data.targetWeight);
+  }
+  return "";
+}
+
+export function validateWeeklyGoal(data) {
+  if (data.goal == "Maintain Weight") {
+    return "";
+  }
+  if (!data.weeklyGoal) {
+    return "Please select a weekly goal";
   }
   return "";
 }

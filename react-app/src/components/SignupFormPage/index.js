@@ -19,6 +19,7 @@ import {
   validateGenderSelection,
   validateGoalSelection,
   validateWeights,
+  validateWeeklyGoal
 } from "../../utils";
 
 const DATA = {
@@ -74,6 +75,7 @@ function SignupFormPage() {
       validateGoalSelection,
       validateGenderSelection,
       validateWeights,
+      validateWeeklyGoal
     ];
 
     const validator = validators[currentStepIndex];
