@@ -35,26 +35,28 @@ const checkWeightPerRep = (weightPerRep, weightErrors, setWeightErrors) => {
 };
 
   const checkForExercise = (exerciseName, exerciseType, cardioExercises, weightExercises, usersExercises, setNameError) => {
-    const trimmedExerciseName = exerciseName.trim().toLowerCase(); // trim and lowercase exercise name
+    const trimmedExerciseName = exerciseName.trim().toLowerCase();
     const exercises =
-      exerciseType === "cardio" ? cardioExercises : weightExercises; // get exercises based on exerciseType
+      exerciseType === "Cardio" ? cardioExercises : weightExercises;
 
-    const exerciseExists = // check if exercise already exists
+    const doesExerciseExists = // check if exercise already exists // add comment here
       exercises.some(
         (exercise) =>
           exercise.exerciseName.toLowerCase() === trimmedExerciseName
       ) ||
       usersExercises.some(
         (exercise) =>
-          exercise.exerciseName.split("*")[0].toLowerCase() ===
+          exercise.exerciseName.split("*")[0].toLowerCase() === // here
           trimmedExerciseName
       );
 
-    if (exerciseExists) {
+    if (doesExerciseExists) {
       // set error if exercise already exists
       setNameError("Exercise already exists");
-    } else if (exerciseName.length > 50) {
+    } else if (exerciseName.length >= 50) {
       setNameError("Must be less than 50 characters");
+    } else if (exerciseName.length < 5) {
+      setNameError("Must be greater than 5 characters");
     }
   };
 

@@ -1,0 +1,26 @@
+.all-goals-container {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.signup-goal-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: 2px solid rgba(180, 180, 180, 0.6);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: white;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    transition: all 0.3s;
+}
+
+.signup-goal-button.active {
+    color: rgb(0, 102, 238);
+    border: 2px solid rgb(0, 102, 238);
+}

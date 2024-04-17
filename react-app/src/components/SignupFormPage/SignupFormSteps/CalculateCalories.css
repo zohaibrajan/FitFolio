@@ -1,0 +1,39 @@
+.gender-choices {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 25px 0;
+}
+
+#gender {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#goal-form-label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: 600;
+}
+
+input[type=radio] {
+    transform: scale(1.25);
+    margin: 0 0.5em;
+}
+
+#date-input {
+    padding: 10px;
+    width: 198px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.height-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+#height {
+    font-weight: 600;
+}

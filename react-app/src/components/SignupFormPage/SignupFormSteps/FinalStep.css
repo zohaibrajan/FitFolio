@@ -1,0 +1,12 @@
+#toggle-password-visibility {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    padding: 0;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #8e8e8e;
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+}
