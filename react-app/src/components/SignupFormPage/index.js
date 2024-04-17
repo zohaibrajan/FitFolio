@@ -6,6 +6,7 @@ import {
   CalculateCalories,
   GetCurrentAndTargetWeight,
   WeeklyGoal,
+  FinalStep
 } from "./SignupFormSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -50,7 +51,7 @@ function SignupFormPage() {
     <CalculateCalories {...data} updateData={updateData} />,
     <GetCurrentAndTargetWeight {...data} updateData={updateData} />,
     <WeeklyGoal {...data} updateData={updateData} />,
-    <span>h1</span>,
+    <FinalStep {...data} updateData={updateData} />
   ];
 
   const {
@@ -109,7 +110,7 @@ function SignupFormPage() {
           <button id="signup-back" type="button" onClick={back}>
             BACK
           </button>
-          <button id="signup-next" type="submit">{isLastStep ? "Sign Up" : "NEXT"}</button>
+          <button id="signup-next" type="submit">{isLastStep ? "SIGN UP" : "NEXT"}</button>
         </div>
       </form>
     </div>
