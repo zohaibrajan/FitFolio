@@ -9,7 +9,7 @@
     width: 100%;
 }
 
-.signup-form-container {
+.update-goal-form-container {
     display: flex;
     flex-direction: column;
     width: 550px;
@@ -20,14 +20,6 @@
     font-family: "Inter", Helvetica, Arial, sans-serif;
 }
 
-
-.signup-form-parent {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 1425px;
-    border-top: 3px solid rgb(0, 102, 238);
-}
 
 .signup-submit-button-container {
     display: flex;
