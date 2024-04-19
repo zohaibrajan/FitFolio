@@ -1,4 +1,4 @@
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../FormElements";
 
 export function WeeklyGoal({ goal, weeklyGoal, updateData }) {
   const maintainWeight = goal === "Maintain Weight";

@@ -1,4 +1,4 @@
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../FormElements";
 import FormInputAnimated from "../../FormElements/FormInputAnimated";
 
 export function GetFirstName({ firstName, updateData }) {

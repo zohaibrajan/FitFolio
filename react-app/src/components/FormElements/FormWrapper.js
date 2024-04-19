@@ -1,6 +1,6 @@
 import "./FormWrapper.css";
 
-export function FormWrapper({ title, text, children }) {
+function FormWrapper({ title, text, children }) {
   return (
     <div id="form-wrapper">
       <h1 id="wrapper-title">{title}</h1>
@@ -9,3 +9,5 @@ export function FormWrapper({ title, text, children }) {
     </div>
   );
 }
+
+export default FormWrapper;

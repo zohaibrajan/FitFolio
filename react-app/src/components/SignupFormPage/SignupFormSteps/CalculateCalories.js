@@ -1,6 +1,5 @@
 import { formattingUserInputDate, gettingTodaysDate } from "../../../utils";
-import { FormWrapper } from "./FormWrapper";
-import FormInputAnimated from "../../FormElements/FormInputAnimated";
+import { FormWrapper, FormInputAnimated } from "../../FormElements";
 import "./CalculateCalories.css";
 
 export function CalculateCalories({

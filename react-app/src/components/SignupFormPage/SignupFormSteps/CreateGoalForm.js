@@ -1,4 +1,4 @@
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../FormElements";
 import "./CreateGoalForm.css";
 
 export function CreateGoalForm({ goal, firstName, updateData }) {

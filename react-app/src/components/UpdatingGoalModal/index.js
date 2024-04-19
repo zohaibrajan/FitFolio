@@ -12,11 +12,15 @@ function UpdatingGoalModal() {
     lbsPerWeek: goal.lbsPerWeek,
   }
   const [data, setData] = useState(DATA);
+  const { step, steps, currentStepIndex, next, back, isLastStep } =
+    useMultistepForm([
+      <h1>Step 1</h1>
+    ]);
 
-  
   return (
     <div>
       <form>
+        {step}
         <div>
           <button></button>
           <button></button>
