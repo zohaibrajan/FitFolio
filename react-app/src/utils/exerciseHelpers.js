@@ -55,7 +55,7 @@ const checkWeightPerRep = (weightPerRep, weightErrors, setWeightErrors) => {
       setNameError("Exercise already exists");
     } else if (exerciseName.length >= 50) {
       setNameError("Must be less than 50 characters");
-    } else if (exerciseName.length < 5) {
+    } else if (exerciseName && exerciseName.length < 5) {
       setNameError("Must be greater than 5 characters");
     }
   };

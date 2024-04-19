@@ -13,7 +13,7 @@ import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
 import { useHistory } from "react-router-dom";
 import { createGoalThunk } from "../../store/goal";
-import { TailSpin } from "react-loader-spinner";
+import LoadingSpinner from "../LoadingSpinner";
 import { getUsersGoalThunk } from "../../store/goal";
 import "./SignupForm.css";
 import {
@@ -152,18 +152,7 @@ function SignupFormPage() {
   return (
     <>
       {isLoading ? (
-        <div className="loading-spinner">
-          <TailSpin
-            visible={true}
-            height="80"
-            width="80"
-            color="rgb(0, 102, 238)"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            wrapperStyle={{}}
-            wrapperClass=""
-          />
-        </div>
+        <LoadingSpinner />
       ) : (
         <div className="signup-form-parent">
           <form className="signup-form-container" onSubmit={handleSubmit}>

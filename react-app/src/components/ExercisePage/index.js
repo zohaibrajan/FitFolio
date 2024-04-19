@@ -74,13 +74,13 @@ function ExercisePage() {
             />
             <ErrorHandlingComponent error={false} />
             {isCardio ? (
-              <CardioForm exerciseName={exerciseName} /> // creates a cardio exercise and log
+              <CardioForm exerciseName={exerciseName} nameError={nameError}/> // creates a cardio exercise and log
             ) : (
-              <StrengthExerciseForm exerciseName={exerciseName} /> // creates a strength exercise and log
+              <StrengthExerciseForm exerciseName={exerciseName} nameError={nameError}/> // creates a strength exercise and log
             )}
           </div>
           <div className="create-exercise-text">
-            <h3>Creating a New Exercise</h3> 
+            <h3>Creating a New Exercise</h3>
             <p>
               If you can't find an exercise in our database, you can easily add
               it yourself.

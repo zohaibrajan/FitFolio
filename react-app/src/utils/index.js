@@ -95,6 +95,9 @@ export function validateUsernameAndPassword(data) {
 }
 
 
+
+
+
 export const isEmpty = (str) => str === "";
 export const hasErrors = (errors) =>
     Object.values(errors).some((error) => error !== "");
