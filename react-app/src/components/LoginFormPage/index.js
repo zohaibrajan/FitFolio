@@ -74,7 +74,7 @@ function LoginFormPage() {
             {error && <div className="login-errors">{error}</div>}
             <div className="login-submit-button-container">
               <button className="login-submit-button" type="submit">
-                Log In
+                LOG IN
               </button>
               <button className="demo-login-button" onClick={demoLogin}>
                 Demo User

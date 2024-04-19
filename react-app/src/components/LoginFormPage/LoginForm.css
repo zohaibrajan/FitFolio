@@ -39,6 +39,8 @@
     border-radius: 5px;
     background-color: rgb(0, 102, 238);
     color: white;
+    letter-spacing: .045625rem;
+    transition: background-color 0.3s ease;
 }
 
 .login-submit-button:disabled:hover,
