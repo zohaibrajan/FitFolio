@@ -15,7 +15,7 @@ import {
   formattingUserInputDate,
 } from "../../utils";
 
-function StrengthExerciseForm({ exerciseName }) {
+function StrengthExerciseForm({ exerciseName, nameError }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const date = useSelectedDate();
@@ -27,7 +27,7 @@ function StrengthExerciseForm({ exerciseName }) {
     reps: "",
     weightPerRep: "",
   });
-  const commonChecks = isEmpty(exerciseName);
+  const commonChecks = isEmpty(exerciseName) || nameError
   const weightChecks =
     [sets, reps, weightPerRep].some(isEmpty) || hasErrors(weightErrors);
   const disabled = commonChecks || weightChecks;

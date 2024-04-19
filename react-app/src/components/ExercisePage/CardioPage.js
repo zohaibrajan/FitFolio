@@ -14,7 +14,7 @@ import {
   formattingUserInputDate,
 } from "../../utils";
 
-function CardioForm({ exerciseName }) {
+function CardioForm({ exerciseName, nameError }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const date = useSelectedDate();
@@ -26,7 +26,7 @@ function CardioForm({ exerciseName }) {
     calories: "",
   });
 
-  const commonChecks = isEmpty(exerciseName);
+  const commonChecks = isEmpty(exerciseName) || nameError;
   const cardioChecks =
     [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
   const disabled = commonChecks || cardioChecks;
