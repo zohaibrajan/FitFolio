@@ -94,16 +94,7 @@ export function validateUsernameAndPassword(data) {
   return "";
 }
 
-export function validateLogin(data) {
-  const { email, password } = data;
-  if (isEmpty(email)) {
-    return "Please enter an email";
-  }
-  if (isEmpty(password)) {
-    return "Please enter a password";
-  }
-  return "";
-}
+
 
 
 
