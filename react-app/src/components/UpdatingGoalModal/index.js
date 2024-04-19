@@ -225,7 +225,7 @@ function UpdatingGoalModal() {
   return (
     <>
       <div>
-        <div className="signup-form-container" style={{ borderRadius: "10px" }}>
+        <div className="update-goal-form-container" style={{ borderRadius: "10px" }}>
           <h1 style={{ marginBottom: "25px" }}>Let's Update your Goal</h1>
           <form onSubmit={handleSubmit} className="signup-form">
             <label className="all-goals-container" style={{ height: "170px" }}>
