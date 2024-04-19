@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { login } from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { TailSpin } from "react-loader-spinner";
+import LoadingSpinner from "../LoadingSpinner";
 import {
   FormInputAnimated,
   FormInputPassword,
 } from "../../components/FormElements";
+import { validateLogin } from "../../utils";
 import "./LoginForm.css";
 
 const DATA = {
@@ -18,7 +19,6 @@ function LoginFormPage() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState(DATA);
   const [errors, setErrors] = useState("");
 
@@ -26,15 +26,17 @@ function LoginFormPage() {
     setData((prev) => ({ ...prev, ...fields }));
   }
 
-  const togglePasswordVisibility = (e) => {
-    e.preventDefault();
-    setShowPassword(!showPassword);
-  };
-
   if (sessionUser) return <Redirect to="/my-home/diary" />;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errorData = validateLogin(data);
+
+    if (errorData) {
+      setErrors(errorData);
+      return;
+    }
+
     const { email, password } = data;
     setIsLoading(true);
     const data = await dispatch(login(email, password));
@@ -54,18 +56,7 @@ function LoginFormPage() {
   return (
     <>
       {isLoading ? (
-        <div className="loading-spinner">
-          <TailSpin
-            visible={true}
-            height="80"
-            width="80"
-            color="rgb(0, 102, 238)"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            wrapperStyle={{}}
-            wrapperClass=""
-          />
-        </div>
+        <LoadingSpinner />
       ) : (
         <div className="login-form-parent">
           <div className="login-form-container">
