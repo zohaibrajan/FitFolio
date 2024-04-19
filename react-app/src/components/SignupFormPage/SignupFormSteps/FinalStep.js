@@ -3,17 +3,9 @@ import {
   FormInputAnimated,
   FormInputPassword
 } from "../../FormElements"
-import { useState } from "react";
 import "./FinalStep.css";
 
 export function FinalStep({ updateData, email, password, confirmPassword, username }) {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = (e) => {
-    e.preventDefault();
-    setShowPassword(!showPassword);
-  };
-
   return (
     <FormWrapper
       title="Create your account"

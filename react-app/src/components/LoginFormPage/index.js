@@ -7,6 +7,7 @@ import {
   FormInputAnimated,
   FormInputPassword,
 } from "../../components/FormElements";
+import { FormWrapper } from "../SignupFormPage/SignupFormSteps";
 import { validateLogin } from "../../utils";
 import "./LoginForm.css";
 
@@ -58,33 +59,34 @@ function LoginFormPage() {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <div className="login-form-parent">
-          <div className="login-form-container">
-            <h1>Member Login</h1>
-            <form onSubmit={handleSubmit} className="login-form">
-              <FormInputAnimated
-                text="Email"
-                label="email"
-                value={data.email}
-                updateData={updateData}
-                type="email"
-              />
-              <FormInputPassword
-                password={data.password}
-                updateData={updateData}
-              />
-              <div className="login-submit-button-container">
-                <button className="login-submit-button" type="submit">
-                  Log In
-                </button>
+        <div className="signup-form-parent">
+          <form onSubmit={handleSubmit} className="signup-form-container">
+            <FormWrapper title="Member Login">
+              <div>
+                <FormInputAnimated
+                  text="Email"
+                  label="email"
+                  value={data.email}
+                  updateData={updateData}
+                  type="email"
+                />
+                <FormInputPassword
+                  password={data.password}
+                  updateData={updateData}
+                />
               </div>
-            </form>
+            </FormWrapper>
+            <div className="login-submit-button-container">
+              <button className="login-submit-button" type="submit">
+                Log In
+              </button>
+            </div>
             <div className="demo-login-container">
               <button className="demo-login-button" onClick={demoLogin}>
                 Demo User
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </>
