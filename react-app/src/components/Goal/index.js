@@ -23,15 +23,15 @@ function Goal() {
           <h2>{goal.goal}</h2>
           <span>
             Current Calories Needed:{" "}
-            <span className="goal-nums">{goal.caloriesPerDay}</span>
+            <span className="goal-nums">{goal.caloriesPerDay} kcal</span>
           </span>
           <span>
             Starting Weight:{" "}
-            <span className="goal-nums">{goal.startingWeight}</span>
+            <span className="goal-nums">{goal.startingWeight} lbs</span>
           </span>
           <span>
             Target Weight:{" "}
-            <span className="goal-nums">{goal.targetWeight}</span>
+            <span className="goal-nums">{goal.targetWeight} lbs</span>
           </span>
         </div>
         <div className="update-goal-button-container">
