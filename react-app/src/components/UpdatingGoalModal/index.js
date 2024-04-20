@@ -1,20 +1,24 @@
 import { useState } from "react";
-import { useMultistepForm } from "../SignupFormPage/useMultistepForm";
 import { useSelector } from "react-redux";
+import { useMultistepForm } from "../SignupFormPage/useMultistepForm";
+import { AllGoals } from "./UpdatingGoalSteps/AllGoals";
 
 function UpdatingGoalModal() {
   const goal = useSelector((state) => state.goal);
   const DATA = {
     goal: goal.goal,
-    weeklyGoal: goal.weeklyGoal,
     startingWeight: goal.startingWeight,
     targetWeight: goal.targetWeight,
     lbsPerWeek: goal.lbsPerWeek,
   }
+  const updateData = (fields) => {
+    setData((prev) => ({ ...prev, ...fields }));
+  };
   const [data, setData] = useState(DATA);
-  const { step, steps, currentStepIndex, next, back, isLastStep } =
+  console.log(data);
+  const { step, next, back, isLastStep } =
     useMultistepForm([
-      <h1>Step 1</h1>
+      <AllGoals {...data} updateData={updateData}/>
     ]);
 
   return (
@@ -22,8 +26,8 @@ function UpdatingGoalModal() {
       <form>
         {step}
         <div>
-          <button></button>
-          <button></button>
+          <button onClick={back}>BACK</button>
+          <button onClick={next}>{isLastStep ? "CONFIRM" : "NEXT"}</button>
         </div>
       </form>
     </div>

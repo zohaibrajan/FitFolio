@@ -5,7 +5,7 @@
     font-size: 17px;
 }
 
-.signup-goal-button {
+.goal-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -20,7 +20,7 @@
     transition: all 0.3s;
 }
 
-.signup-goal-button.active {
+.goal-button.active {
     color: rgb(0, 102, 238);
     border: 2px solid rgb(0, 102, 238);
 }

@@ -24,7 +24,7 @@ export function WeeklyGoal({ goal, weeklyGoal, updateData }) {
             <div className="all-goals-choices">
               {Object.entries(goalValues).map(([text, value]) => (
                 <button
-                  className={`signup-goal-button ${
+                  className={`goal-button ${
                     weeklyGoal === value ? "active" : ""
                   }`}
                   key={text}
