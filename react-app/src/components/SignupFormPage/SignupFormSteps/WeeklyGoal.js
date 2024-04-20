@@ -1,4 +1,4 @@
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../FormElements";
 
 export function WeeklyGoal({ goal, weeklyGoal, updateData }) {
   const maintainWeight = goal === "Maintain Weight";
@@ -24,7 +24,7 @@ export function WeeklyGoal({ goal, weeklyGoal, updateData }) {
             <div className="all-goals-choices">
               {Object.entries(goalValues).map(([text, value]) => (
                 <button
-                  className={`signup-goal-button ${
+                  className={`goal-button ${
                     weeklyGoal === value ? "active" : ""
                   }`}
                   key={text}

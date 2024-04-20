@@ -1,5 +1,4 @@
-import { FormWrapper } from "./FormWrapper";
-import FormInputAnimated from "../../FormElements/FormInputAnimated";
+import { FormWrapper, FormInputAnimated } from "../../FormElements";
 import "./GetCurrentAndTargetWeight.css";
 
 export function GetCurrentAndTargetWeight({
@@ -8,7 +7,7 @@ export function GetCurrentAndTargetWeight({
   targetWeight,
   goal,
 }) {
-    
+
   const maintainWeight = goal === "Maintain Weight";
   if (maintainWeight) {
     targetWeight = currentWeight;

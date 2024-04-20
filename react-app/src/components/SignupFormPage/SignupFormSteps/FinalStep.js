@@ -1,5 +1,5 @@
-import { FormWrapper } from "./FormWrapper";
 import {
+  FormWrapper,
   FormInputAnimated,
   FormInputPassword
 } from "../../FormElements"

@@ -1,214 +1,66 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useMultistepForm } from "../SignupFormPage/useMultistepForm";
 import { updateGoalThunk } from "../../store/goal";
 import { useModal } from "../../context/Modal";
-import "./UpdatingGoal.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { AllGoals } from "./UpdatingGoalSteps";
+import { validateWeeklyGoal, validateWeights } from "../../utils";
+import {
+  WeeklyGoal,
+  GetCurrentAndTargetWeight,
+} from "../SignupFormPage/SignupFormSteps";
+import "./UpdatingGoalModal.css";
 
 function UpdatingGoalModal() {
-  const currentGoal = useSelector((state) => state.goal);
   const dispatch = useDispatch();
   const history = useHistory();
   const { closeModal } = useModal();
-  const [goal, setGoal] = useState(currentGoal.goal);
-  const [currentWeight, setCurrentWeight] = useState(
-    currentGoal.startingWeight
-  );
-  const [targetWeight, setTargetWeight] = useState(currentGoal.targetWeight);
-  const [goalErrors, setGoalErrors] = useState("");
-  const [weeklyGoal, setWeeklyGoal] = useState(
-    currentGoal.goal === "Lose Weight"
-      ? -1 * currentGoal.lbsPerWeek
-      : currentGoal.lbsPerWeek
-  );
-  const disabled =
-    goalErrors.length || weeklyGoal === "" || targetWeight === "";
-  const buttonStyle = disabled ? "disabled-button" : "signup-submit-button";
-
-  const handleGoalClick = (clickedGoal) => {
-    setGoal(clickedGoal);
-    if (clickedGoal === "Lose Weight") {
-      setWeeklyGoal("")
-      setTargetWeight("");
-    } else if (clickedGoal === "Maintain Weight") {
-      setWeeklyGoal("set");
-      setTargetWeight(currentWeight);
-    } else if (clickedGoal === "Gain Weight") {
-      setWeeklyGoal("");
-      setTargetWeight("");
-    }
-
-    setGoalErrors("");
+  const [error, setError] = useState("");
+  const goal = useSelector((state) => state.goal);
+  const DATA = {
+    goal: goal.goal,
+    currentWeight: goal.startingWeight,
+    targetWeight: goal.targetWeight,
+    // Weekly goal is intentionally left blank to be filled in by user
+    weeklyGoal: "",
+  }
+  const updateData = (fields) => {
+    setData((prev) => ({ ...prev, ...fields }));
   };
+  const [data, setData] = useState(DATA);
+  const { step, next, back, isLastStep, isFirstStep, currentStepIndex } =
+    useMultistepForm([
+      <AllGoals {...data} updateData={updateData} />,
+      <WeeklyGoal {...data} updateData={updateData} />,
+      <GetCurrentAndTargetWeight {...data} updateData={updateData} />,
+    ]);
 
-  const handleCurrentWeightChange = (e) => {
-    const newCurrentWeight = e.target.value;
-    setCurrentWeight(newCurrentWeight);
-    setTargetWeight("");
-    setGoalErrors("");
-  };
-
-  const handleTargetWeightChange = (e) => {
-    const newTargetWeight = e.target.value;
-    setTargetWeight(newTargetWeight);
-
-    if (
-      (goal === "Lose Weight" &&
-        newTargetWeight !== "" &&
-        parseFloat(newTargetWeight) >= parseFloat(currentWeight)) ||
-      (goal === "Maintain Weight" &&
-        newTargetWeight !== "" &&
-        parseFloat(newTargetWeight) !== parseFloat(currentWeight)) ||
-      (goal === "Gain Weight" &&
-        newTargetWeight !== "" &&
-        parseFloat(newTargetWeight) <= parseFloat(currentWeight))
-    ) {
-      setGoalErrors(`Invalid target weight for ${goal} goal.`);
-    } else {
-      setGoalErrors("");
-      setTargetWeight(newTargetWeight);
-    }
-  };
-
-  const renderWeeklyGoalButtons = () => {
-    if (!goal) {
-      return (
-        <div className="checking-if-goal" style={{ height: "50px" }}>
-          <span
-            style={{
-              fontWeight: "600",
-              fontSize: "15px",
-              color: "rgb(0, 102, 238)",
-            }}
-          >
-            You have not selected a goal yet
-          </span>
-        </div>
-      );
-    }
-    if (goal === "Maintain Weight") {
-      return (
-        <div className="checking-if-goal" style={{ height: "50px" }}>
-          <span
-            style={{
-              fontWeight: "600",
-              fontSize: "15px",
-              color: "rgb(0, 102, 238)",
-            }}
-          >
-            Your Weekly Goal is to remain at your Current Weight
-          </span>
-        </div>
-      );
-    } else {
-      return (
-        <div className="checking-if-goal-buttons">
-          {goal === "Lose Weight" && (
-            <>
-              <button
-                type="button"
-                className="weekly-goal-buttons"
-                onClick={() => setWeeklyGoal(-0.5)}
-                style={{
-                  border:
-                    weeklyGoal === -0.5
-                      ? "2px solid rgb(0, 102, 238)"
-                      : "1px solid black",
-                  color: weeklyGoal === -0.5 ? "rgb(0, 102, 238)" : "black",
-                }}
-              >
-                Lose 0.5 lbs per week
-              </button>
-              <button
-                type="button"
-                className="weekly-goal-buttons"
-                onClick={() => setWeeklyGoal(-1)}
-                style={{
-                  border:
-                    weeklyGoal === -1
-                      ? "2px solid rgb(0, 102, 238)"
-                      : "1px solid black",
-                  color: weeklyGoal === -1 ? "rgb(0, 102, 238)" : "black",
-                }}
-              >
-                Lose 1 lb per week
-              </button>
-              <button
-                type="button"
-                className="weekly-goal-buttons"
-                onClick={() => setWeeklyGoal(-1.5)}
-                style={{
-                  border:
-                    weeklyGoal === -1.5
-                      ? "2px solid rgb(0, 102, 238)"
-                      : "1px solid black",
-                  color: weeklyGoal === -1.5 ? "rgb(0, 102, 238)" : "black",
-                }}
-              >
-                Lose 1.5 lbs per week
-              </button>
-            </>
-          )}
-          {goal === "Gain Weight" && (
-            <>
-              <button
-                type="button"
-                className="weekly-goal-buttons"
-                onClick={() => setWeeklyGoal(0.5)}
-                style={{
-                  border:
-                    weeklyGoal === 0.5
-                      ? "2px solid rgb(0, 102, 238)"
-                      : "1px solid black",
-                  color: weeklyGoal === 0.5 ? "rgb(0, 102, 238)" : "black",
-                }}
-              >
-                Gain 0.5 lbs per week
-              </button>
-              <button
-                type="button"
-                className="weekly-goal-buttons"
-                onClick={() => setWeeklyGoal(1)}
-                style={{
-                  border:
-                    weeklyGoal === 1
-                      ? "2px solid rgb(0, 102, 238)"
-                      : "1px solid black",
-                  color: weeklyGoal === 1 ? "rgb(0, 102, 238)" : "black",
-                }}
-              >
-                Gain 1 lb per week
-              </button>
-              <button
-                type="button"
-                className="weekly-goal-buttons"
-                onClick={() => setWeeklyGoal(1.5)}
-                style={{
-                  border:
-                    weeklyGoal === 1.5
-                      ? "2px solid rgb(0, 102, 238)"
-                      : "1px solid black",
-                  color: weeklyGoal === 1.5 ? "rgb(0, 102, 238)" : "black",
-                }}
-              >
-                Gain 1.5 lbs per week
-              </button>
-            </>
-          )}
-        </div>
-      );
-    }
-  };
-
+  useEffect(() => {
+    setError("");
+  }, [currentStepIndex]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataGoal = new FormData();
 
+    const validators = [null, validateWeeklyGoal, validateWeights];
+    const validator = validators[currentStepIndex];
+    if (validator && validator(data)) {
+      setError(validator(data));
+      return;
+    }
+
+    if (!isLastStep) return next();
+
+    let { goal, currentWeight, targetWeight, weeklyGoal } = data;
+    if (goal === "Maintain Weight") {
+      targetWeight = currentWeight;
+      weeklyGoal = 0;
+    }
+
+    const formDataGoal = new FormData();
     formDataGoal.append("goal", goal);
-    goal === "Maintain Weight"
-      ? formDataGoal.append("lbs_per_week", 0)
-      : formDataGoal.append("lbs_per_week", Math.abs(parseFloat(weeklyGoal)));
+    formDataGoal.append("lbs_per_week", weeklyGoal);
     formDataGoal.append("starting_weight", currentWeight);
     formDataGoal.append("target_weight", targetWeight);
 
@@ -223,6 +75,7 @@ function UpdatingGoalModal() {
   };
 
   return (
+<<<<<<< HEAD
     <>
       <div>
         <div className="update-goal-form-container" style={{ borderRadius: "10px" }}>
@@ -338,9 +191,26 @@ function UpdatingGoalModal() {
               </button>
             </div>
           </form>
+=======
+    <div className="update-goal-form-parent">
+      <form className="update-goal-form-container" onSubmit={handleSubmit}>
+        {step}
+        {error && <div id="error-message">{error}</div>}
+        <div className="update-goal-buttons-container">
+          <button
+            id="update-goal-form-back"
+            type="button"
+            onClick={isFirstStep ? closeModal : back}
+          >
+            BACK
+          </button>
+          <button id="update-goal-form-next" type="submit">
+            {isLastStep ? "CONFIRM" : "NEXT"}
+          </button>
+>>>>>>> refactor
         </div>
-      </div>
-    </>
+      </form>
+    </div>
   );
 }
 
