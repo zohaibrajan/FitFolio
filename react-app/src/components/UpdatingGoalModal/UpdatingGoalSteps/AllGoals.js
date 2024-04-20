@@ -1,7 +1,7 @@
 import { FormWrapper } from "../../SignupFormPage/SignupFormSteps";
 
 
-export function AllGoals({ goal, updateData }) {
+function AllGoals({ goal, updateData }) {
     return (
         <FormWrapper title="Let's Update Your Goal" text="What is your primary goal?">
             <div className="all-goals-container">
@@ -22,3 +22,5 @@ export function AllGoals({ goal, updateData }) {
         </FormWrapper>
     );
 }
+
+export default AllGoals;
