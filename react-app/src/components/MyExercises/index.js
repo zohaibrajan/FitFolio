@@ -13,7 +13,6 @@ import "./MyExercises.css";
 import EditExercisePanel from "../EditExercisePanel";
 
 function MyExercises({ type }) {
-  // exerciseType = exerciseType.charAt(0).toUpperCase() + exerciseType.slice(1);
   const [exerciseType, setExerciseType] = useState(type); // ["Cardio", "Strength"]
   const dispatch = useDispatch();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -24,16 +23,17 @@ function MyExercises({ type }) {
   const exercisesPerPage = 10;
   const endIndex = currentPage * exercisesPerPage;
   const startIndex = endIndex - exercisesPerPage;
+  const isCardio = exerciseType === "Cardio";
 
   useEffect(() => {
-    if (exerciseType === "Cardio") {
+    if (isCardio) {
       dispatch(getUsersCardioExercisesFilteredThunk());
       setCurrentPage(1);
     } else {
       dispatch(getUsersWeightExercisesFilteredThunk());
       setCurrentPage(1);
     }
-  }, [dispatch, exerciseType]);
+  }, [dispatch, isCardio]);
 
   useEffect(() => {
     setIsPanelOpen(false);
@@ -45,7 +45,7 @@ function MyExercises({ type }) {
 
   const handleDelete = (e, exerciseId) => {
     e.preventDefault();
-    if (exerciseType === "Cardio") {
+    if (isCardio) {
       dispatch(deleteUserCardioExerciseThunk(exerciseId));
     } else {
       dispatch(deleteUserWeightExerciseThunk(exerciseId));
@@ -96,7 +96,7 @@ function MyExercises({ type }) {
                   <td>
                     <OpenModalButton
                       modalComponent={
-                        exerciseType === "Cardio" ? (
+                        isCardio ? (
                           <CardioLogModal
                             exerciseName={exercise.exerciseName}
                             exerciseId={exercise.id}
@@ -172,9 +172,8 @@ function MyExercises({ type }) {
         <div className="edit-exercise-panel-parent">
           {isPanelOpen && (
             <EditExercisePanel
-              exerciseTypeFromMyExercises={exerciseType}
+              isCardio={isCardio}
               selectedExercise={selectedExercise}
-              exerciseId={selectedExercise.id}
               setIsPanelOpen={setIsPanelOpen}
             />
           )}
