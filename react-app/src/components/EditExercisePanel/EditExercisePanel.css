@@ -54,3 +54,10 @@
     background-color: #8C8C8C;
     cursor: not-allowed;
 }
+
+.edit-exercise-panel-strength-text-container {
+    display: flex;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    justify-content: center;
+    font-size: 10px;
+}

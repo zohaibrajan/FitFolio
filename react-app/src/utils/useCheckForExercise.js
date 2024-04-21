@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { getAllCardioExercisesThunk } from "../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../store/weightExercises";
@@ -21,9 +21,10 @@ export const useCheckForExercise = (exerciseName, exerciseType, setError) => {
       : getAllWeightExercisesThunk;
     dispatch(thunkAction());
 
+
     const trimmedExerciseName = exerciseName.trim().toLowerCase();
     const exercises =
-      exerciseType === "Cardio" ? cardioExercises : weightExercises;
+      isCardio ? cardioExercises : weightExercises;
 
     const doesExerciseExists =
       exercises.some(
@@ -47,7 +48,7 @@ export const useCheckForExercise = (exerciseName, exerciseType, setError) => {
       setError("Must not be empty");
 
     }
-  }, [exerciseName, exerciseType, cardioExercises, weightExercises, usersExercises, setError, dispatch]);
+  }, [exerciseName, isCardio, cardioExercises, weightExercises, usersExercises, setError, dispatch]);
 
   return checkExercise;
 };

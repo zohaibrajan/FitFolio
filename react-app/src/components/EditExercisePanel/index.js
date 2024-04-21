@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EditCardioExercise from "./EditCardioExercise";
+import EditStrengthExercise from "./EditStrengthExercise";
 import { FormInput } from "../FormElements";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import { useCheckForExercise } from "../../utils";
@@ -19,9 +20,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
 
   useEffect(() => {
     setExerciseName(selectedExercise.exerciseName.split("*")[0]);
-  }
-  , [selectedExercise]);
-
+  }, [selectedExercise]);
 
   return (
     <div className={`side-panel`}>
@@ -56,7 +55,13 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
             isModified={isModified}
           />
         ) : (
-          <h1>Strength</h1>
+          <EditStrengthExercise
+            nameError={nameError}
+            exerciseData={selectedExercise}
+            exerciseName={exerciseName}
+            setIsPanelOpen={setIsPanelOpen}
+            isModified={isModified}
+          />
         )}
       </div>
     </div>

@@ -45,6 +45,7 @@ function EditCardioExercise({
       caloriesBurned: exerciseData.caloriesPerMinute * 60,
     });
     setIsModified(false);
+    // eslint-disable-next-line
   }, [exerciseData]);
 
   const handleSubmit = async (e) => {
