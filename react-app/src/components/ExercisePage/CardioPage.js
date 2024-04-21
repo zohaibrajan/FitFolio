@@ -38,7 +38,7 @@ function CardioForm({ exerciseName, nameError }) {
     cardioLog.append("calories_burned", caloriesBurned);
     cardioLog.append("date", formattingUserInputDate(date.selectedDate));
     cardioLog.append("exercise_name", exerciseName);
-    cardioExerciseForm.append("exercise_name", exerciseName);
+    cardioExerciseForm.append("exercise_name", exerciseName.trim());
     cardioExerciseForm.append("intensity", intensity);
     cardioExerciseForm.append("duration", duration);
     cardioExerciseForm.append("calories_burned", caloriesBurned);

@@ -41,7 +41,7 @@ function StrengthExerciseForm({ exerciseName, nameError }) {
     strengthLog.append("weight_per_rep", weightPerRep);
     strengthLog.append("date", formattingUserInputDate(date.selectedDate));
     strengthLog.append("exercise_name", exerciseName);
-    strengthExerciseForm.append("exercise_name", exerciseName);
+    strengthExerciseForm.append("exercise_name", exerciseName.trim());
 
     try {
       await dispatch(createWeightExerciseThunk(strengthExerciseForm));

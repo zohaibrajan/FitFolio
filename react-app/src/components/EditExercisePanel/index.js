@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditCardioExercise from "./EditCardioExercise";
 import { FormInput } from "../FormElements";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
@@ -15,6 +15,12 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
     isCardio ? "Cardio" : "Strength",
     setNameError
   );
+
+  useEffect(() => {
+    setExerciseName(selectedExercise.exerciseName.split("*")[0]);
+  }
+  , [selectedExercise]);
+  
 
   return (
     <div className={`side-panel`}>
@@ -39,7 +45,12 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
         />
         <ErrorHandlingComponent error={nameError} />
         {isCardio ? (
-          <EditCardioExercise exerciseData={selectedExercise} nameError={nameError} />
+          <EditCardioExercise
+            exerciseData={selectedExercise}
+            nameError={nameError}
+            exerciseName={exerciseName}
+            setIsPanelOpen={setIsPanelOpen}
+          />
         ) : (
           <h1>Strength</h1>
         )}

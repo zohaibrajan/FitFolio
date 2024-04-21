@@ -1,36 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { FormInput, FormSubmitButton, FormSelect } from "../FormElements";
+import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercisesFiltered";
+import { updateCardioExerciseAllExercises } from "../../store/userOwnedExercises";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import {
   checkDuration,
   checkCaloriesBurned,
   isEmpty,
-  hasErrors
+  hasErrors,
 } from "../../utils";
 
-function EditCardioExercise({ exerciseData, nameError }) {
-  const DATA = {
+function EditCardioExercise({ exerciseData, nameError, exerciseName, setIsPanelOpen}) {
+  const dispatch = useDispatch();
+  const [data, setData] = useState({
     duration: 60,
     intensity: exerciseData.intensity,
     caloriesBurned: exerciseData.caloriesPerMinute * 60,
-  };
-  const [data, setData] = useState(DATA);
+  });
   const [cardioErrors, setCardioErrors] = useState({
     duration: "",
     calories: "",
   });
+  const [isModified, setIsModified] = useState(false);
   const { duration, intensity, caloriesBurned } = data;
   const cardioChecks =
     [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
   const disabled = nameError || cardioChecks;
-
   function updateData(fields) {
     setData((prev) => ({ ...prev, ...fields }));
+    setIsModified(true);
   }
+
+  useEffect(() => {
+    setData({
+      duration: 60,
+      intensity: exerciseData.intensity,
+      caloriesBurned: exerciseData.caloriesPerMinute * 60,
+    });
+    setIsModified(false);
+    }, [exerciseData]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submit");
+    const cardioExerciseForm = new FormData();
+    cardioExerciseForm.append("exercise_name", exerciseName.trim());
+    cardioExerciseForm.append("intensity", intensity);
+    cardioExerciseForm.append("duration", duration);
+    cardioExerciseForm.append("calories_burned", caloriesBurned);
+    try {
+      const exercise = await dispatch(
+        updateUserCardioExerciseThunk(exerciseData.id, cardioExerciseForm)
+      );
+      await dispatch(updateCardioExerciseAllExercises(exercise));
+      setIsPanelOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -58,7 +85,7 @@ function EditCardioExercise({ exerciseData, nameError }) {
         }
         onChange={(e) => updateData({ duration: e.target.value })}
       />
-      <ErrorHandlingComponent error={false} />
+      <ErrorHandlingComponent error={cardioErrors.duration} />
       <FormInput
         label={"Calories Burned"}
         type={"number"}
@@ -70,9 +97,9 @@ function EditCardioExercise({ exerciseData, nameError }) {
         }
         onChange={(e) => updateData({ caloriesBurned: e.target.value })}
       />
-      <ErrorHandlingComponent error={false} />
+      <ErrorHandlingComponent error={cardioErrors.duration} />
       <FormSubmitButton
-        disabled={disabled}
+        disabled={disabled || !isModified}
         divClass={"create-exercise-button-container"}
         buttonClass={"create-exercise-button"}
         text={"Add Exercise"}
