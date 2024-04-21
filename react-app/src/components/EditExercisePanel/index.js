@@ -1,8 +1,6 @@
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
-  console.log(selectedExercise, isCardio);
-
   return (
     <div className={`side-panel`}>
       <div className="edit-exercise-panel-title-container">
