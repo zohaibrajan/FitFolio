@@ -1,10 +1,31 @@
+import { useDispatch } from "react-redux";
 import { FormSubmitButton } from "../FormElements";
+import { updateUserWeightExerciseThunk } from "../../store/userOwnedExercisesFiltered";
+import { updateWeightExerciseAllExercises } from "../../store/userOwnedExercises";
 
-function EditStrengthExercise({ nameError, isModified }) {
-
+function EditStrengthExercise({
+  nameError,
+  isModified,
+  exerciseName,
+  exerciseId,
+  setIsPanelOpen,
+}) {
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
-  }
+    const weightExerciseForm = new FormData();
+    weightExerciseForm.append("exercise_name", exerciseName.trim());
+
+    try {
+      const exercise = await dispatch(
+        updateUserWeightExerciseThunk(exerciseId, weightExerciseForm)
+      );
+      await dispatch(updateWeightExerciseAllExercises(exercise));
+      setIsPanelOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <>
       <div className="edit-exercise-panel-strength-text-container">

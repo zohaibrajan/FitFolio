@@ -57,7 +57,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
         ) : (
           <EditStrengthExercise
             nameError={nameError}
-            exerciseData={selectedExercise}
+            exerciseId={selectedExercise.id}
             exerciseName={exerciseName}
             setIsPanelOpen={setIsPanelOpen}
             isModified={isModified}
