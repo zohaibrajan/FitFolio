@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ErrorHandlingComponent from "../ErrorHandlingComponent"; // absolute import
 import StrengthExerciseForm from "./StrengthPage";
 import CardioForm from "./CardioPage";
 import MyExercises from "../MyExercises";
 import { FormInput, FormSelect } from "../FormElements";
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
 import { getAllWeightExercisesThunk } from "../../store/weightExercises";
