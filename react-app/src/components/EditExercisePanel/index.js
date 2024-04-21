@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import EditCardioExercise from "./EditCardioExercise";
 import { FormInput } from "../FormElements";
 import ErrorHandlingComponent from "../ErrorHandlingComponent";
-import { useDispatch } from "react-redux";
-import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
-import { getAllWeightExercisesThunk } from "../../store/weightExercises";
-import {
-  checkForExercise,
-  useCardioExercises,
-  useWeightExercises,
-  useUserExercises,
-} from "../../utils";
+import { useCheckForExercise } from "../../utils";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
@@ -18,29 +10,12 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
     selectedExercise.exerciseName.split("*")[0]
   );
   const [nameError, setNameError] = useState("");
-  const dispatch = useDispatch();
-  const usersExercises = useUserExercises();
-  const cardioExercises = useCardioExercises();
-  const weightExercises = useWeightExercises();
+  const checkExercise = useCheckForExercise(
+    exerciseName,
+    isCardio ? "Cardio" : "Strength",
+    setNameError
+  );
 
-  console.log(usersExercises);
-
-  useEffect(() => {
-    // useEffect to get exercises based on exerciseType
-    const thunkAction = isCardio
-      ? getAllCardioExercisesThunk
-      : getAllWeightExercisesThunk;
-    dispatch(thunkAction());
-    checkForExercise(
-      exerciseName,
-      isCardio ? "Cardio" : "Strength",
-      cardioExercises,
-      weightExercises,
-      usersExercises,
-      setNameError
-    ); // checks for exercise when exerciseType changes
-    // eslint-disable-next-line
-  }, [dispatch, isCardio]);
   return (
     <div className={`side-panel`}>
       <div className="edit-exercise-panel-title-container">
@@ -56,12 +31,13 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
           type={"text"}
           value={exerciseName}
           name={"exercise-name"}
+          onBlur={checkExercise}
           onChange={(e) => {
             setExerciseName(e.target.value);
             setNameError("");
           }}
         />
-        <ErrorHandlingComponent error={false} />
+        <ErrorHandlingComponent error={nameError} />
         {isCardio ? (
           <EditCardioExercise exerciseData={selectedExercise} />
         ) : (
