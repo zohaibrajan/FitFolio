@@ -25,7 +25,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
           className="fa-solid fa-xmark close-panel"
         ></i>
       </div>
-      <div>
+      <div className="edit-exercise-form">
         <FormInput
           label={"Exercise Name"}
           type={"text"}
@@ -39,7 +39,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
         />
         <ErrorHandlingComponent error={nameError} />
         {isCardio ? (
-          <EditCardioExercise exerciseData={selectedExercise} />
+          <EditCardioExercise exerciseData={selectedExercise} nameError={nameError} />
         ) : (
           <h1>Strength</h1>
         )}

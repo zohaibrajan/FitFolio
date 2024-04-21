@@ -26,10 +26,9 @@ function CardioForm({ exerciseName, nameError }) {
     calories: "",
   });
 
-  const commonChecks = isEmpty(exerciseName) || nameError;
   const cardioChecks =
     [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
-  const disabled = commonChecks || cardioChecks;
+  const disabled = nameError || cardioChecks;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

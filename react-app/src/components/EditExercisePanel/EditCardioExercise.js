@@ -5,20 +5,25 @@ import {
   checkDuration,
   checkCaloriesBurned,
   isEmpty,
-  hasErrors,
-  formattingUserInputDate,
+  hasErrors
 } from "../../utils";
 
-
-function EditCardioExercise({ exerciseData }) {
+function EditCardioExercise({ exerciseData, nameError }) {
   const DATA = {
-    exerciseName: exerciseData.exerciseName.split("*")[0],
     duration: 60,
     intensity: exerciseData.intensity,
     caloriesBurned: exerciseData.caloriesPerMinute * 60,
   };
   const [data, setData] = useState(DATA);
+  const [cardioErrors, setCardioErrors] = useState({
+    duration: "",
+    calories: "",
+  });
   const { duration, intensity, caloriesBurned } = data;
+  const cardioChecks =
+    [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
+  const disabled = nameError || cardioChecks;
+
   function updateData(fields) {
     setData((prev) => ({ ...prev, ...fields }));
   }
@@ -48,7 +53,9 @@ function EditCardioExercise({ exerciseData }) {
         value={duration}
         placeholder={"Duration eg. 30"}
         name={"duration"}
-        onBlur={(e) => checkDuration(e.target.value)}
+        onBlur={(e) =>
+          checkDuration(e.target.value, cardioErrors, setCardioErrors)
+        }
         onChange={(e) => updateData({ duration: e.target.value })}
       />
       <ErrorHandlingComponent error={false} />
@@ -58,12 +65,14 @@ function EditCardioExercise({ exerciseData }) {
         value={caloriesBurned}
         placeholder={"Calories Burned eg. 300"}
         name={"caloriesBurned"}
-        onBlur={(e) => checkCaloriesBurned(e.target.value)}
+        onBlur={(e) =>
+          checkCaloriesBurned(e.target.value, cardioErrors, setCardioErrors)
+        }
         onChange={(e) => updateData({ caloriesBurned: e.target.value })}
       />
       <ErrorHandlingComponent error={false} />
       <FormSubmitButton
-        disabled={false}
+        disabled={disabled}
         divClass={"create-exercise-button-container"}
         buttonClass={"create-exercise-button"}
         text={"Add Exercise"}

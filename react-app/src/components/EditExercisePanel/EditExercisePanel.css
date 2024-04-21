@@ -28,20 +28,12 @@
     transform: translateX(100%);
 }
 
-/* .edit-exercise-form {
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-}
-
-.edit-exercise-panel-label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
+.edit-exercise-form {
     font-family: "Inter", Helvetica, Arial, sans-serif;
-    font-size: 15px;
+    padding: 10px;
 }
 
+/*
 .edit-exercise-panel-submit-button {
     cursor: pointer;
     font-family: "Inter", Helvetica, Arial, sans-serif;

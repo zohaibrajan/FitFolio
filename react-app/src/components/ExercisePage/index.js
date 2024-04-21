@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ErrorHandlingComponent from "../ErrorHandlingComponent"; // absolute import
 import StrengthExerciseForm from "./StrengthPage";
 import CardioForm from "./CardioPage";
