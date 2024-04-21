@@ -1,66 +1,82 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { useSelectedDate } from "../../context/SelectedDate";
-import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import { FormInput, FormSubmitButton, FormSelect } from "../FormElements";
-import { createCardioExerciseThunk } from "../../store/cardioExercises";
-import { createCardioLogThunk } from "../../store/cardioLogs";
+import { updateUserCardioExerciseThunk } from "../../store/userOwnedExercisesFiltered";
+import { updateCardioExerciseAllExercises } from "../../store/userOwnedExercises";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import {
   checkDuration,
   checkCaloriesBurned,
   isEmpty,
   hasErrors,
-  formattingUserInputDate,
 } from "../../utils";
 
-function CardioForm({ exerciseName, nameError }) {
+function EditCardioExercise({
+  exerciseData,
+  nameError,
+  exerciseName,
+  setIsPanelOpen,
+  setIsModified,
+  isModified,
+}) {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const date = useSelectedDate();
-  const [intensity, setIntensity] = useState("Low");
-  const [caloriesBurned, setCaloriesBurned] = useState("");
-  const [duration, setDuration] = useState("");
+  const [data, setData] = useState({
+    duration: 60,
+    intensity: exerciseData.intensity,
+    caloriesBurned: exerciseData.caloriesPerMinute * 60,
+  });
   const [cardioErrors, setCardioErrors] = useState({
     duration: "",
     calories: "",
   });
-
+  const { duration, intensity, caloriesBurned } = data;
   const cardioChecks =
     [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
   const disabled = nameError || cardioChecks;
+  function updateData(fields) {
+    setData((prev) => ({ ...prev, ...fields }));
+    setIsModified(true);
+  }
+
+  useEffect(() => {
+    setData({
+      duration: 60,
+      intensity: exerciseData.intensity,
+      caloriesBurned: exerciseData.caloriesPerMinute * 60,
+    });
+    setIsModified(false);
+    // eslint-disable-next-line
+  }, [exerciseData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const cardioExerciseForm = new FormData();
-    const cardioLog = new FormData();
-    cardioLog.append("duration", duration);
-    cardioLog.append("calories_burned", caloriesBurned);
-    cardioLog.append("date", formattingUserInputDate(date.selectedDate));
-    cardioLog.append("exercise_name", exerciseName);
     cardioExerciseForm.append("exercise_name", exerciseName.trim());
     cardioExerciseForm.append("intensity", intensity);
     cardioExerciseForm.append("duration", duration);
     cardioExerciseForm.append("calories_burned", caloriesBurned);
     try {
-      await dispatch(createCardioExerciseThunk(cardioExerciseForm));
-      await dispatch(createCardioLogThunk(cardioLog));
-      history.replace("/my-home/diary");
+      const exercise = await dispatch(
+        updateUserCardioExerciseThunk(exerciseData.id, cardioExerciseForm)
+      );
+      await dispatch(updateCardioExerciseAllExercises(exercise));
+      setIsPanelOpen(false);
     } catch (e) {
       console.error(e);
     }
   };
+
   return (
     <form onSubmit={handleSubmit} encType="multipart/form-data">
       <FormSelect
         label={"Intensity"}
         name={"intensity"}
         value={intensity}
-        onChange={(e) => setIntensity(e.target.value)}
+        onChange={(e) => updateData({ intensity: e.target.value })}
         options={[
           { label: "Low", value: "Low" },
           { label: "Medium", value: "Medium" },
-          { label: "High", value: "High" }
+          { label: "High", value: "High" },
         ]}
       />
       <ErrorHandlingComponent error={false} />
@@ -73,10 +89,7 @@ function CardioForm({ exerciseName, nameError }) {
         onBlur={(e) =>
           checkDuration(e.target.value, cardioErrors, setCardioErrors)
         }
-        onChange={(e) => {
-          setDuration(e.target.value);
-          setCardioErrors({ ...cardioErrors, duration: "" });
-        }}
+        onChange={(e) => updateData({ duration: e.target.value })}
       />
       <ErrorHandlingComponent error={cardioErrors.duration} />
       <FormInput
@@ -88,21 +101,17 @@ function CardioForm({ exerciseName, nameError }) {
         onBlur={(e) =>
           checkCaloriesBurned(e.target.value, cardioErrors, setCardioErrors)
         }
-        onChange={(e) => {
-          setCaloriesBurned(e.target.value);
-          setCardioErrors({ ...cardioErrors, calories: "" });
-        }}
+        onChange={(e) => updateData({ caloriesBurned: e.target.value })}
       />
-      <ErrorHandlingComponent error={cardioErrors.calories} />
+      <ErrorHandlingComponent error={cardioErrors.duration} />
       <FormSubmitButton
-        disabled={disabled}
+        disabled={disabled || !isModified}
         divClass={"create-exercise-button-container"}
-        buttonClass={"create-exercise-button"}
-        text={"Add Exercise"}
+        buttonClass={"edit-exercise-panel-submit-button"}
+        text={"Update Exercise"}
       />
     </form>
   );
 }
 
-
-export default CardioForm;
+export default EditCardioExercise;

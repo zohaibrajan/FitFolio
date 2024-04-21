@@ -1,45 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import ErrorHandlingComponent from "../ErrorHandlingComponent"; // absolute import
 import StrengthExerciseForm from "./StrengthPage";
 import CardioForm from "./CardioPage";
 import MyExercises from "../MyExercises";
 import { FormInput, FormSelect } from "../FormElements";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllCardioExercisesThunk } from "../../store/cardioExercises";
-import { getAllWeightExercisesThunk } from "../../store/weightExercises";
-import { checkForExercise } from "../../utils";
+import { useCheckForExercise } from "../../utils";
 import "./ExercisePage.css";
 
 function ExercisePage() {
-  const dispatch = useDispatch();
-  const cardioExercisesObj = useSelector((state) => state.cardioExercises);
-  const weightExercisesObj = useSelector((state) => state.weightExercises);
-  const usersExercisesObj = useSelector((state) => state.userExercisesFiltered);
-  const usersExercises = Object.values(usersExercisesObj);
-  const cardioExercises = Object.values(cardioExercisesObj);
-  const weightExercises = Object.values(weightExercisesObj);
   const [exerciseName, setExerciseName] = useState("");
   const [nameError, setNameError] = useState("");
   const [exerciseType, setExerciseType] = useState("Cardio");
   const isCardio = exerciseType === "Cardio";
-
-  useEffect(() => { // useEffect to get exercises based on exerciseType
-    const thunkAction =
-      isCardio
-        ? getAllCardioExercisesThunk
-        : getAllWeightExercisesThunk;
-    dispatch(thunkAction());
-    checkForExercise(
-      exerciseName,
-      exerciseType,
-      cardioExercises,
-      weightExercises,
-      usersExercises,
-      setNameError
-    ); // checks for exercise when exerciseType changes
-    // eslint-disable-next-line
-  }, [dispatch, exerciseType]);
+  const checkExercise = useCheckForExercise(
+    exerciseName,
+    exerciseType,
+    setNameError
+  );
 
   return (
     <div className="exercise-page-container">
@@ -55,7 +32,7 @@ function ExercisePage() {
               value={exerciseName}
               placeholder={"Exercise Name eg. Running"}
               name={"exercise-name"}
-              onBlur={(e) => checkForExercise(e.target.value, exerciseType, cardioExercises, weightExercises, usersExercises, setNameError)}
+              onBlur={checkExercise}
               onChange={(e) => {
                 setExerciseName(e.target.value);
                 setNameError("");

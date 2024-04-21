@@ -63,8 +63,9 @@ def update_user_cardio_exercise(user_cardio_exercise):
         calories_burned = data["calories_burned"]
         calories_burned_per_minute = round(calories_burned / duration)
         user_exercise_exists = get_cardio_exercise(data["exercise_name"].title())
+        exercise_name = data["exercise_name"].title() + "*"
 
-        if user_exercise_exists:
+        if user_cardio_exercise.exercise_name != exercise_name and user_exercise_exists:
             return {
                 "errorMessage": "Sorry, Cardio Exercise Already Exists"
             }, 400
