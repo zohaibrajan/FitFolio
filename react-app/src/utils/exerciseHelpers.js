@@ -36,37 +36,6 @@ const checkWeightPerRep = (weightPerRep, weightErrors, setWeightErrors) => {
   }
 };
 
-const checkForExercise = (
-  exerciseName,
-  exerciseType,
-  cardioExercises,
-  weightExercises,
-  usersExercises,
-  setNameError
-) => {
-  const trimmedExerciseName = exerciseName.trim().toLowerCase();
-  const exercises =
-    exerciseType === "Cardio" ? cardioExercises : weightExercises;
-
-  const doesExerciseExists = // check if exercise already exists // add comment here
-    exercises.some(
-      (exercise) => exercise.exerciseName.toLowerCase() === trimmedExerciseName
-    ) ||
-    usersExercises.some(
-      (exercise) =>
-        exercise.exerciseName.split("*")[0].toLowerCase() === // here
-        trimmedExerciseName
-    );
-
-  if (doesExerciseExists) {
-    // set error if exercise already exists
-    setNameError("Exercise already exists");
-  } else if (exerciseName.length >= 50) {
-    setNameError("Must be less than 50 characters");
-  } else if (exerciseName && exerciseName.length < 5) {
-    setNameError("Must be greater than 5 characters");
-  }
-};
 
 const useCardioExercises = () => {
   return useSelector((state) => Object.values(state.cardioExercises));
@@ -87,7 +56,6 @@ export {
   checkSets,
   checkReps,
   checkWeightPerRep,
-  checkForExercise,
   useCardioExercises,
   useWeightExercises,
   useUserExercises

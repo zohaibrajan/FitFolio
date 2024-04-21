@@ -18,7 +18,7 @@ function EditCardioExercise({ exerciseData }) {
     caloriesBurned: exerciseData.caloriesPerMinute * 60,
   };
   const [data, setData] = useState(DATA);
-  const { exerciseName, duration, intensity, caloriesBurned } = data;
+  const { duration, intensity, caloriesBurned } = data;
   function updateData(fields) {
     setData((prev) => ({ ...prev, ...fields }));
   }

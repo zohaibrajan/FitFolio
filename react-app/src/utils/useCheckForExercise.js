@@ -43,6 +43,9 @@ export const useCheckForExercise = (exerciseName, exerciseType, setError) => {
       setError("Must be less than 50 characters");
     } else if (exerciseName && exerciseName.length < 5) {
       setError("Must be greater than 5 characters");
+    } else if (exerciseName.length <= 0) {
+      setError("Must not be empty");
+
     }
   }, [exerciseName, exerciseType, cardioExercises, weightExercises, usersExercises, setError, dispatch]);
 
