@@ -33,3 +33,24 @@
     padding: 10px;
 }
 
+.edit-exercise-panel-submit-button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    background-color: rgb(133, 196, 0);
+    width: 65%;
+    padding: 5px;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 3px;
+}
+
+.edit-exercise-panel-submit-button:hover {
+    background-color: rgb(72, 104, 2);
+}
+
+.edit-exercise-panel-submit-button:disabled,
+.edit-exercise-panel-submit-button:disabled:hover {
+    background-color: #8C8C8C;
+    cursor: not-allowed;
+}

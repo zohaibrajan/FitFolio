@@ -11,7 +11,14 @@ import {
   hasErrors,
 } from "../../utils";
 
-function EditCardioExercise({ exerciseData, nameError, exerciseName, setIsPanelOpen}) {
+function EditCardioExercise({
+  exerciseData,
+  nameError,
+  exerciseName,
+  setIsPanelOpen,
+  setIsModified,
+  isModified,
+}) {
   const dispatch = useDispatch();
   const [data, setData] = useState({
     duration: 60,
@@ -22,7 +29,6 @@ function EditCardioExercise({ exerciseData, nameError, exerciseName, setIsPanelO
     duration: "",
     calories: "",
   });
-  const [isModified, setIsModified] = useState(false);
   const { duration, intensity, caloriesBurned } = data;
   const cardioChecks =
     [duration, caloriesBurned].some(isEmpty) || hasErrors(cardioErrors);
@@ -39,8 +45,7 @@ function EditCardioExercise({ exerciseData, nameError, exerciseName, setIsPanelO
       caloriesBurned: exerciseData.caloriesPerMinute * 60,
     });
     setIsModified(false);
-    }, [exerciseData]);
-
+  }, [exerciseData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,8 +106,8 @@ function EditCardioExercise({ exerciseData, nameError, exerciseName, setIsPanelO
       <FormSubmitButton
         disabled={disabled || !isModified}
         divClass={"create-exercise-button-container"}
-        buttonClass={"create-exercise-button"}
-        text={"Add Exercise"}
+        buttonClass={"edit-exercise-panel-submit-button"}
+        text={"Update Exercise"}
       />
     </form>
   );

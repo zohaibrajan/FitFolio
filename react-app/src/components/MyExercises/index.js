@@ -64,12 +64,8 @@ function MyExercises({ type }) {
                 onChange={(e) => setExerciseType(e.target.value)}
                 className="exercise-type-select"
               >
-                <option value="Cardio">
-                  Cardio
-                </option>
-                <option value="Strength">
-                  Strength
-                </option>
+                <option value="Cardio">Cardio</option>
+                <option value="Strength">Strength</option>
               </select>
               Exercises
             </span>
@@ -98,12 +94,12 @@ function MyExercises({ type }) {
                       modalComponent={
                         isCardio ? (
                           <CardioLogModal
-                            exerciseName={exercise.exerciseName}
+                            exerciseName={exercise.exerciseName.split("*")[0]}
                             exerciseId={exercise.id}
                           />
                         ) : (
                           <WeightLogModal
-                            exerciseName={exercise.exerciseName}
+                            exerciseName={exercise.exerciseName.split("*")[0]}
                             exerciseIdProp={exercise.id}
                           />
                         )

@@ -9,6 +9,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
   const [exerciseName, setExerciseName] = useState(
     selectedExercise.exerciseName.split("*")[0]
   );
+  const [isModified, setIsModified] = useState(false);
   const [nameError, setNameError] = useState("");
   const checkExercise = useCheckForExercise(
     exerciseName,
@@ -20,7 +21,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
     setExerciseName(selectedExercise.exerciseName.split("*")[0]);
   }
   , [selectedExercise]);
-  
+
 
   return (
     <div className={`side-panel`}>
@@ -41,6 +42,7 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
           onChange={(e) => {
             setExerciseName(e.target.value);
             setNameError("");
+            setIsModified(true);
           }}
         />
         <ErrorHandlingComponent error={nameError} />
@@ -50,6 +52,8 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
             nameError={nameError}
             exerciseName={exerciseName}
             setIsPanelOpen={setIsPanelOpen}
+            setIsModified={setIsModified}
+            isModified={isModified}
           />
         ) : (
           <h1>Strength</h1>
