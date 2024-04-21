@@ -28,7 +28,7 @@
     transform: translateX(100%);
 }
 
-.edit-exercise-form {
+/* .edit-exercise-form {
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -74,4 +74,4 @@
 .edit-exercise-panel-submit-button-container {
     display: flex;
     justify-content: center;
-}
+} */

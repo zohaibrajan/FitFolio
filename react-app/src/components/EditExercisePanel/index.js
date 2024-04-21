@@ -1,3 +1,6 @@
+import EditCardioExercise from "./EditCardioExercise";
+import { FormInput } from "../FormElements";
+import ErrorHandlingComponent from "../ErrorHandlingComponent";
 import "./EditExercisePanel.css";
 
 function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
@@ -9,6 +12,21 @@ function EditExercisePanel({ selectedExercise, isCardio, setIsPanelOpen }) {
           onClick={() => setIsPanelOpen(false)}
           className="fa-solid fa-xmark close-panel"
         ></i>
+      </div>
+      <div>
+        <FormInput
+          label={"Exercise Name"}
+          type={"text"}
+          value={selectedExercise.name}
+          placeholder={"Exercise Name eg. Running"}
+          name={"exercise-name"}
+        />
+        <ErrorHandlingComponent error={false} />
+        {isCardio ? (
+          <EditCardioExercise exerciseData={selectedExercise} />
+        ) : (
+          <h1>Strength</h1>
+        )}
       </div>
     </div>
   );
