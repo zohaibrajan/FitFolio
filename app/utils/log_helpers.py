@@ -6,7 +6,7 @@ def verify_cardio_log(func):
         cardio_log = CardioLog.query.get(cardioLogId)
 
         if not cardio_log:
-            return {
+            return { # returns a tuple, the first element is the dictionary, the second element is the status code
                 "errorMessage": "Sorry, Cardio Log Does Not Exist"
             }, 404
 
@@ -56,5 +56,3 @@ def verify_food_log(func):
         return func(food_log)
 
     return wrapper
-
-

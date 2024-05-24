@@ -52,7 +52,7 @@ function SignupFormPage() {
     setData((prev) => ({ ...prev, ...fields }));
   }
 
-  const { step, steps, currentStepIndex, next, back, isLastStep } =
+  const { step, steps, currentStepIndex, next, back, isLastStep, isFirstStep } =
     useMultistepForm([
       <GetFirstName {...data} updateData={updateData} />,
       <CreateGoalForm {...data} updateData={updateData} />,
@@ -135,12 +135,12 @@ function SignupFormPage() {
     formDataGoal.append("target_weight", targetWeight);
 
     setIsLoading(true);
-    const signUpData = await dispatch(signUp(formDataUser));
-    if (signUpData && signUpData.username) {
-      setError(signUpData.username);
+    const signUpErrors = await dispatch(signUp(formDataUser));
+    if (signUpErrors && signUpErrors.username) {
+      setError(signUpErrors.username);
       setIsLoading(false);
-    } else if (signUpData && signUpData.email){
-      setError(signUpData.email);
+    } else if (signUpErrors && signUpErrors.email){
+      setError(signUpErrors.email);
       setIsLoading(false);
     } else {
       await dispatch(createGoalThunk(formDataGoal));
@@ -164,7 +164,18 @@ function SignupFormPage() {
             {step}
             {error && <div id="error-message">{error}</div>}
             <div className="signup-buttons-container">
-              <button id="signup-back" type="button" onClick={back}>
+              <button
+                id="signup-back"
+                type="button"
+                onClick={(e) => {
+                  if (isFirstStep) {
+                    history.replace("/");
+                    e.stopPropagation();
+                  } else {
+                    back();
+                  }
+                }}
+              >
                 BACK
               </button>
               <button id="signup-next" type="submit">
