@@ -18,10 +18,10 @@ function Navigation({ isLoaded }) {
   const logoutUser = async (e) => {
     e.preventDefault();
     dispatch(clearGoalState());
-    dispatch(clearCardioLogState())
-    dispatch(clearFoodLogState())
-    dispatch(clearWeightLogState())
-    dispatch(clearUserExercises())
+    dispatch(clearCardioLogState());
+    dispatch(clearFoodLogState());
+    dispatch(clearWeightLogState());
+    dispatch(clearUserExercises());
     await dispatch(logout());
     history.replace("/");
     return;
@@ -62,11 +62,7 @@ function Navigation({ isLoaded }) {
             aria-orientation="vertical"
             style={{ fontSize: "0px", opacity: "0.4" }}
           />
-          <span
-            className="follow-us"
-          >
-            Connect:
-          </span>
+          <span className="follow-us">Connect:</span>
           <a
             target="_blank"
             href="https://github.com/zohaibrajan"
