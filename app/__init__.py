@@ -44,9 +44,20 @@ Migrate(app, db)
 # Application Security
 CORS(app)
 
+# CORS doesn't allow unapproved clients to make requests to your server.
+# A preflight request is made to the server BEFORE the actual request
+# to determine whether or not the actual request is safe to send or not.
+# This request will include the Origin header.
 
-# Since we are deploying with Docker and Flask,
-# we won't be using a buildpack when we deploy to Heroku.
+# The server sends back a response to the preflight request which includes a
+# Access-Control-Allow-Origin header. If the response's Access-Control-Allow-Origin header's
+# pattern matches the value of the preflight request's Origin header, the browser will make the actual request.
+
+# If it does not match, the browser will block the request
+# and thus NOT send the actual request. Keep in mind this only happens
+# if the browser supports CORS.
+
+
 # Therefore, we need to make sure that in production any
 # request made over http is redirected to https.
 # Well.........
